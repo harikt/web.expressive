@@ -1,0 +1,11 @@
+.btn {
+    &.btn-default.ladda-button .ladda-spinner > div > div > div {
+        background-color: #333!important;
+    }
+}
+
+a:not(.btn) {
+    &.ladda-button .ladda-spinner > div > div > div {
+        background-color: #333!important;
+    }
+}

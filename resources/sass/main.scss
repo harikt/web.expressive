@@ -1,0 +1,28 @@
+@import "components/background/patterns";
+@import "components/sidebar";
+@import "components/alerts";
+@import "components/links";
+@import "components/table";
+@import "components/chart";
+@import "components/form";
+@import "components/details";
+@import "components/spinner";
+@import "components/summary-table";
+@import "components/wysiwyg";
+@import "components/file-tree";
+@import "components/buttons";
+@import "components/dashboard";
+@import "components/darkroom";
+@import "components/auth";
+@import "components/loading";
+@import "components/dialog";
+@import "components/typeahead";
+
+body {
+    font-family: Arial, sans-serif!important;
+}
+
+.dms-page-content {
+    position: relative;
+    z-index: 800;
+}

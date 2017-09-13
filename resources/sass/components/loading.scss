@@ -1,0 +1,10 @@
+.content-wrapper {
+    @extend .dms-spinner-container;
+    min-height: 50px;
+
+    &.loading {
+        > .dms-page-content {
+            opacity: .3;
+        }
+    }
+}

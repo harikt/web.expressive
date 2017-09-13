@@ -1,0 +1,11 @@
+.dms-chart-container {
+
+    @extend .dms-spinner-container;
+
+    &.loading {
+        .dms-chart {
+            min-height: 100px;
+            opacity: .3;
+        }
+    }
+}

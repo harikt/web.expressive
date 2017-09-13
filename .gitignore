@@ -1,0 +1,8 @@
+/bk/
+/vendor/
+/storage/
+/.idea/
+/node_modules/
+/bower_components/
+/tests/Tests/Integration/temp/
+/composer.lock

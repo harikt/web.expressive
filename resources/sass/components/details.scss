@@ -1,0 +1,34 @@
+.dms-display-map {
+    margin: 15px 0;
+    height: 200px;
+    border-radius: 3px;
+    border: 1px solid #ddd;
+}
+
+.dms-file-display {
+    img {
+        max-width: 100%;
+    }
+}
+
+.dms-display-inner-module {
+    .dms-inner-module-form-container {
+        @extend .dms-spinner-container;
+
+        &.loading .dms-inner-module-form {
+            opacity: .3;
+        }
+
+        .box-tools .btn:not(.btn-info) {
+            display: none;
+        }
+    }
+
+    .dms-table {
+        .dms-row-button-control {
+            .btn:not(.btn-info) {
+                display: none;
+            }
+        }
+    }
+}

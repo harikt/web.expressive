@@ -1,0 +1,42 @@
+{
+    "name": "dms-org/web.laravel",
+    "description": "The integration package with the laravel framework",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Elliot Levin",
+            "email": "elliotlevin@hotmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "Dms\\Web\\Laravel\\": "./src/"
+        },
+        "files" : [
+            "./src/helper.php"
+        ]
+    },
+    "require": {
+        "php": ">=7.0.0",
+        "dms-org/core": "^0.8",
+        "dms-org/common.structure": "^0.8",
+        "dms-org/package.analytics": "^0.8",
+        "laravel/framework": "5.4.*",
+        "marcj/topsort": "^1.0",
+        "cache/cache": "^0.1.0",
+        "league/oauth2-google": "^1.0",
+        "laravel/browser-kit-testing": "^1.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Dms\\Web\\Laravel\\Tests\\": "./tests/Tests/",
+            "Dms\\Core\\Tests\\": "./vendor/dms-org/core/tests/Tests/"
+        }
+    },
+    "require-dev": {
+        "dms-org/common.testing": "dev-master",
+        "orchestra/testbench": "~3.0",
+        "dms-org/package.content": "^0.8"
+    }
+}

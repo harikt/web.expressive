@@ -1,0 +1,1 @@
+<span class="dms-date-or-time-display" data-mode="{{ $mode }}" data-date-format="{{ $format }}">{{ $value }}</span>

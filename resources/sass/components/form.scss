@@ -1,0 +1,204 @@
+a.dms-run-action-form {
+    cursor: pointer;
+}
+
+.dms-staged-form-container {
+    @extend .dms-spinner-container;
+
+    &.loading {
+        .dms-staged-form {
+            opacity: .3;
+        }
+    }
+}
+
+.dms-form-stage-container:not(.loaded):not(.loading) + .dms-form-stage-container:not(.loaded):not(.loading) {
+    // Don't display consecutive unloaded form stages
+    display: none;
+}
+
+.dms-staged-form {
+    .help-block-error {
+        color: #a94442;
+    }
+
+    .list-group.dms-field-list {
+        margin-bottom: 0;
+    }
+
+    .dms-form-stage-container {
+        @extend .dms-spinner-container;
+
+        &.loading {
+            .dms-form-stage {
+                min-height: 50px;
+                opacity: .3;
+            }
+        }
+    }
+
+    .dropzone {
+        border: 2px dashed #0087F7;
+        border-radius: 5px;
+        background: white;
+        transition: .3s;
+
+        &.dz-drag-hover {
+            box-shadow: inset 0 0 8px #000;
+        }
+
+        .dz-message {
+            position: absolute;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: #aaa;
+            display: block !important;
+        }
+
+        .dz-details {
+            padding-top: 3em !important;
+            padding-bottom: 1em !important;
+        }
+
+        .dz-image {
+            background: #ddd;
+        }
+
+        .btn {
+            position: absolute;
+            top: 0;
+            z-index: 25;
+            cursor: pointer;
+        }
+
+        .btn-download-file {
+            left: 0;
+            border-top-left-radius: 20px;
+        }
+
+        .btn-remove-file {
+            right: 0;
+            border-top-right-radius: 20px;
+        }
+
+        .btn-edit-file {
+            left: calc(50% - 15px);
+        }
+    }
+
+    textarea.form-control {
+        max-width: 100%;
+    }
+
+    .dms-date-picker-container {
+        position: relative;
+    }
+
+    .dms-map-picker {
+        margin: 15px 0;
+        height: 200px;
+        border-radius: 3px;
+        border: 1px solid #ddd;
+    }
+
+    .dms-field-table {
+        .row-key-column {
+            width: 20%;
+        }
+
+        .daterangepicker {
+            min-width: 450px;
+        }
+    }
+
+    .dms-inner-module {
+        @extend .dms-spinner-container;
+
+        &.loading .dms-inner-module-panel {
+            opacity: .3;
+        }
+
+        .dms-table-control {
+            .dms-table-rows-per-page-form {
+                display: none;
+            }
+
+            .dms-table-quick-filter-form {
+                width: 100%;
+
+                & > .input-group {
+                    float: none !important;
+                }
+            }
+        }
+
+        .dms-inner-module-form-container {
+            @extend .dms-spinner-container;
+
+            &.loading .dms-inner-module-form {
+                opacity: .3;
+            }
+        }
+    }
+
+    .dms-wysiwyg-container {
+        .dms-file-picker-dialog {
+            z-index: 9999999;
+
+            .dms-file-picker-container {
+                @extend .dms-spinner-container;
+                min-height: 50px;
+
+                &.loading {
+                    .dms-file-picker {
+                        opacity: .3;
+                    }
+                }
+
+                .dms-quick-filter-form .form-group {
+                    margin: 0 !important;
+                }
+            }
+        }
+
+    }
+
+    .dms-money-input-group {
+        .dms-money-input {
+            width: 70%;
+        }
+
+        .dms-currency-input {
+            width: 30%;
+        }
+    }
+
+    .dms-disabled-input {
+        cursor: default;
+        pointer-events: none;
+        opacity: .7;
+    }
+}
+
+.dms-display-html {
+    width: 100%;
+    border: 1px solid #bbb;
+    border-radius: 3px;
+    padding: 5px;
+    height: 60vh;
+    position: relative;
+
+    .dms-display-iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+
+    .dms-view-more-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+}
+

@@ -1,0 +1,8 @@
+.login-box-logo {
+    width: 100%;
+    margin-top: 10%;
+
+    & + .login-box {
+        margin-top: 20px;
+    }
+}
