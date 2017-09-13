@@ -6,12 +6,16 @@
         {
             "name": "Elliot Levin",
             "email": "elliotlevin@hotmail.com"
+        },
+        {
+            "name": "Hari KT",
+            "email": "kthari85@gmail.com"
         }
     ],
     "minimum-stability": "stable",
     "autoload": {
         "psr-4": {
-            "Dms\\Web\\Laravel\\": "./src/"
+            "Dms\\Web\\Expressive\\": "./src/"
         },
         "files" : [
             "./src/helper.php"
@@ -19,18 +23,26 @@
     },
     "require": {
         "php": ">=7.0.0",
+        "aura/session": "^2.1",
+        "cache/cache": "^0.1.0",
         "dms-org/core": "^0.8",
         "dms-org/common.structure": "^0.8",
         "dms-org/package.analytics": "^0.8",
-        "laravel/framework": "5.4.*",
+        "illuminate/cache": "^5.4",
+        "illuminate/config": "^5.4",
+        "illuminate/container": "^5.4",
+        "illuminate/events": "^5.4",
+        "illuminate/filesystem": "^5.4",
+        "illuminate/view": "^5.4",
         "marcj/topsort": "^1.0",
-        "cache/cache": "^0.1.0",
         "league/oauth2-google": "^1.0",
-        "laravel/browser-kit-testing": "^1.0"
+        "laravel/browser-kit-testing": "^1.0",
+        "symfony/translation": "^3.3",
+        "zendframework/zend-expressive": "^2.0.2"
     },
     "autoload-dev": {
         "psr-4": {
-            "Dms\\Web\\Laravel\\Tests\\": "./tests/Tests/",
+            "Dms\\Web\\Expressive\\Tests\\": "./tests/Tests/",
             "Dms\\Core\\Tests\\": "./vendor/dms-org/core/tests/Tests/"
         }
     },

@@ -29,7 +29,7 @@ use Zend\Diactoros\Response\JsonResponse;
  *
  * @author Elliot Levin <elliotlevin@hotmail.com>
  */
-class ChartController extends DmsController implements ServerMiddlewareInterface
+class LoadChartDataController extends DmsController implements ServerMiddlewareInterface
 {
     /**
      * @var ChartControlRenderer
