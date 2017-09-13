@@ -96,7 +96,7 @@ return [
             'dir' => storage_path('trash/'),
         ],
         'temp-files'    => [
-            'dir'             => __DIR__, //storage_path('dms/temp-uploads/'),
+            'dir'             => storage_path('dms/temp-uploads/'),
             'upload-expiry'   => 3600,
             'download-expiry' => 3600,
         ],

@@ -6,7 +6,6 @@ use Dms\Core\Exception\InvalidArgumentException;
 use Dms\Core\Language\ILanguageProvider;
 use Dms\Core\Language\Message;
 use Dms\Core\Language\MessageNotFoundException;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Translation\MessageSelector;
 
@@ -26,9 +25,9 @@ class LanguageProvider implements ILanguageProvider
      * LaravelLanguageProvider constructor.
      *
      */
-    public function __construct()
+    public function __construct(Translator $translator)
     {
-        $this->translator = new Translator('fr_FR', new MessageSelector());
+        $this->translator = $translator;
     }
 
     /**
