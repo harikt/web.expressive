@@ -190,13 +190,13 @@ class ModuleContext
         );
     }
 
-	/**
-	 * @return RouterInterface
-	 */
-	public function getRouter()
-	{
-		return $this->router;
-	}
+    /**
+     * @return RouterInterface
+     */
+    public function getRouter()
+    {
+        return $this->router;
+    }
 
     protected function combineUrlPaths(string ... $paths) : string
     {

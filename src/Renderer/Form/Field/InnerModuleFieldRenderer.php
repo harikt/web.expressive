@@ -118,7 +118,7 @@ class InnerModuleFieldRenderer extends BladeFieldRendererWithActions implements 
 
         $moduleContext = $this->loadInnerModuleContext($field, $renderingContext, $currentState);
 
-		// @todo
+        // @todo
         /** @var ModuleRequestRouter $moduleRequestRouter */
         $moduleRequestRouter = app(ModuleRequestRouter::class);
 

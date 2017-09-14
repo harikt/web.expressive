@@ -153,8 +153,7 @@ class LoginController extends DmsController implements ServerMiddlewareInterface
         if ('XMLHttpRequest' == $request->getHeaderLine('X-Requested-With')) {
             return response('Failed', 400);
         } else {
-            // @todo
-            $to = '/dms/auth/login';
+            $to = $this->urlHelper->generate('dms::auth.login');
             $response = new Response('php://memory', 302);
             return $response->withHeader('Location', $to);
             // return redirect()->back()

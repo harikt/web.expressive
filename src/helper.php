@@ -197,9 +197,9 @@ if (! function_exists('csrf_token')) {
      */
     function csrf_token()
     {
-		$session = app(Session::class);
+        $session = app(Session::class);
 
-		return $session->getCsrfToken()->getValue();
+        return $session->getCsrfToken()->getValue();
     }
 }
 
@@ -573,5 +573,12 @@ if (!function_exists('asset_file_url')) {
         $relativePath = substr($filePath, strlen($publicPath));
 
         return asset(str_replace(DIRECTORY_SEPARATOR, '/', $relativePath));
+    }
+}
+
+if (!function_exists('url')) {
+    function url($url)
+    {
+        return $url;
     }
 }
