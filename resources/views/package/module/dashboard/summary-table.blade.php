@@ -27,7 +27,7 @@
                     <li class="pull-right dms-general-action-container">
                         @if($action instanceof \Dms\Core\Module\IUnparameterizedAction)
                             <button class="dms-run-action-form inline btn btn-{{ \Dms\Web\Expressive\Util\KeywordTypeIdentifier::getClass($action->getName()) }}"
-                                 data-action="{{ $moduleContext->getUrl('action.run', ['package' => $request->getAttribute('package'), 'module' => $request->getAttribute('module'), 'action' => $action->getName()]) }}"
+                                 data-action="{{ $moduleContext->getUrl('action.run', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName(), 'action' => $action->getName()]) }}"
                                  data-method="post"
                             >
                                 {{ \Dms\Web\Expressive\Util\ActionLabeler::getActionButtonLabel($action)  }}

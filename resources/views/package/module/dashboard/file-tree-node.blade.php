@@ -56,7 +56,7 @@
                             @if($isTrash ?? false)
                                 @if ($moduleContext->getModule()->getAction('restore-file')->isAuthorized())
                                 <span class="dms-run-action-form inline"
-                                      data-action="{{ $moduleContext->getUrl('action.run', ['restore-file', 'file' => $fileId]) }}"
+                                      data-action="{{ $moduleContext->getUrl('action.run', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName(), 'action' => 'restore-file', 'file' => $fileId]) }}"
                                       data-after-run-remove-closest="li"
                                       data-reload-page-after-submit="1"
                                       data-method="post">
@@ -69,7 +69,7 @@
                             @else
                                 @if ($moduleContext->getModule()->getAction('download')->isAuthorized())
                                 <span class="dms-run-action-form inline"
-                                      data-action="{{ $moduleContext->getUrl('action.run', ['download', 'object' => $fileId]) }}"
+                                      data-action="{{ $moduleContext->getUrl('action.run', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName(), 'action' => 'download', 'object' => $fileId]) }}"
                                       data-method="post">
                                     {!! csrf_field() !!}
                                     <button type="submit" class="btn btn-xs btn-success">
@@ -78,20 +78,20 @@
                                 </span>
                                 @endif
                                 @if ($moduleContext->getModule()->getAction('details')->isAuthorized())
-                                <a href="{{ $moduleContext->getUrl('action.show', ['action' => 'details', 'object_id' => $fileId]) }}" title="View Details"
+                                <a href="{{ $moduleContext->getUrl('action.show', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName(), 'action' => 'details', 'object_id' => $fileId]) }}" title="View Details"
                                    class="btn btn-xs btn-info">
                                     <i class="fa fa-bars"></i>
                                 </a>
                                 @endif
                                 @if ($moduleContext->getModule()->getAction('edit')->isAuthorized())
-                                <a href="{{ $moduleContext->getUrl('action.form', ['edit', $fileId]) }}" title="Edit"
+                                <a href="{{ $moduleContext->getUrl('action.form', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName(), 'action' => 'edit', 'object_id' => $fileId]) }}" title="Edit"
                                    class="btn btn-xs btn-primary">
                                     <i class="fa fa-pencil-square-o"></i>
                                 </a>
                                 @endif
                                 @if ($moduleContext->getModule()->getAction('remove')->isAuthorized())
                                     <span class="dms-run-action-form inline"
-                                          data-action="{{ $moduleContext->getUrl('action.run', ['remove', 'object' => $fileId]) }}"
+                                          data-action="{{ $moduleContext->getUrl('action.run', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName(), 'action' => 'remove', 'object' => $fileId]) }}"
                                           data-after-run-remove-closest="li"
                                           data-method="post">
                                         {!! csrf_field() !!}

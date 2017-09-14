@@ -2,6 +2,8 @@
 
 > WIP : Some of them are buggy or not working as expected.
 
+If you are interested to play with, [use the example repo](https://github.com/harikt/example.web.expressive#usage)
+
 The integration package with the zend framework expressive with backend theme as (Admin-LTE).
 
 ## Todo
