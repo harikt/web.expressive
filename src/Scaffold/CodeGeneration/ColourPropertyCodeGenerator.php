@@ -42,12 +42,12 @@ class ColourPropertyCodeGenerator extends CommonValueObjectPropertyCodeGenerator
             $method = 'asHexString';
         } else {
             $class  = TransparentColourMapper::class;
-            $method = 'asRgbaString';;
+            $method = 'asRgbaString';
+            ;
         }
 
         $code->addNamespaceImport($class);
         $code->getCode()->append('->using(' . $this->getShortClassName($class) . '::' . $method . '(\'' . $columnName . '\'))');
-
     }
 
     protected function doGenerateCmsObjectFieldCode(

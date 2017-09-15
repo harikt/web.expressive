@@ -6,58 +6,53 @@ use Dms\Core\Exception\InvalidArgumentException;
 use Dms\Core\Persistence\Db\Connection\IConnection;
 use Dms\Core\Persistence\Db\Doctrine\DoctrineConnection;
 use Dms\Core\Persistence\Db\Mapping\IOrm;
-use Illuminate\Database\Console\Migrations\BaseCommand;
-use Illuminate\Support\Composer;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * The auto migrate command
  *
  * @author Elliot Levin <elliotlevin@hotmail.com>
  */
-class AutoGenerateMigrationCommand extends BaseCommand
+class AutoGenerateMigrationCommand extends Command
 {
-    /**
-     * The console command signature.
-     *
-     * @var string
-     */
-    protected $signature = 'dms:make:migration {name : The name of the migration.}';
+    protected $autoMigrationGenerator;
+
+    protected $connection;
+
+    protected $orm;
 
     /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Auto-generates a new migration file to sync the db with the current state of the orm';
-
-    /**
-     * @var Composer
-     */
-    private $composer;
-
-    /**
-     * AutoGenerateMigrationCommand constructor.
-     *
-     * @param Composer $composer
-     */
-    public function __construct(Composer $composer)
-    {
-        parent::__construct();
-        $this->composer = $composer;
-    }
-
-    /**
-     * Execute the console command.
-     *
      * @param LaravelMigrationGenerator $autoMigrationGenerator
      * @param IConnection               $connection
      * @param IOrm                      $orm
      */
-    public function fire(
+    public function __construct(
         LaravelMigrationGenerator $autoMigrationGenerator,
         IConnection $connection,
         IOrm $orm
     ) {
+        $this->autoMigrationGenerator = $autoMigrationGenerator;
+        $this->connection = $connection;
+        $this->orm = $orm;
+    }
+
+    protected function configure()
+    {
+        $this
+            ->setName('dms:make:migration')
+            ->addArgument('name', InputArgument::REQUIRED, 'The name of the migration.')
+            ->setDescription('Auto-generates a new migration file to sync the db with the current state of the orm')
+            ;
+    }
+
+    /**
+     * Execute the console command.
+     */
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
         InvalidArgumentException::verifyInstanceOf(__METHOD__, 'connection', $connection, DoctrineConnection::class);
 
         $file = $autoMigrationGenerator->generateMigration(
@@ -67,11 +62,9 @@ class AutoGenerateMigrationCommand extends BaseCommand
         );
 
         if (!$file) {
-            $this->line("<info>No Migration Generated: Schema has not changed.</info>");
+            $output->writeln("<info>No Migration Generated: Schema has not changed.</info>");
         } else {
-            $this->line("<info>Created Migration:</info> {$file}");
+            $output->writeln("<info>Created Migration:</info> {$file}");
         }
-
-        $this->composer->dumpAutoloads();
     }
 }
