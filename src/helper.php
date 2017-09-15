@@ -114,19 +114,6 @@ if (! function_exists('back')) {
     }
 }
 
-if (! function_exists('base_path')) {
-    /**
-     * Get the path to the base of the install.
-     *
-     * @param  string  $path
-     * @return string
-     */
-    function base_path($path = '')
-    {
-        return app()->basePath().($path ? DIRECTORY_SEPARATOR.$path : $path);
-    }
-}
-
 // modified
 if (! function_exists('config')) {
     /**
@@ -200,20 +187,6 @@ if (! function_exists('csrf_token')) {
         $session = app(Session::class);
 
         return $session->getCsrfToken()->getValue();
-    }
-}
-
-if (! function_exists('database_path')) {
-    /**
-     * Get the database path.
-     *
-     * @param  string  $path
-     * @return string
-     */
-    function database_path($path = '')
-    {
-        // return app()->databasePath($path);
-        return __FUNCTION__;
     }
 }
 

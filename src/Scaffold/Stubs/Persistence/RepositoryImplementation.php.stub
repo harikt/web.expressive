@@ -1,0 +1,20 @@
+<?php declare(strict_types=1);
+
+namespace {namespace};
+
+use Dms\Core\Persistence\Db\Connection\IConnection;
+use Dms\Core\Persistence\Db\Mapping\IOrm;
+use Dms\Core\Persistence\DbRepository;
+use {interface};
+use {entity};
+
+/**
+ * The database repository implementation for the {entity} entity.
+ */
+class {name} extends DbRepository implements {interface_name}
+{
+    public function __construct(IConnection $connection, IOrm $orm)
+    {
+        parent::__construct($connection, $orm->getEntityMapper({entity_name}::class));
+    }
+}

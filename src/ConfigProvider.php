@@ -26,6 +26,12 @@ class ConfigProvider
             'dependencies' => $this->getDependencies(),
             'templates'    => $this->getTemplates(),
             'routes'       => $this->getRoutes(),
+            'console' => [
+                'commands' => [
+                    Scaffold\ScaffoldCmsCommand::class,
+                    Scaffold\ScaffoldPersistenceCommand::class,
+                ],
+            ],
         ];
     }
 

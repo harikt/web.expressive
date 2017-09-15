@@ -1,0 +1,55 @@
+<?php declare(strict_types=1);
+
+namespace {namespace};
+
+use Dms\Core\Auth\IAuthSystem;
+use Dms\Core\Common\Crud\CrudModule;
+use Dms\Core\Common\Crud\Definition\CrudModuleDefinition;
+use Dms\Core\Common\Crud\Definition\Form\CrudFormDefinition;
+use Dms\Core\Common\Crud\Definition\Table\SummaryTableDefinition;
+use {data_source_class};
+{imports}
+
+/**
+ * The {name} module.
+ */
+class {class_name} extends CrudModule
+{
+{properties}
+
+    public function __construct({data_source_class_name} $dataSource, IAuthSystem $authSystem{constructor_params})
+    {
+{initializers}
+        parent::__construct($dataSource, $authSystem);
+    }
+
+    /**
+     * Defines the structure of this module.
+     *
+     * @param CrudModuleDefinition $module
+     */
+    protected function defineCrudModule(CrudModuleDefinition $module)
+    {
+        $module->name('{name}');
+
+        {label_code}
+
+        $module->metadata([
+            'icon' => ''
+        ]);
+
+        $module->crudForm(function (CrudFormDefinition $form) {
+{fields}
+        });
+
+        $module->removeAction()->deleteFromDataSource();
+
+        $module->summaryTable(function (SummaryTableDefinition $table) {
+{columns}
+
+            $table->view('all', 'All')
+                ->loadAll()
+                ->asDefault();
+        });
+    }
+}
