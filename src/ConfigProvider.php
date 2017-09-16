@@ -30,7 +30,6 @@ class ConfigProvider
                 'commands' => [
                     Scaffold\ScaffoldCmsCommand::class,
                     Scaffold\ScaffoldPersistenceCommand::class,
-                    Persistence\Db\Migration\AutoGenerateMigrationCommand::class,
                 ],
             ],
         ];
