@@ -30,7 +30,6 @@
         "cache/cache": "^0.1.0",
         "dms-org/core": "^0.8",
         "dms-org/common.structure": "^0.8",
-        "dms-org/package.analytics": "^0.8",
         "illuminate/cache": "^5.4",
         "illuminate/config": "^5.4",
         "illuminate/container": "^5.4",
