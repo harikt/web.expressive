@@ -1,7 +1,10 @@
 {
-    "name": "dms-org/web.laravel",
-    "description": "The integration package with the laravel framework",
+    "name": "harikt/web.expressive",
+    "description": "The integration package with the zend expressive",
     "license": "MIT",
+    "config": {
+        "sort-packages": true
+    },
     "authors": [
         {
             "name": "Elliot Levin",
