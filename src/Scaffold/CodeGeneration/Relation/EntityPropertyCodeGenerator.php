@@ -148,7 +148,6 @@ class EntityPropertyCodeGenerator extends PropertyCodeGenerator
         $code->getCode()->append('->labelledBy(' . $this->findLabelProperty($entity) . ')');
 
         $code->getCode()->indent--;
-
     }
 
     protected function findLabelProperty(DomainObjectStructure $entity) : string

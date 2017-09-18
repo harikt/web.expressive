@@ -110,7 +110,6 @@ abstract class CommonValueObjectPropertyCodeGenerator extends PropertyCodeGenera
             $code->getCode()->appendLine('Field::create(\'' . $fieldName . '\', \'' . $fieldLabel . '\')->arrayOf(');
             $code->getCode()->indent++;
             $code->getCode()->append('Field::element()');
-
         } else {
             $code->getCode()->append('Field::create(\'' . $fieldName . '\', \'' . $fieldLabel . '\')');
         }

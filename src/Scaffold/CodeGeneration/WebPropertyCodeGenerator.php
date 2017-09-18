@@ -54,7 +54,6 @@ class WebPropertyCodeGenerator extends CommonValueObjectPropertyCodeGenerator
         }
 
         $code->getCode()->append('->using(new ' . $this->getShortClassName($class) . '(\'' . $columnName . '\'))');
-
     }
 
     protected function doGenerateCmsObjectFieldCode(

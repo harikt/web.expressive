@@ -70,7 +70,7 @@ class ObjectActionButtonBuilder
                 $formUrl    = $moduleContext->getUrl('action.form', ['module' => $module->getName(), 'package' => $module->getPackageName(), 'action' => $action->getName(), 'object_id' => '__object__']);
             } else {
                 $submitForm = true;
-                $formUrl    = $moduleContext->getUrl('action.run', ['module' => $module->getName(), 'package' => $module->getPackageName(), 'action' => $action->getName(), 'object_id' => '__object__']);
+                $formUrl    = $moduleContext->getUrl('action.run', ['module' => $module->getName(), 'package' => $module->getPackageName(), 'action' => $action->getName()], ['object' => '__object__']);
             }
 
             $rowActions[$action->getName()] = new ActionButton(

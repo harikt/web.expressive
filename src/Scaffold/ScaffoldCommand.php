@@ -167,7 +167,8 @@ abstract class ScaffoldCommand extends Command
             $initializers[]          = $indent . $indent . '$this->' . $name . ' = $' . $name . ';';
         }
 
-        $php = strtr($php,
+        $php = strtr(
+            $php,
             [
                 '{imports}'            => implode(PHP_EOL, $imports),
                 '{properties}'         => implode(PHP_EOL, $properties),
