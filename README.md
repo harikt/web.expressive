@@ -10,7 +10,7 @@ The integration package with the zend framework expressive with backend theme as
 
 ### Login screen
 
-![Login screen](https://user-images.githubusercontent.com/120454/30545392-16f1188a-9ca7-11e7-8908-60b0de19d173.png)
+![Login screen](https://user-images.githubusercontent.com/120454/30545763-333ca896-9ca8-11e7-99d0-063318b53bb4.png)
 
 ### Dashboard
 
