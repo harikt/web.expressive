@@ -77,7 +77,6 @@ class FilePropertyCodeGenerator extends CommonValueObjectPropertyCodeGenerator
         $code->getCode()->append('->moveToPathWithRandomFileName(' . $this->getStorageDirectoryCode($object) . ')');
 
         $code->getCode()->indent--;
-
     }
 
     protected function getStorageDirectoryCode(DomainObjectStructure $object) : string

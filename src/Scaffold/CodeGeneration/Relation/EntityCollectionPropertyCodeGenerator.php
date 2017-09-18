@@ -135,7 +135,6 @@ class EntityCollectionPropertyCodeGenerator extends PropertyCodeGenerator
         $code->getCode()->append('->mapToCollection(' . $entity->getReflection()->getShortName() . '::collectionType())');
 
         $code->getCode()->indent--;
-
     }
 
     protected function findLabelProperty(DomainObjectStructure $entity) : string

@@ -10,7 +10,6 @@ use Dms\Core\Model\Object\Enum;
 use Dms\Core\Model\Object\FinalizedClassDefinition;
 use Dms\Core\Model\Object\ValueObject;
 
-
 /**
  * The domain object structure class
  *

@@ -150,8 +150,7 @@ class ModuleContext
         array $queryParams = [],
         $fragmentIdentifier = null,
         array $options = []
-    ) : string
-    {
+    ) : string {
         $routeParams = array_merge($routeParams, [
             'package' => $this->getModule()->getPackageName(),
             'module' => $this->getModule()->getName(),

@@ -5,7 +5,6 @@ namespace Dms\Web\Expressive\Scaffold\Domain;
 use Dms\Core\Exception\InvalidArgumentException;
 use Dms\Core\Model\Traversable;
 
-
 /**
  * @author Elliot Levin <elliotlevin@hotmail.com>
  */
