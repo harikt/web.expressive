@@ -56,7 +56,7 @@
                             @if($isTrash ?? false)
                                 @if ($moduleContext->getModule()->getAction('restore-file')->isAuthorized())
                                 <span class="dms-run-action-form inline"
-                                      data-action="{{ $moduleContext->getUrl('action.run', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName(), 'action' => 'restore-file', 'file' => $fileId]) }}"
+                                      data-action="{{ $moduleContext->getUrl('action.run', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName(), 'action' => 'restore-file'], ['file' => $fileId]) }}"
                                       data-after-run-remove-closest="li"
                                       data-reload-page-after-submit="1"
                                       data-method="post">
@@ -69,7 +69,7 @@
                             @else
                                 @if ($moduleContext->getModule()->getAction('download')->isAuthorized())
                                 <span class="dms-run-action-form inline"
-                                      data-action="{{ $moduleContext->getUrl('action.run', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName(), 'action' => 'download', 'object' => $fileId]) }}"
+                                      data-action="{{ $moduleContext->getUrl('action.run', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName(), 'action' => 'download'], ['object' => $fileId]) }}"
                                       data-method="post">
                                     {!! csrf_field() !!}
                                     <button type="submit" class="btn btn-xs btn-success">
