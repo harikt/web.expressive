@@ -57,7 +57,7 @@ class ModuleContext
      * @param \string[]        $breadcrumbs
      * @param IModule|callable $moduleLoaderCallback
      */
-    public function __construct(Router $moduleRouter, string $rootUrl, array $titles, array $breadcrumbs, $moduleLoaderCallback, bool $isSubmodule = false)
+    public function __construct(RouterInterface $router, string $rootUrl, array $titles, array $breadcrumbs, $moduleLoaderCallback, bool $isSubmodule = false)
     {
         $this->router = $router;
         $this->rootUrl      = $rootUrl;
