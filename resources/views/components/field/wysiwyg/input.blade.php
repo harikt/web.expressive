@@ -1,5 +1,5 @@
 <div class="dms-wysiwyg-container"
-     data-load-file-picker-url="{{ route('dms::package.module.dashboard', ['module' => 'documents', 'package' => 'files']) }}"
+     data-load-file-picker-url="{{ route('dms::package.module.dashboard', ['package' => 'documents', 'module' => 'files']) }}"
 >
 <textarea
         name="{{ $name }}"

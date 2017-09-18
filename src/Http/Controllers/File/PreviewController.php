@@ -16,7 +16,7 @@ use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Zend\Diactoros\Response\JsonResponse;
+use Zend\Diactoros\Response;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
@@ -58,19 +58,24 @@ class PreviewController extends DmsController implements ServerMiddlewareInterfa
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
         $token = $request->getAttribute('token');
+        $response = new Response();
         try {
             $file = $this->tempFileService->getTempFile($token);
 
             $isImage = @getimagesize($file->getFile()->getFullPath()) !== false;
 
             if ($isImage) {
-                return \response()
-                    ->download($file->getFile()->getInfo(), $file->getFile()->getClientFileNameWithFallback());
+                $response = $response->withHeader('Content-Type', 'application/octet-stream')
+                    ->withHeader('Content-Disposition', "attachment; filename=\"{$file->getFile()->getClientFileNameWithFallback()}\"");
+                $response->getBody()->write(file_get_contents($file->getFile()->getFullPath()));
+                return $response;
+                // \response()
+                //     ->download($file->getFile()->getInfo(), $file->getFile()->getClientFileNameWithFallback());
             }
-
-            return \response('', 404);
         } catch (EntityNotFoundException $e) {
             DmsError::abort($request, 404);
         }
+
+        return DmsError::abort($request, 404);
     }
 }

@@ -27,7 +27,11 @@ class DmsError
             return $response;
         }
 
-        throw new HttpResponseException(response(self::renderErrorView($statusCode), $statusCode));
+        $response = new Response();
+        $response = $response->withHeader('Status', $statusCode);
+        $response->getBody()->write(self::renderErrorView($statusCode));
+
+        return $response;
     }
 
     /**
