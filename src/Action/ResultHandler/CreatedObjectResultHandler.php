@@ -57,14 +57,15 @@ class CreatedObjectResultHandler extends ActionResultHandler
         $label         = $module->getLabelFor($result);
         $type          = str_singular(StringHumanizer::humanize($module->getName()));
 
+        $isSubmodule   = $moduleContext->isSubmodule();
         $canEditObject = $module instanceof ICrudModule && $module->allowsEdit() && $module->getEditAction()->isAuthorized();
         $canViewObject = $module->allowsDetails() && $module->getDetailsAction()->isAuthorized();
 
         $objectId = $module->getDataSource()->getObjectId($result);
 
-        if ($canEditObject) {
+        if ($canEditObject && !$isSubmodule) {
             $redirectUrl = $moduleContext->getUrl('action.form', ['module' => $module->getName(), 'package' => $module->getPackageName(), 'action' => ICrudModule::EDIT_ACTION, 'object_id' => $objectId]);
-        } elseif ($canViewObject) {
+        } elseif ($canViewObject && !$isSubmodule) {
             $redirectUrl = $moduleContext->getUrl('action.show', ['module' => $module->getName(), 'package' => $module->getPackageName(), 'action' => ICrudModule::DETAILS_ACTION, 'object_id' => $objectId]);
         } else {
             $redirectUrl = $moduleContext->getUrl('dashboard');

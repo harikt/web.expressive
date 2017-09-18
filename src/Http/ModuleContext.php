@@ -44,6 +44,11 @@ class ModuleContext
     protected $module;
 
     /**
+     * @var bool
+     */
+    protected $isSubmodule;
+
+    /**
      * ModuleContext constructor.
      *
      * @param RouterInterface  $router
@@ -52,18 +57,27 @@ class ModuleContext
      * @param \string[]        $breadcrumbs
      * @param IModule|callable $moduleLoaderCallback
      */
-    public function __construct(RouterInterface $router, string $rootUrl, array $titles, array $breadcrumbs, $moduleLoaderCallback)
+    public function __construct(Router $moduleRouter, string $rootUrl, array $titles, array $breadcrumbs, $moduleLoaderCallback, bool $isSubmodule = false)
     {
         $this->router = $router;
         $this->rootUrl      = $rootUrl;
         $this->titles       = $titles;
         $this->breadcrumbs  = $breadcrumbs;
+        $this->isSubmodule = $isSubmodule;
 
         if ($moduleLoaderCallback instanceof IModule) {
             $this->module = $moduleLoaderCallback;
         } else {
             $this->moduleLoaderCallback = $moduleLoaderCallback;
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSubmodule(): bool
+    {
+        return $this->isSubmodule;
     }
 
     /**
@@ -131,14 +145,6 @@ class ModuleContext
     }
 
     /**
-     * @return string
-     */
-    public function getRootUrl() : string
-    {
-        return $this->rootUrl;
-    }
-
-    /**
      * @param string $name
      * @param array  $parameters
      *
@@ -166,6 +172,14 @@ class ModuleContext
     }
 
     /**
+     * @return string
+     */
+    public function getRootUrl() : string
+    {
+        return $this->rootUrl;
+    }
+
+    /**
      * @param string $title
      * @param string $breadcrumbUrl
      * @param string $breadcrumbName
@@ -179,7 +193,8 @@ class ModuleContext
             $this->rootUrl,
             array_merge($this->titles, [$title]),
             $this->breadcrumbs + [$breadcrumbUrl => $breadcrumbName ?? $title],
-            $this->module ?? $this->moduleLoaderCallback
+            $this->module ?? $this->moduleLoaderCallback,
+            $this->isSubmodule
         );
     }
 
@@ -196,7 +211,8 @@ class ModuleContext
             strpos($moduleRootPath, ':') !== false ? $moduleRootPath : $this->combineUrlPaths($this->rootUrl, $moduleRootPath),
             $this->titles,
             $this->breadcrumbs,
-            $module->withoutRequiredPermissions()
+            $module->withoutRequiredPermissions(),
+            true
         );
     }
 
