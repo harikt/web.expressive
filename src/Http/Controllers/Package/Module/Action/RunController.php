@@ -130,28 +130,24 @@ class RunController extends DmsController implements ServerMiddlewareInterface
     }
 
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
-    // public function runAction(ServerRequestInterface $request, ModuleContext $moduleContext, string $actionName)
     {
         $packageName = $request->getAttribute('package');
         $moduleName = $request->getAttribute('module');
         $actionName = $request->getAttribute('action');
+
         $package = $this->cms->loadPackage($packageName);
+
         $moduleContext = ModuleContext::rootContext($this->router, $packageName, $moduleName, function () use ($package, $moduleName) {
             return $package->loadModule($moduleName);
         });
         $module = $moduleContext->getModule();
-
-        $objectId = $request->getAttribute('object_id');
-        $actionName = $request->getAttribute('action');
-        $stageNumber = $request->getAttribute('stage');
-        $formRendererAction = $request->getAttribute('form_action');
 
         $action = $this->loadAction($moduleContext->getModule(), $actionName, $request);
 
         $this->loadSharedViewVariables($request);
 
         try {
-            $result = $this->runActionWithDataFromRequest($request, $moduleContext, $action);
+            $result = $this->runActionWithDataFromRequest($request, $moduleContext, $action, $request->getQueryParams());
         } catch (\Exception $e) {
             return $this->handleActionException($moduleContext, $action, $e);
         }
@@ -161,53 +157,6 @@ class RunController extends DmsController implements ServerMiddlewareInterface
         } catch (UnhandleableActionResultException $e) {
             return $this->handleUnknownHandlerException($e);
         }
-    }
-
-    protected function loadFormStage(
-        ServerRequestInterface $request,
-        ModuleContext $moduleContext,
-        string $actionName,
-        int $stageNumber,
-        string $objectId = null,
-        &$object = null
-    ) : IForm {
-        $action = $this->loadAction($moduleContext->getModule(), $actionName, $request);
-
-        if (!($action instanceof IParameterizedAction)) {
-            return new JsonResponse([
-                'message' => 'This action does not require an input form',
-            ], 403);
-        }
-
-        if ($this->objectId !== null && $action instanceof IObjectAction) {
-            $object = $this->loadObject($this->objectId, $action);
-
-            $action = $action->withSubmittedFirstStage([
-                IObjectAction::OBJECT_FIELD_NAME => $object,
-            ]);
-
-            $stageNumber--;
-        }
-
-        $form        = $action->getStagedForm();
-        $stageNumber = (int)$stageNumber;
-
-        if ($stageNumber < 1 || $stageNumber > $form->getAmountOfStages()) {
-            return new JsonResponse([
-                'message' => 'Invalid stage number',
-            ], 404);
-        }
-
-        $input = $this->inputTransformers->transform($moduleContext, $action, $request->getParsedBody());
-
-        if ($request->input('__initial_dependent_data')) {
-            for ($i = 1; $i < $stageNumber; $i++) {
-                $formStage = $form->getFormForStage($i, $input);
-                $input += $formStage->unprocess($formStage->getInitialValues());
-            }
-        }
-
-        return $form->getFormForStage($stageNumber, $input);
     }
 
     /**
@@ -297,28 +246,5 @@ class RunController extends DmsController implements ServerMiddlewareInterface
                 'message' => 'Invalid action name',
             ], 404);
         }
-    }
-
-    /**
-     * @param string $objectId
-     * @param        $action
-     *
-     * @return mixed
-     */
-    protected function loadObject(string $objectId, IObjectAction $action) : ITypedObject
-    {
-        try {
-            /** @var ObjectIdType $objectField */
-            $objectFieldType = $action->getObjectForm()->getField(IObjectAction::OBJECT_FIELD_NAME)->getType();
-
-            return $this->loadObjectFromDataSource($this->objectId, $objectFieldType->getObjects());
-        } catch (InvalidInputException $e) {
-            DmsError::abort($request, 404);
-        }
-    }
-
-    protected function loadObjectFromDataSource(string $objectId, IIdentifiableObjectSet $dataSource) : ITypedObject
-    {
-        return $dataSource instanceof IRepository ? $dataSource->get((int)$this->objectId) : $dataSource->get($this->objectId);
     }
 }
