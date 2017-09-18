@@ -91,7 +91,7 @@
                                 @endif
                                 @if ($moduleContext->getModule()->getAction('remove')->isAuthorized())
                                     <span class="dms-run-action-form inline"
-                                          data-action="{{ $moduleContext->getUrl('action.run', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName(), 'action' => 'remove', 'object' => $fileId]) }}"
+                                          data-action="{{ $moduleContext->getUrl('action.run', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName(), 'action' => 'remove'], ['object' => $fileId]) }}"
                                           data-after-run-remove-closest="li"
                                           data-method="post">
                                         {!! csrf_field() !!}

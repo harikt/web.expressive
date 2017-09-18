@@ -144,15 +144,26 @@ class ModuleContext
      *
      * @return string
      */
-    public function getUrl(string $name, array $parameters = []) : string
+    public function getUrl(
+        string $name,
+        array $routeParams = [],
+        array $queryParams = [],
+        $fragmentIdentifier = null,
+        array $options = []
+    ) : string
     {
-        $parameters = array_merge($parameters, [
+        $routeParams = array_merge($routeParams, [
             'package' => $this->getModule()->getPackageName(),
             'module' => $this->getModule()->getName(),
         ]);
 
-        return $this->router->generateUri('dms::package.module.' . $name, $parameters);
-        // return $this->combineUrlPaths($this->rootUrl, $this->router->generateUri('dms::package.module.' . $name, $parameters));
+        $uriString = $this->router->generateUri('dms::package.module.' . $name, $routeParams);
+
+        if (count($queryParams) > 0) {
+            $uriString .= '?' . http_build_query($queryParams);
+        }
+
+        return $uriString;
     }
 
     /**
