@@ -116,31 +116,31 @@ class LoadTableRowsController extends DmsController implements ServerMiddlewareI
         //     'orderings.*.direction'  => 'required|in:' . implode(',', OrderingDirection::getAll()),
         // ]);
 
-        if (isset($request->getQueryParams()['offset'])) {
-            $criteria->skipRows((int)$request->getQueryParams()['offset'] + $criteria->getRowsToSkip());
+        if (isset($request->getParsedBody()['offset'])) {
+            $criteria->skipRows((int)$request->getParsedBody()['offset'] + $criteria->getRowsToSkip());
         }
 
-        if (isset($request->getQueryParams()['max_rows'])) {
-            $criteria->maxRows(min((int)$request->getQueryParams()['max_rows'], $criteria->getAmountOfRows() ?: PHP_INT_MAX));
+        if (isset($request->getParsedBody()['max_rows'])) {
+            $criteria->maxRows(min((int)$request->getParsedBody()['max_rows'], $criteria->getAmountOfRows() ?: PHP_INT_MAX));
         }
 
         $isFiltered = false;
 
-        if (isset($request->getQueryParams()['conditions'])) {
+        if (isset($request->getParsedBody()['conditions'])) {
             $isFiltered = true;
 
-            $criteria->setConditionMode($request->getQueryParams()['condition_mode']);
+            $criteria->setConditionMode($request->getParsedBody()['condition_mode']);
 
-            foreach ($request->getQueryParams()['conditions'] as $condition) {
+            foreach ($request->getParsedBody()['conditions'] as $condition) {
                 $criteria->where($condition['component'], $condition['operator'], $condition['value']);
             }
         }
 
-        if (isset($request->getQueryParams()['orderings'])) {
+        if (isset($request->getParsedBody()['orderings'])) {
             $isFiltered = true;
 
             $criteria->clearOrderings();
-            foreach ($request->getQueryParams()['orderings'] as $ordering) {
+            foreach ($request->getParsedBody()['orderings'] as $ordering) {
                 $criteria->orderBy($ordering['component'], $ordering['direction']);
             }
         }
