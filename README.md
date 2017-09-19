@@ -1,10 +1,20 @@
 # harikt/web.expressive
 
-> WIP : Some of them are buggy or not working as expected.
-
 If you are interested to play with, [use the example repo](https://github.com/harikt/dms-expressive-skeleton#usage)
 
-The integration package with the zend framework expressive with backend theme as (Admin-LTE).
+Aims to integrate [DMS](https://github.com/dms-org/) with the zend expressive.
+
+> Not sure what DMS is? [Read the docs](http://dms-docs.readthedocs.io/).
+
+## Features
+
+* Authentication.
+* User and Role management.
+* File management.
+* Content Management via [package.content](https://github.com/dms-org/package.content/).
+* Blog via [package.blog](https://github.com/dms-org/package.blog/).
+* Contact page via [package.contact-us](https://github.com/dms-org/package.contact-us).
+* [Build you own package](http://dms-docs.readthedocs.io/en/latest/docs/your-first-app.html).
 
 ## Screenshots
 
@@ -32,8 +42,9 @@ The integration package with the zend framework expressive with backend theme as
 
 ![Content Page Edit](https://user-images.githubusercontent.com/120454/30545343-f0c297b0-9ca6-11e7-94ea-23d4080e07c9.png)
 
-via [package.content](https://github.com/dms-org/package.content/)
+## Planned / Working
 
+* Migrations
 
 ## Todo
 
@@ -41,5 +52,3 @@ via [package.content](https://github.com/dms-org/package.content/)
 * Update Tests
 * Remove unused code
 * Remove `src/helper.php`
-* Possible todo : integrating with other templating engines like Twig, Plates ?
-* and more ....
