@@ -4,6 +4,7 @@ namespace Dms\Web\Expressive\Http\Controllers\Package\Module\Chart;
 
 use Dms\Core\Exception\InvalidArgumentException;
 use Dms\Core\ICms;
+use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\Model\Criteria\Condition\ConditionOperator;
 use Dms\Core\Model\Criteria\OrderingDirection;
 use Dms\Core\Module\IChartDisplay;
@@ -88,13 +89,13 @@ class LoadChartDataController extends DmsController implements ServerMiddlewareI
             $axisNames[] = $axis->getName();
         }
 
-        $this->validate($request, [
-            'conditions.*.axis'     => 'required|in:' . implode(',', $axisNames),
-            'conditions.*.operator' => 'required|in:' . implode(',', ConditionOperator::getAll()),
-            'conditions.*.value'    => 'required',
-            'orderings.*.component' => 'required|in:' . implode(',', $axisNames),
-            'orderings.*.direction' => 'required|in' . implode(',', OrderingDirection::getAll()),
-        ]);
+        // $this->validate($request, [
+        //     'conditions.*.axis'     => 'required|in:' . implode(',', $axisNames),
+        //     'conditions.*.operator' => 'required|in:' . implode(',', ConditionOperator::getAll()),
+        //     'conditions.*.value'    => 'required',
+        //     'orderings.*.component' => 'required|in:' . implode(',', $axisNames),
+        //     'orderings.*.direction' => 'required|in' . implode(',', OrderingDirection::getAll()),
+        // ]);
 
         if ($request->has('conditions')) {
             foreach ($request->input('conditions') as $condition) {

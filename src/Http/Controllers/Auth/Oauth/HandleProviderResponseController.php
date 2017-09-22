@@ -1,10 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace Dms\Web\Expressive\Http\Controllers\Auth;
+namespace Dms\Web\Expressive\Http\Controllers\Auth\Oauth;
 
 use Dms\Core\Auth\IAdminRepository;
 use Dms\Core\Auth\IRoleRepository;
 use Dms\Core\Auth\Permission;
+use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\ICms;
 use Dms\Web\Expressive\Auth\Admin;
 use Dms\Web\Expressive\Auth\Oauth\AdminAccountDetails;
@@ -24,7 +25,7 @@ use League\OAuth2\Client\Provider\ResourceOwnerInterface;
  *
  * @author Elliot Levin <elliotlevin@hotmail.com>
  */
-class OauthController extends DmsController implements ServerMiddlewareInterface
+class HandleProviderResponseController extends DmsController implements ServerMiddlewareInterface
 {
     /**
      * @var OauthProviderCollection
@@ -51,32 +52,24 @@ class OauthController extends DmsController implements ServerMiddlewareInterface
      */
     public function __construct(
         ICms $cms,
+        IAuthSystem $auth,
         OauthProviderCollection $providerCollection,
         IAdminRepository $adminRepository,
         IRoleRepository $roleRepository
     ) {
         parent::__construct($cms, $auth);
 
-        $this->middleware('dms.guest');
+        // $this->middleware('dms.guest');
         $this->providerCollection = $providerCollection;
         $this->cms                = $cms;
         $this->adminRepository    = $adminRepository;
         $this->roleRepository     = $roleRepository;
     }
 
-    public function redirectToProvider(string $providerName, ServerRequestInterface $request)
+    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
-        $oauthProvider = $this->getProvider($providerName);
+        $providerName = $request->getAttribute('provider');
 
-        $url = $oauthProvider->getProvider()->getAuthorizationUrl();
-
-        $request->session()->put('dms-oauth-state', $oauthProvider->getProvider()->getState());
-
-        return \redirect($url);
-    }
-
-    public function handleProviderResponse(string $providerName, ServerRequestInterface $request)
-    {
         $oauthProvider = $this->getProvider($providerName);
 
         $state = $request->session()->pull('dms-oauth-state');

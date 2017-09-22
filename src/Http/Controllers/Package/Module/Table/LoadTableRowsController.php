@@ -179,6 +179,6 @@ class LoadTableRowsController extends DmsController implements ServerMiddlewareI
             ], 404);
         }
 
-        throw new HttpResponseException($response);
+        return $response;
     }
 }

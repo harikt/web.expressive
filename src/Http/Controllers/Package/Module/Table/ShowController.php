@@ -44,6 +44,8 @@ class ShowController extends DmsController implements ServerMiddlewareInterface
 
     protected $router;
 
+    protected $urlHelper;
+
     /**
      * TableController constructor.
      *
@@ -82,7 +84,7 @@ class ShowController extends DmsController implements ServerMiddlewareInterface
 
         if ($table instanceof ISummaryTable) {
             $to = $this->urlHelper->generate('dms::package.module.dashboard', [
-                'package' => $this->package->getName(),
+                'package' => $package->getName(),
                 'module'  => $firstModule,
             ], [
                 '__no_template' => 1,
@@ -142,6 +144,6 @@ class ShowController extends DmsController implements ServerMiddlewareInterface
             ], 404);
         }
 
-        throw new HttpResponseException($response);
+        return $response;
     }
 }

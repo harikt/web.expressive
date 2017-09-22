@@ -18,7 +18,6 @@ use Dms\Web\Expressive\Http\ModuleContext;
 use Dms\Web\Expressive\Renderer\Chart\ChartControlRenderer;
 use Dms\Web\Expressive\Util\StringHumanizer;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Psr\Http\Message\ServerRequestInterface;
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -39,8 +38,6 @@ class ShowChartController extends DmsController implements ServerMiddlewareInter
     protected $chartRenderer;
 
     protected $template;
-
-    protected $chartRenderer;
 
     protected $moduleContext;
 
@@ -97,13 +94,13 @@ class ShowChartController extends DmsController implements ServerMiddlewareInter
             $axisNames[] = $axis->getName();
         }
 
-        $this->validate($request, [
-            'conditions.*.axis'     => 'required|in:' . implode(',', $axisNames),
-            'conditions.*.operator' => 'required|in:' . implode(',', ConditionOperator::getAll()),
-            'conditions.*.value'    => 'required',
-            'orderings.*.component' => 'required|in:' . implode(',', $axisNames),
-            'orderings.*.direction' => 'required|in' . implode(',', OrderingDirection::getAll()),
-        ]);
+        // $this->validate($request, [
+        //     'conditions.*.axis'     => 'required|in:' . implode(',', $axisNames),
+        //     'conditions.*.operator' => 'required|in:' . implode(',', ConditionOperator::getAll()),
+        //     'conditions.*.value'    => 'required',
+        //     'orderings.*.component' => 'required|in:' . implode(',', $axisNames),
+        //     'orderings.*.direction' => 'required|in' . implode(',', OrderingDirection::getAll()),
+        // ]);
 
         if ($request->has('conditions')) {
             foreach ($request->input('conditions') as $condition) {

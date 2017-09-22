@@ -23,6 +23,9 @@ class DmsError
     {
         if ('XMLHttpRequest' == $request->getHeaderLine('X-Requested-With')) {
             $response = new Response('php://memory', $statusCode);
+            if ($statusCode == 401) {
+                $message = json_encode(['redirect' => '/dms']);
+            }
             $response->getBody()->write($message);
             return $response;
         }

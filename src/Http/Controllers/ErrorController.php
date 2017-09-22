@@ -3,7 +3,9 @@
 namespace Dms\Web\Expressive\Http\Controllers;
 
 use Dms\Web\Expressive\Error\DmsError;
+use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * The error controller.
@@ -12,7 +14,7 @@ use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterfa
  */
 class ErrorController extends DmsController implements ServerMiddlewareInterface
 {
-    public function notFound()
+    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
         DmsError::abort($request, 404);
     }

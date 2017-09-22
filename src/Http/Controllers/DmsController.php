@@ -53,17 +53,17 @@ class DmsController
      */
     protected function loadSharedViewVariables(ServerRequestInterface $request)
     {
-        // 	$params = [
-        //      'cms'   => $this->cms,
-        //      'user'  => $this->auth->isAuthenticated() ? $this->auth->getAuthenticatedUser() : null,
-        //      'title' => 'DMS {' . $request->getServerParams()['SERVER_NAME'] . '}',
+        // $params = [
+        //     'cms'   => $this->cms,
+        //     'user'  => $this->auth->isAuthenticated() ? $this->auth->getAuthenticatedUser() : null,
+        //     'title' => 'DMS {' . $request->getServerParams()['SERVER_NAME'] . '}',
         //  ];
-        // 	foreach ($params as $param => $value) {
-        // 		$this->template->addDefaultParam(TemplateRendererInterface::TEMPLATE_ALL,
-        // 			$param,
-        //          $value
-        //      );
-        // 	}
+        // foreach ($params as $param => $value) {
+        // 	$this->template->addDefaultParam(TemplateRendererInterface::TEMPLATE_ALL,
+        // 		$param,
+        //      $value
+        //  );
+        // }
 
         view()->share([
             'cms'   => $this->cms,
