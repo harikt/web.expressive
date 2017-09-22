@@ -15,6 +15,7 @@ use Illuminate\Contracts\Auth\PasswordBroker;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\HtmlResponse;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
  * The password reset controller
@@ -34,6 +35,11 @@ class ResetController extends DmsController implements ServerMiddlewareInterface
     protected $passwordResetService;
 
     /**
+     * @var TemplateRendererInterface
+     */
+    protected $template;
+
+    /**
      * Create a new password controller instance.
      *
      * @param ICms                  $cms
@@ -43,11 +49,13 @@ class ResetController extends DmsController implements ServerMiddlewareInterface
     public function __construct(
         ICms $cms,
         IAuthSystem $auth,
+        TemplateRendererInterface $template,
         PasswordBrokerManager $passwordBrokerManager,
         IPasswordResetService $passwordResetService
     ) {
         parent::__construct($cms, $auth);
 
+        $this->template = $template;
         // $this->middleware('dms.guest');
         $this->passwordBroker       = $passwordBrokerManager->broker('dms');
         $this->passwordResetService = $passwordResetService;

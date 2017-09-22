@@ -32,6 +32,8 @@ class TableRenderer
      */
     private $actionButtonBuilder;
 
+    protected $template;
+
     /**
      * TableRenderer constructor.
      *

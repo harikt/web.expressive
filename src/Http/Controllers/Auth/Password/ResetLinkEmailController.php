@@ -36,6 +36,8 @@ class ResetLinkEmailController extends DmsController implements ServerMiddleware
      */
     protected $passwordResetService;
 
+    protected $template;
+
     /**
      * Create a new password controller instance.
      *
@@ -47,11 +49,13 @@ class ResetLinkEmailController extends DmsController implements ServerMiddleware
     public function __construct(
         ICms $cms,
         IAuthSystem $auth,
+        TemplateRendererInterface $template,
         PasswordBrokerManager $passwordBrokerManager,
         IPasswordResetService $passwordResetService
     ) {
         parent::__construct($cms, $auth);
 
+        $this->template = $template;
         // $this->middleware('dms.guest');
         $this->passwordBroker       = $passwordBrokerManager->broker('dms');
         $this->passwordResetService = $passwordResetService;
@@ -128,11 +132,11 @@ class ResetLinkEmailController extends DmsController implements ServerMiddleware
      */
     public function reset(ServerRequestInterface $request)
     {
-        $this->validate($request, [
-            'token'    => 'required',
-            'username' => 'required',
-            'password' => 'required|confirmed|min:6|max:50',
-        ]);
+        // $this->validate($request, [
+        //     'token'    => 'required',
+        //     'username' => 'required',
+        //     'password' => 'required|confirmed|min:6|max:50',
+        // ]);
 
         $credentials = $request->only(
             'username',

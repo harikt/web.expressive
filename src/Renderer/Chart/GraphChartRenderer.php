@@ -132,7 +132,7 @@ class GraphChartRenderer extends ChartRenderer
         }
 
         if ($value instanceof DateOrTimeObject) {
-            return $value->format($value::DISPLAY_FORMAT);
+            return $value->format(DateTime::DISPLAY_FORMAT);
         }
 
         return (string)$value;
