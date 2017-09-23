@@ -42,6 +42,7 @@ use Dms\Web\Expressive\Util\StringHumanizer;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
@@ -90,10 +91,6 @@ class ShowResultController extends DmsController implements ServerMiddlewareInte
      */
     protected $actionButtonBuilder;
 
-    protected $template;
-
-    protected $router;
-
     /**
      * ActionController constructor.
      *
@@ -109,16 +106,16 @@ class ShowResultController extends DmsController implements ServerMiddlewareInte
     public function __construct(
         ICms $cms,
         IAuthSystem $auth,
+        TemplateRendererInterface $template,
+        RouterInterface $router,
         ActionInputTransformerCollection $inputTransformers,
         ActionResultHandlerCollection $resultHandlers,
         ActionExceptionHandlerCollection $exceptionHandlers,
         ActionSafetyChecker $actionSafetyChecker,
         ActionFormRenderer $actionFormRenderer,
-        ObjectActionButtonBuilder $actionButtonBuilder,
-        TemplateRendererInterface $template,
-        RouterInterface $router
+        ObjectActionButtonBuilder $actionButtonBuilder
     ) {
-        parent::__construct($cms, $auth);
+        parent::__construct($cms, $auth, $template, $router);
         $this->lang                = $cms->getLang();
         $this->inputTransformers   = $inputTransformers;
         $this->resultHandlers      = $resultHandlers;
@@ -126,32 +123,34 @@ class ShowResultController extends DmsController implements ServerMiddlewareInte
         $this->actionSafetyChecker = $actionSafetyChecker;
         $this->actionFormRenderer  = $actionFormRenderer;
         $this->actionButtonBuilder = $actionButtonBuilder;
-        $this->router = $router;
-        $this->template = $template;
     }
 
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
-    // public function showActionResult(ServerRequestInterface $request, ModuleContext $moduleContext, string $actionName, string $objectId = null)
     {
         $packageName = $request->getAttribute('package');
         $moduleName = $request->getAttribute('module');
+        $actionName = $request->getAttribute('action');
+        $objectId = $request->getAttribute('object_id');
+
         $package = $this->cms->loadPackage($packageName);
         $moduleContext = ModuleContext::rootContext($this->router, $packageName, $moduleName, function () use ($package, $moduleName) {
             return $package->loadModule($moduleName);
         });
-        $actionName = $request->getAttribute('action');
-        $objectId = $request->getAttribute('object_id');
         $module = $moduleContext->getModule();
-        $action = $this->loadAction($module, $actionName, $request);
+
+        $action = $this->loadAction($moduleContext->getModule(), $actionName, $request);
+        if ($action instanceof ResponseInterface) {
+            return $action;
+        }
 
         if (!$this->actionSafetyChecker->isSafeToShowActionResultViaGetRequest($action)) {
-            DmsError::abort($request, 404);
+            return DmsError::abort($request, 404);
         }
 
         try {
             $result = $this->runActionWithDataFromRequest($request, $moduleContext, $action, [IObjectAction::OBJECT_FIELD_NAME => $objectId]);
         } catch (InvalidFormSubmissionException $e) {
-            DmsError::abort($request, 404);
+            return DmsError::abort($request, 404);
         }
 
         $response = $this->resultHandlers->handle($moduleContext, $action, $result);
@@ -217,7 +216,7 @@ class ShowResultController extends DmsController implements ServerMiddlewareInte
             $action = $module->getAction($actionName);
 
             if (!$action->isAuthorized()) {
-                DmsError::abort($request, 401);
+                return DmsError::abort($request, 401);
             }
 
             return $action;
@@ -227,7 +226,7 @@ class ShowResultController extends DmsController implements ServerMiddlewareInte
             ], 404);
         }
 
-        throw new HttpResponseException($response);
+        return $response;
     }
 
     /**
@@ -244,7 +243,7 @@ class ShowResultController extends DmsController implements ServerMiddlewareInte
 
             return $this->loadObjectFromDataSource($objectId, $objectFieldType->getObjects());
         } catch (InvalidInputException $e) {
-            DmsError::abort($request, 404);
+            return DmsError::abort($request, 404);
         }
     }
 

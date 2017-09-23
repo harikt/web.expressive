@@ -39,9 +39,9 @@ use Dms\Web\Expressive\Renderer\Form\IFormRendererWithActions;
 use Dms\Web\Expressive\Util\ActionLabeler;
 use Dms\Web\Expressive\Util\ActionSafetyChecker;
 use Dms\Web\Expressive\Util\StringHumanizer;
-
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
@@ -89,10 +89,6 @@ class RunController extends DmsController implements ServerMiddlewareInterface
      */
     protected $actionButtonBuilder;
 
-    protected $template;
-
-    protected $router;
-
     /**
      * ActionController constructor.
      *
@@ -108,16 +104,16 @@ class RunController extends DmsController implements ServerMiddlewareInterface
     public function __construct(
         ICms $cms,
         IAuthSystem $auth,
+        TemplateRendererInterface $template,
+        RouterInterface $router,
         ActionInputTransformerCollection $inputTransformers,
         ActionResultHandlerCollection $resultHandlers,
         ActionExceptionHandlerCollection $exceptionHandlers,
         ActionSafetyChecker $actionSafetyChecker,
         ActionFormRenderer $actionFormRenderer,
-        ObjectActionButtonBuilder $actionButtonBuilder,
-        TemplateRendererInterface $template,
-        RouterInterface $router
+        ObjectActionButtonBuilder $actionButtonBuilder
     ) {
-        parent::__construct($cms, $auth);
+        parent::__construct($cms, $auth, $template, $router);
         $this->lang                = $cms->getLang();
         $this->inputTransformers   = $inputTransformers;
         $this->resultHandlers      = $resultHandlers;
@@ -125,8 +121,6 @@ class RunController extends DmsController implements ServerMiddlewareInterface
         $this->actionSafetyChecker = $actionSafetyChecker;
         $this->actionFormRenderer  = $actionFormRenderer;
         $this->actionButtonBuilder = $actionButtonBuilder;
-        $this->router = $router;
-        $this->template = $template;
     }
 
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
@@ -140,14 +134,16 @@ class RunController extends DmsController implements ServerMiddlewareInterface
         $moduleContext = ModuleContext::rootContext($this->router, $packageName, $moduleName, function () use ($package, $moduleName) {
             return $package->loadModule($moduleName);
         });
-        $module = $moduleContext->getModule();
 
         $action = $this->loadAction($moduleContext->getModule(), $actionName, $request);
+        if ($action instanceof ResponseInterface) {
+            return $action;
+        }
 
         $this->loadSharedViewVariables($request);
 
         try {
-            $result = $this->runActionWithDataFromRequest($request, $moduleContext, $action, $request->getQueryParams());
+            $result = $this->runActionWithDataFromRequest($request, $moduleContext, $action);
         } catch (\Exception $e) {
             return $this->handleActionException($moduleContext, $action, $e);
         }
@@ -171,7 +167,7 @@ class RunController extends DmsController implements ServerMiddlewareInterface
     {
         if ($action instanceof IParameterizedAction) {
             /** @var IParameterizedAction $action */
-            $input  = $this->inputTransformers->transform($moduleContext, $action, $request->getParsedBody() + $extraData);
+            $input  = $this->inputTransformers->transform($moduleContext, $action, $request->getParsedBody() + $request->getQueryParams() + $extraData);
             $result = $action->run($input);
 
             return $result;
@@ -237,7 +233,7 @@ class RunController extends DmsController implements ServerMiddlewareInterface
             $action = $module->getAction($actionName);
 
             if (!$action->isAuthorized()) {
-                DmsError::abort($request, 401);
+                return DmsError::abort($request, 401);
             }
 
             return $action;

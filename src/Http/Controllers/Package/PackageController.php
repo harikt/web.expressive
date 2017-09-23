@@ -13,6 +13,7 @@ use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Expressive\Helper\UrlHelper;
+use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\HtmlResponse;
@@ -34,10 +35,6 @@ class PackageController extends DmsController implements ServerMiddlewareInterfa
      */
     protected $packageRenderers;
 
-    protected $template;
-
-    protected $urlHelper;
-
     /**
      * PackageController constructor.
      *
@@ -47,19 +44,14 @@ class PackageController extends DmsController implements ServerMiddlewareInterfa
     public function __construct(
         ICms $cms,
         IAuthSystem $auth,
-        PackageRendererCollection $packageRenderers,
         TemplateRendererInterface $template,
-        UrlHelper $urlHelper
+        RouterInterface $router,
+        PackageRendererCollection $packageRenderers
     ) {
-        parent::__construct($cms, $auth);
-        $this->template = $template;
-        $this->urlHelper = $urlHelper;
+        parent::__construct($cms, $auth, $template, $router);
         $this->packageRenderers = $packageRenderers;
     }
 
-
-    // public function showDashboard(ServerRequestInterface $request)
-    // {
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
         $this->loadPackage($request);
@@ -67,8 +59,8 @@ class PackageController extends DmsController implements ServerMiddlewareInterfa
         if (!$this->package->hasDashboard() || !$this->package->loadDashboard()->getAuthorizedWidgets()) {
             $moduleNames = $this->package->getModuleNames();
             $firstModule = reset($moduleNames);
-
-            $to = $this->urlHelper->generate('dms::package.module.dashboard', [
+            $urlHelper = new UrlHelper($this->router);
+            $to = $urlHelper->generate('dms::package.module.dashboard', [
                 'package' => $this->package->getName(),
                 'module'  => $firstModule,
             ], [
@@ -77,11 +69,6 @@ class PackageController extends DmsController implements ServerMiddlewareInterfa
 
             $response = new Response('php://memory', 302);
             return $response->withHeader('Location', $to);
-            // return redirect()
-            //     ->route('dms::package.module.dashboard', [
-            //         'package' => $this->package->getName(),
-            //         'module'  => $firstModule,
-            //     ] + array_filter($request->only('__content_only', '__no_template')));
         }
 
         $packageName = $this->package->getName();
@@ -95,7 +82,7 @@ class PackageController extends DmsController implements ServerMiddlewareInterfa
                     'assetGroups'      => ['tables', 'charts', 'forms'],
                     'pageTitle'        => StringHumanizer::title($packageName) . ' :: Dashboard',
                     'breadcrumbs'      => [
-                        route('dms::index') => 'Home',
+                        $this->router->generateUri('dms::index') => 'Home',
                     ],
                     'finalBreadcrumb'  => StringHumanizer::title($packageName),
                     'packageRenderers' => $this->packageRenderers,

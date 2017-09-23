@@ -23,16 +23,9 @@ use Zend\Diactoros\Response\HtmlResponse;
 class ModuleController extends DmsController implements ServerMiddlewareInterface
 {
     /**
-     * @var TemplateRendererInterface
-     */
-    protected $template;
-
-    /**
      * @var ModuleRendererCollection
      */
     protected $moduleRenderers;
-
-    protected $router;
 
     /**
      * ModuleController constructor.
@@ -45,15 +38,13 @@ class ModuleController extends DmsController implements ServerMiddlewareInterfac
     public function __construct(
         ICms $cms,
         IAuthSystem $auth,
-        ModuleRendererCollection $moduleRenderers,
         TemplateRendererInterface $template,
-        RouterInterface $router
+        RouterInterface $router,
+        ModuleRendererCollection $moduleRenderers
     ) {
-        parent::__construct($cms, $auth);
+        parent::__construct($cms, $auth, $template, $router);
         $this->moduleRenderers = $moduleRenderers;
         // $this->moduleContext = $moduleContext;
-        $this->template = $template;
-        $this->router = $router;
     }
 
     /**

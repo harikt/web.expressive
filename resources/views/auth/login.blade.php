@@ -45,7 +45,7 @@
     @foreach ($oauthProviders as $oauthProvider)
         <div class="row">
             <div class="col-sm-12">
-                <a class="btn btn-block btn-default" data-no-ajax="1" href="{{ route('dms::auth.oauth.redirect', [$oauthProvider->getName()]) }}">
+                <a class="btn btn-block btn-default" data-no-ajax="1" href="{{ route('dms::auth.oauth.redirect', ['provider' => $oauthProvider->getName()]) }}">
                     {{ $oauthProvider->getLabel() }}
                 </a>
             </div>

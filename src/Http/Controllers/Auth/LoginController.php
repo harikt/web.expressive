@@ -2,6 +2,7 @@
 
 namespace Dms\Web\Expressive\Http\Controllers\Auth;
 
+use BehEh\Flaps\Flap;
 use Dms\Core\Auth\AdminBannedException;
 use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\Auth\InvalidCredentialsException;
@@ -15,7 +16,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\JsonResponse;
-use Zend\Expressive\Helper\UrlHelper;
+use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
@@ -30,12 +31,7 @@ class LoginController extends DmsController implements ServerMiddlewareInterface
      */
     protected $oauthProviderCollection;
 
-    /**
-     * @var TemplateRendererInterface
-     */
-    protected $template;
-
-    protected $urlHelper;
+    protected $flap;
 
     /**
      * Create a new authentication controller instance.
@@ -48,37 +44,14 @@ class LoginController extends DmsController implements ServerMiddlewareInterface
     public function __construct(
         ICms $cms,
         IAuthSystem $auth,
-        OauthProviderCollection $oauthProviderCollection,
         TemplateRendererInterface $template,
-        UrlHelper $urlHelper
+        RouterInterface $router,
+        OauthProviderCollection $oauthProviderCollection,
+        Flap $flap
     ) {
-        parent::__construct($cms, $auth);
-
-        $this->template = $template;
-        $this->urlHelper = $urlHelper;
-
-        // $this->middleware('dms.guest', ['except' => 'logout']);
+        parent::__construct($cms, $auth, $template, $router);
         $this->oauthProviderCollection = $oauthProviderCollection;
-    }
-
-    /**
-     * Get the maximum number of login attempts for delaying further attempts.
-     *
-     * @return int
-     */
-    protected function maxLoginAttempts() : int
-    {
-        return config('dms.auth.login.max-attempts');
-    }
-
-    /**
-     * The number of seconds to delay further login attempts.
-     *
-     * @return int
-     */
-    protected function lockoutTime() : int
-    {
-        return config('dms.auth.login.lockout-time');
+        $this->flap = $flap;
     }
 
 
@@ -94,21 +67,11 @@ class LoginController extends DmsController implements ServerMiddlewareInterface
     }
 
     /**
-     * Show the application login form.
-     *
-     * @return \Zend\Diactoros\Response
-     */
-    public function showLoginForm()
-    {
-        return view('dms::auth.login', ['oauthProviders' => $this->oauthProviderCollection->getAll()]);
-    }
-
-    /**
      * Handle a login request to the application.
      *
      * @param  \Psr\Http\Message\ServerRequestInterface $request
      *
-     * @return \Zend\Diactoros\Response
+     * @return Response
      */
     public function login(ServerRequestInterface $request)
     {
@@ -117,16 +80,19 @@ class LoginController extends DmsController implements ServerMiddlewareInterface
         //     'password' => 'required',
         // ]);
 
-        // if ($this->hasTooManyLoginAttempts($request)) {
-        //     return $this->sendLockoutResponse($request);
-        // }
+        if (! $this->flap->limit($this->getThrottleKey($request))) {
+            $response = new Response();
+
+            // @todo
+            $response->getBody()->write("Failed!");
+
+            return $response;
+        }
 
         try {
             $username = $request->getParsedBody()['username'];
             $password = $request->getParsedBody()['password'];
             $this->auth->login($username, $password);
-
-            // $this->clearLoginAttempts($request);
 
             if ('XMLHttpRequest' == $request->getHeaderLine('X-Requested-With')) {
                 return new JsonResponse([
@@ -134,10 +100,9 @@ class LoginController extends DmsController implements ServerMiddlewareInterface
                     'csrf_token' => csrf_token(),
                 ]);
             } else {
-                $to = $this->urlHelper->generate('dms::index');
+                $to = $this->router->generateUri('dms::index');
                 $response = new Response('php://memory', 302);
                 return $response->withHeader('Location', $to);
-                // return redirect()->intended(route('dms::index'));
             }
         } catch (InvalidCredentialsException $e) {
             $errorMessage = 'dms::auth.failed';
@@ -145,103 +110,14 @@ class LoginController extends DmsController implements ServerMiddlewareInterface
             $errorMessage = 'dms::auth.banned';
         }
 
-        // If the login attempt was unsuccessful we will increment the number of attempts
-        // to login and redirect the user back to the login form. Of course, when this
-        // user surpasses their maximum number of attempts they will get locked out.
-        // $this->incrementLoginAttempts($request);
-
         if ('XMLHttpRequest' == $request->getHeaderLine('X-Requested-With')) {
             return response('Failed', 400);
         } else {
-            $to = $this->urlHelper->generate('dms::auth.login');
+            $to = $this->router->generateUri('dms::auth.login');
             $response = new Response('php://memory', 302);
+
             return $response->withHeader('Location', $to);
-            // return redirect()->back()
-            //     ->withInput($request->only('username'))
-            //     ->withErrors([
-            //         'username' => trans($errorMessage),
-            //     ]);
         }
-    }
-
-    /**
-     * Determine if the user has too many failed login attempts.
-     *
-     * @param  \Psr\Http\Message\ServerRequestInterface $request
-     *
-     * @return bool
-     */
-    protected function hasTooManyLoginAttempts(ServerRequestInterface $request) : bool
-    {
-        return app(RateLimiter::class)->tooManyAttempts(
-            $this->getThrottleKey($request),
-            $this->maxLoginAttempts(),
-            $this->lockoutTime() / 60
-        );
-    }
-
-    /**
-     * Increment the login attempts for the user.
-     *
-     * @param  \Psr\Http\Message\ServerRequestInterface $request
-     *
-     * @return void
-     */
-    protected function incrementLoginAttempts(ServerRequestInterface $request)
-    {
-        app(RateLimiter::class)->hit(
-            $this->getThrottleKey($request)
-        );
-    }
-
-    /**
-     * Determine how many retries are left for the user.
-     *
-     * @param  \Psr\Http\Message\ServerRequestInterface $request
-     *
-     * @return int
-     */
-    protected function retriesLeft(ServerRequestInterface $request) : int
-    {
-        $attempts = app(RateLimiter::class)->attempts(
-            $this->getThrottleKey($request)
-        );
-
-        return $this->maxLoginAttempts() - $attempts + 1;
-    }
-
-    /**
-     * Redirect the user after determining they are locked out.
-     *
-     * @param  \Psr\Http\Message\ServerRequestInterface $request
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    protected function sendLockoutResponse(ServerRequestInterface $request)
-    {
-        $seconds = app(RateLimiter::class)->availableIn(
-            $this->getThrottleKey($request)
-        );
-
-        return redirect()->back()
-            ->withInput($request->only('username', 'remember'))
-            ->withErrors([
-                'username' => trans('dms::auth.throttle', ['seconds' => $seconds]),
-            ]);
-    }
-
-    /**
-     * Clear the login locks for the given user credentials.
-     *
-     * @param  \Psr\Http\Message\ServerRequestInterface $request
-     *
-     * @return void
-     */
-    protected function clearLoginAttempts(ServerRequestInterface $request)
-    {
-        app(RateLimiter::class)->clear(
-            $this->getThrottleKey($request)
-        );
     }
 
     /**
@@ -253,6 +129,11 @@ class LoginController extends DmsController implements ServerMiddlewareInterface
      */
     protected function getThrottleKey(ServerRequestInterface $request) : string
     {
-        return mb_strtolower($request->input('username')) . '|' . $request->ip();
+        $ipAddress = $request->getAttribute('ip_address');
+        if (! $ipAddress) {
+            $ipAddress = $request->getServerParams()['REMOTE_ADDR'];
+        }
+
+        return strtolower($request->getParsedBody()['username']) . '|' . $ipAddress;
     }
 }

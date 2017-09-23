@@ -40,12 +40,6 @@ class ShowController extends DmsController implements ServerMiddlewareInterface
      */
     protected $tableRenderer;
 
-    protected $template;
-
-    protected $router;
-
-    protected $urlHelper;
-
     /**
      * TableController constructor.
      *
@@ -55,20 +49,18 @@ class ShowController extends DmsController implements ServerMiddlewareInterface
     public function __construct(
         ICms $cms,
         IAuthSystem $auth,
-        TableRenderer $tableRenderer,
         TemplateRendererInterface $template,
         RouterInterface $router,
-        UrlHelper $urlHelper
+        TableRenderer $tableRenderer
     ) {
-        parent::__construct($cms, $auth);
+        parent::__construct($cms, $auth, $template, $router);
         $this->tableRenderer = $tableRenderer;
-        $this->template = $template;
-        $this->router = $router;
-        $this->urlHelper = $urlHelper;
+        ;
     }
 
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
+        $urlHelper = new UrlHelper($this->router);
         $packageName = $request->getAttribute('package');
         $moduleName = $request->getAttribute('module');
         $tableName = $request->getAttribute('table');
@@ -83,7 +75,7 @@ class ShowController extends DmsController implements ServerMiddlewareInterface
         $table = $this->loadTable($module, $tableName);
 
         if ($table instanceof ISummaryTable) {
-            $to = $this->urlHelper->generate('dms::package.module.dashboard', [
+            $to = $urlHelper->generate('dms::package.module.dashboard', [
                 'package' => $package->getName(),
                 'module'  => $firstModule,
             ], [
@@ -124,7 +116,7 @@ class ShowController extends DmsController implements ServerMiddlewareInterface
         try {
             return $table->getView($viewName);
         } catch (InvalidArgumentException $e) {
-            DmsError::abort($request, 404);
+            return DmsError::abort($request, 404);
         }
     }
 

@@ -16,6 +16,6 @@ class ErrorController extends DmsController implements ServerMiddlewareInterface
 {
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
-        DmsError::abort($request, 404);
+        return DmsError::abort($request, 404);
     }
 }

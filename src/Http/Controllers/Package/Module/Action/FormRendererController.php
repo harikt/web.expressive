@@ -42,9 +42,11 @@ use Dms\Web\Expressive\Util\StringHumanizer;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
+use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\JsonResponse;
 
@@ -90,10 +92,6 @@ class FormRendererController extends DmsController implements ServerMiddlewareIn
      */
     protected $actionButtonBuilder;
 
-    protected $template;
-
-    protected $router;
-
     /**
      * ActionController constructor.
      *
@@ -109,16 +107,16 @@ class FormRendererController extends DmsController implements ServerMiddlewareIn
     public function __construct(
         ICms $cms,
         IAuthSystem $auth,
+        TemplateRendererInterface $template,
+        RouterInterface $router,
         ActionInputTransformerCollection $inputTransformers,
         ActionResultHandlerCollection $resultHandlers,
         ActionExceptionHandlerCollection $exceptionHandlers,
         ActionSafetyChecker $actionSafetyChecker,
         ActionFormRenderer $actionFormRenderer,
-        ObjectActionButtonBuilder $actionButtonBuilder,
-        TemplateRendererInterface $template,
-        RouterInterface $router
+        ObjectActionButtonBuilder $actionButtonBuilder
     ) {
-        parent::__construct($cms, $auth);
+        parent::__construct($cms, $auth, $template, $router);
         $this->lang                = $cms->getLang();
         $this->inputTransformers   = $inputTransformers;
         $this->resultHandlers      = $resultHandlers;
@@ -126,8 +124,6 @@ class FormRendererController extends DmsController implements ServerMiddlewareIn
         $this->actionSafetyChecker = $actionSafetyChecker;
         $this->actionFormRenderer  = $actionFormRenderer;
         $this->actionButtonBuilder = $actionButtonBuilder;
-        $this->router = $router;
-        $this->template = $template;
     }
 
     // public function runFormRendererActionWithObject(
@@ -166,13 +162,20 @@ class FormRendererController extends DmsController implements ServerMiddlewareIn
         $formRendererAction = $request->getAttribute('form_action');
 
         $action = $this->loadAction($moduleContext->getModule(), $actionName, $request);
+        if ($action instanceof ResponseInterface) {
+            return $action;
+        }
+
         $form   = $this->loadFormStage($request, $moduleContext, $actionName, $stageNumber, $objectId, $object);
+        if ($form instanceof ResponseInterface) {
+            return $form;
+        }
 
         $renderingContext = new FormRenderingContext($moduleContext, $action, $stageNumber, $object);
         $renderer         = $this->actionFormRenderer->getFormRenderer($renderingContext, $form);
 
         if (!($renderer instanceof IFormRendererWithActions)) {
-            DmsError::abort($request, 404);
+            return DmsError::abort($request, 404);
         }
 
         $this->loadSharedViewVariables($request);
@@ -191,9 +194,9 @@ class FormRendererController extends DmsController implements ServerMiddlewareIn
         $action = $this->loadAction($moduleContext->getModule(), $actionName, $request);
 
         if (!($action instanceof IParameterizedAction)) {
-            throw new HttpResponseException(new JsonResponse([
+            return new JsonResponse([
                 'message' => 'This action does not require an input form',
-            ], 403));
+            ], 403);
         }
 
         if ($objectId !== null && $action instanceof IObjectAction) {
@@ -210,9 +213,9 @@ class FormRendererController extends DmsController implements ServerMiddlewareIn
         $stageNumber = (int)$stageNumber;
 
         if ($stageNumber < 1 || $stageNumber > $form->getAmountOfStages()) {
-            throw new HttpResponseException(new JsonResponse([
+            return new JsonResponse([
                 'message' => 'Invalid stage number',
-            ], 404));
+            ], 404);
         }
 
         $input = $this->inputTransformers->transform($moduleContext, $action, $request->getParsedBody());
@@ -239,7 +242,7 @@ class FormRendererController extends DmsController implements ServerMiddlewareIn
             $action = $module->getAction($actionName);
 
             if (!$action->isAuthorized()) {
-                DmsError::abort($request, 401);
+                return DmsError::abort($request, 401);
             }
 
             return $action;
@@ -249,7 +252,7 @@ class FormRendererController extends DmsController implements ServerMiddlewareIn
             ], 404);
         }
 
-        throw new HttpResponseException($response);
+        return $response;
     }
 
     /**
@@ -266,7 +269,7 @@ class FormRendererController extends DmsController implements ServerMiddlewareIn
 
             return $this->loadObjectFromDataSource($objectId, $objectFieldType->getObjects());
         } catch (InvalidInputException $e) {
-            DmsError::abort($request, 404);
+            return DmsError::abort($request, 404);
         }
     }
 

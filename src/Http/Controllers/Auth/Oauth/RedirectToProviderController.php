@@ -13,13 +13,18 @@ use Dms\Web\Expressive\Auth\Oauth\OauthProvider;
 use Dms\Web\Expressive\Auth\Oauth\OauthProviderCollection;
 use Dms\Web\Expressive\Auth\OauthAdmin;
 use Dms\Web\Expressive\Auth\Role;
+use Dms\Web\Expressive\Error\DmsError;
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Psr\Http\Message\ServerRequestInterface;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
+use Zend\Diactoros\Response;
+use Zend\Expressive\Router\RouterInterface;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
+// todo
 /**
  * The oauth login controller.
  *
@@ -53,13 +58,14 @@ class RedirectToProviderController extends DmsController implements ServerMiddle
     public function __construct(
         ICms $cms,
         IAuthSystem $auth,
+        TemplateRendererInterface $template,
+        RouterInterface $router,
         OauthProviderCollection $providerCollection,
         IAdminRepository $adminRepository,
         IRoleRepository $roleRepository
     ) {
-        parent::__construct($cms, $auth);
+        parent::__construct($cms, $auth, $template, $router);
 
-        // $this->middleware('dms.guest');
         $this->providerCollection = $providerCollection;
         $this->adminRepository    = $adminRepository;
         $this->roleRepository     = $roleRepository;
@@ -69,19 +75,20 @@ class RedirectToProviderController extends DmsController implements ServerMiddle
     {
         $providerName = $request->getAttribute('provider');
 
-        $oauthProvider = $this->getProvider($providerName);
+        if (! $this->providerCollection->has($providerName)) {
+            return DmsError::abort($request, 401);
+        }
+
+        $oauthProvider = $this->providerCollection->getAll()[$providerName];
 
         $url = $oauthProvider->getProvider()->getAuthorizationUrl();
 
-        $request->session()->put('dms-oauth-state', $oauthProvider->getProvider()->getState());
+        // todo keep in session
+        // $request->session()->put('dms-oauth-state', $oauthProvider->getProvider()->getState());
 
-        return \redirect($url);
-    }
+        $response = new Response();
+        $response->withHeader('Location', $url);
 
-    private function getProvider(string $providerName) : OauthProvider
-    {
-        abort_unless($this->providerCollection->has($providerName), 404);
-
-        return $this->providerCollection->getAll()[$providerName];
+        return $response;
     }
 }

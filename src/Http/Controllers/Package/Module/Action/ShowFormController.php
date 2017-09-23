@@ -42,6 +42,7 @@ use Dms\Web\Expressive\Util\StringHumanizer;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\JsonResponse;
@@ -90,10 +91,6 @@ class ShowFormController extends DmsController implements ServerMiddlewareInterf
      */
     protected $actionButtonBuilder;
 
-    protected $template;
-
-    protected $router;
-
     /**
      * ActionController constructor.
      *
@@ -109,16 +106,16 @@ class ShowFormController extends DmsController implements ServerMiddlewareInterf
     public function __construct(
         ICms $cms,
         IAuthSystem $auth,
+        TemplateRendererInterface $template,
+        RouterInterface $router,
         ActionInputTransformerCollection $inputTransformers,
         ActionResultHandlerCollection $resultHandlers,
         ActionExceptionHandlerCollection $exceptionHandlers,
         ActionSafetyChecker $actionSafetyChecker,
         ActionFormRenderer $actionFormRenderer,
-        ObjectActionButtonBuilder $actionButtonBuilder,
-        TemplateRendererInterface $template,
-        RouterInterface $router
+        ObjectActionButtonBuilder $actionButtonBuilder
     ) {
-        parent::__construct($cms, $auth);
+        parent::__construct($cms, $auth, $template, $router);
         $this->lang                = $cms->getLang();
         $this->inputTransformers   = $inputTransformers;
         $this->resultHandlers      = $resultHandlers;
@@ -126,11 +123,8 @@ class ShowFormController extends DmsController implements ServerMiddlewareInterf
         $this->actionSafetyChecker = $actionSafetyChecker;
         $this->actionFormRenderer  = $actionFormRenderer;
         $this->actionButtonBuilder = $actionButtonBuilder;
-        $this->template = $template;
-        $this->router = $router;
     }
 
-    // public function showForm(ModuleContext $moduleContext, string $actionName, string $objectId = null)
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
         $objectId = $request->getAttribute('object_id');
@@ -144,10 +138,13 @@ class ShowFormController extends DmsController implements ServerMiddlewareInterf
 
         $module = $moduleContext->getModule();
 
-        $action = $this->loadAction($module, $actionName, $request);
+        $action = $this->loadAction($moduleContext->getModule(), $actionName, $request);
+        if ($action instanceof ResponseInterface) {
+            return $action;
+        }
 
         if (!($action instanceof IParameterizedAction)) {
-            DmsError::abort($request, 404);
+            return DmsError::abort($request, 404);
         }
 
         $hiddenValues = [];
@@ -202,7 +199,7 @@ class ShowFormController extends DmsController implements ServerMiddlewareInterf
             $action = $module->getAction($actionName);
 
             if (!$action->isAuthorized()) {
-                DmsError::abort($request, 401);
+                return DmsError::abort($request, 401);
             }
 
             return $action;
@@ -212,7 +209,7 @@ class ShowFormController extends DmsController implements ServerMiddlewareInterf
             ], 404);
         }
 
-        throw new HttpResponseException($response);
+        return $response;
     }
 
     /**
@@ -229,7 +226,7 @@ class ShowFormController extends DmsController implements ServerMiddlewareInterf
 
             return $this->loadObjectFromDataSource($objectId, $objectFieldType->getObjects());
         } catch (InvalidInputException $e) {
-            DmsError::abort($request, 404);
+            return DmsError::abort($request, 404);
         }
     }
 

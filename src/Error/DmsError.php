@@ -17,7 +17,7 @@ class DmsError
      * @param int    $statusCode
      * @param string $message
      *
-     * @return void
+     * @return Response
      */
     public static function abort(ServerRequestInterface $request, int $statusCode, string $message = '')
     {

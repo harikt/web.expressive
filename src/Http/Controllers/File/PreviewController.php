@@ -24,8 +24,10 @@ use Zend\Expressive\Template\TemplateRendererInterface;
  *
  * @author Elliot Levin <elliotlevin@hotmail.com>
  */
-class PreviewController extends DmsController implements ServerMiddlewareInterface
+class PreviewController implements ServerMiddlewareInterface
 {
+    protected $cms;
+
     /**
      * @var ITemporaryFileService
      */
@@ -45,12 +47,10 @@ class PreviewController extends DmsController implements ServerMiddlewareInterfa
      */
     public function __construct(
         ICms $cms,
-        IAuthSystem $auth,
         ITemporaryFileService $tempFileService,
         Repository $config
     ) {
-        parent::__construct($cms, $auth);
-
+        $this->cms = $cms;
         $this->tempFileService = $tempFileService;
         $this->config          = $config;
     }
@@ -68,12 +68,10 @@ class PreviewController extends DmsController implements ServerMiddlewareInterfa
                 $response = $response->withHeader('Content-Type', 'application/octet-stream')
                     ->withHeader('Content-Disposition', "attachment; filename=\"{$file->getFile()->getClientFileNameWithFallback()}\"");
                 $response->getBody()->write(file_get_contents($file->getFile()->getFullPath()));
+
                 return $response;
-                // \response()
-                //     ->download($file->getFile()->getInfo(), $file->getFile()->getClientFileNameWithFallback());
             }
         } catch (EntityNotFoundException $e) {
-            DmsError::abort($request, 404);
         }
 
         return DmsError::abort($request, 404);

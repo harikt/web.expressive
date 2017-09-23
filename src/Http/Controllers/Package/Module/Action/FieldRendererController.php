@@ -42,6 +42,7 @@ use Dms\Web\Expressive\Util\StringHumanizer;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
@@ -90,10 +91,6 @@ class FieldRendererController extends DmsController implements ServerMiddlewareI
      */
     protected $actionButtonBuilder;
 
-    protected $template;
-
-    protected $router;
-
     /**
      * ActionController constructor.
      *
@@ -109,16 +106,16 @@ class FieldRendererController extends DmsController implements ServerMiddlewareI
     public function __construct(
         ICms $cms,
         IAuthSystem $auth,
+        TemplateRendererInterface $template,
+        RouterInterface $router,
         ActionInputTransformerCollection $inputTransformers,
         ActionResultHandlerCollection $resultHandlers,
         ActionExceptionHandlerCollection $exceptionHandlers,
         ActionSafetyChecker $actionSafetyChecker,
         ActionFormRenderer $actionFormRenderer,
-        ObjectActionButtonBuilder $actionButtonBuilder,
-        TemplateRendererInterface $template,
-        RouterInterface $router
+        ObjectActionButtonBuilder $actionButtonBuilder
     ) {
-        parent::__construct($cms, $auth);
+        parent::__construct($cms, $auth, $template, $router);
         $this->lang                = $cms->getLang();
         $this->inputTransformers   = $inputTransformers;
         $this->resultHandlers      = $resultHandlers;
@@ -126,8 +123,6 @@ class FieldRendererController extends DmsController implements ServerMiddlewareI
         $this->actionSafetyChecker = $actionSafetyChecker;
         $this->actionFormRenderer  = $actionFormRenderer;
         $this->actionButtonBuilder = $actionButtonBuilder;
-        $this->router = $router;
-        $this->template = $template;
     }
 
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
@@ -156,12 +151,19 @@ class FieldRendererController extends DmsController implements ServerMiddlewareI
         $fieldRendererAction = $request->getAttribute('field_action');
 
         $action = $this->loadAction($moduleContext->getModule(), $actionName, $request);
+        if ($action instanceof ResponseInterface) {
+            return $action;
+        }
+
         $form   = $this->loadFormStage($request, $moduleContext, $actionName, $stageNumber, $objectId, $object);
+        if ($form instanceof ResponseInterface) {
+            return $form;
+        }
 
         $field = $this->findFieldFromBracketSyntaxName($form, $fieldName);
 
         if (!$field) {
-            DmsError::abort($request, 404);
+            return DmsError::abort($request, 404);
         }
 
         $renderingContext = new FormRenderingContext($moduleContext, $action, $stageNumber, $object);
@@ -170,7 +172,7 @@ class FieldRendererController extends DmsController implements ServerMiddlewareI
             ->findRendererFor($renderingContext, $field);
 
         if (!($renderer instanceof IFieldRendererWithActions)) {
-            DmsError::abort($request, 404);
+            return DmsError::abort($request, 404);
         }
 
         $this->loadSharedViewVariables($request);
@@ -269,7 +271,7 @@ class FieldRendererController extends DmsController implements ServerMiddlewareI
             $action = $module->getAction($actionName);
 
             if (!$action->isAuthorized()) {
-                DmsError::abort($request, 401);
+                return DmsError::abort($request, 401);
             }
 
             return $action;
@@ -279,7 +281,7 @@ class FieldRendererController extends DmsController implements ServerMiddlewareI
             ], 404);
         }
 
-        throw new HttpResponseException($response);
+        return $response;
     }
 
     /**
@@ -296,7 +298,7 @@ class FieldRendererController extends DmsController implements ServerMiddlewareI
 
             return $this->loadObjectFromDataSource($objectId, $objectFieldType->getObjects());
         } catch (InvalidInputException $e) {
-            DmsError::abort($request, 404);
+            return DmsError::abort($request, 404);
         }
     }
 

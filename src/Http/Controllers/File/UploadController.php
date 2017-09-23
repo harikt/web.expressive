@@ -24,8 +24,10 @@ use Zend\Expressive\Template\TemplateRendererInterface;
  *
  * @author Elliot Levin <elliotlevin@hotmail.com>
  */
-class UploadController extends DmsController implements ServerMiddlewareInterface
+class UploadController implements ServerMiddlewareInterface
 {
+    protected $cms;
+
     /**
      * @var ITemporaryFileService
      */
@@ -45,12 +47,10 @@ class UploadController extends DmsController implements ServerMiddlewareInterfac
      */
     public function __construct(
         ICms $cms,
-        IAuthSystem $auth,
         ITemporaryFileService $tempFileService,
         Repository $config
     ) {
-        parent::__construct($cms, $auth);
-
+        $this->cms = $cms;
         $this->tempFileService = $tempFileService;
         $this->config          = $config;
     }

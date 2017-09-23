@@ -15,6 +15,7 @@ use Illuminate\Contracts\Auth\PasswordBroker;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\HtmlResponse;
+use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
@@ -35,11 +36,6 @@ class ResetController extends DmsController implements ServerMiddlewareInterface
     protected $passwordResetService;
 
     /**
-     * @var TemplateRendererInterface
-     */
-    protected $template;
-
-    /**
      * Create a new password controller instance.
      *
      * @param ICms                  $cms
@@ -50,13 +46,12 @@ class ResetController extends DmsController implements ServerMiddlewareInterface
         ICms $cms,
         IAuthSystem $auth,
         TemplateRendererInterface $template,
+        RouterInterface $router,
         PasswordBrokerManager $passwordBrokerManager,
         IPasswordResetService $passwordResetService
     ) {
-        parent::__construct($cms, $auth);
+        parent::__construct($cms, $auth, $template, $router);
 
-        $this->template = $template;
-        // $this->middleware('dms.guest');
         $this->passwordBroker       = $passwordBrokerManager->broker('dms');
         $this->passwordResetService = $passwordResetService;
     }
@@ -118,8 +113,11 @@ class ResetController extends DmsController implements ServerMiddlewareInterface
         switch ($response) {
             case PasswordBroker::PASSWORD_RESET:
                 // todo find equivalent of with, withInput, withErrors
-                return redirect()->route('dms::auth.login')->with('success', trans($response));
+                // with('success', trans($response));
+                $response = new Response();
+                $response = $response->withHeader('Location', $this->router->generateUri('dms::auth.login'));
 
+                return $response;
             default:
                 // todo
                 return redirect()->back()

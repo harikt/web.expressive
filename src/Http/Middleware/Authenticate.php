@@ -8,6 +8,7 @@ use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterfa
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
 use Zend\Expressive\Router\RouterInterface;
+use Zend\Expressive\Router\RouteResult;
 
 class Authenticate implements ServerMiddlewareInterface
 {
@@ -37,17 +38,23 @@ class Authenticate implements ServerMiddlewareInterface
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
         $path = '/dms'. $request->getUri()->getPath();
-
+        $routeResult = $request->getAttribute(RouteResult::class);
         if (
             $this->auth->isAuthenticated() ||
-            $path == $this->router->generateUri('dms::auth.login') ||
-            $path == $this->router->generateUri('dms::auth.password.forgot')
+            in_array($routeResult->getMatchedRouteName(), [
+                'dms::auth.login',
+                'dms::auth.password.forgot',
+                'dms::auth.oauth.redirect',
+                'dms::auth.oauth.response',
+            ])
         ) {
             return $delegate->process($request);
         }
 
         $response = new Response();
         if ('XMLHttpRequest' == $request->getHeaderLine('X-Requested-With')) {
+            $message = json_encode(['redirect' => '/dms']);
+            $response->getBody()->write($message);
             return $response->withStatus(401, 'Unauthenticated');
         } else {
             return $response->withHeader('Location', $this->router->generateUri('dms::auth.login'));

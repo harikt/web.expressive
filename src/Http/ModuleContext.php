@@ -54,7 +54,7 @@ class ModuleContext
      * @param RouterInterface  $router
      * @param string           $rootUrl
      * @param array            $titles
-     * @param \string[]        $breadcrumbs
+     * @param string[]        $breadcrumbs
      * @param IModule|callable $moduleLoaderCallback
      */
     public function __construct(RouterInterface $router, string $rootUrl, array $titles, array $breadcrumbs, $moduleLoaderCallback, bool $isSubmodule = false)
@@ -92,12 +92,12 @@ class ModuleContext
     {
         return new ModuleContext(
             $router,
-            route('dms::package.module.dashboard', ['package' => $packageName, 'module' => $moduleName]),
+            $router->generateUri('dms::package.module.dashboard', ['package' => $packageName, 'module' => $moduleName]),
             [StringHumanizer::title($packageName), StringHumanizer::title($moduleName)],
             [
-                route('dms::index')                                                         => 'Home',
-                route('dms::package.dashboard', ['package' => $packageName])                => StringHumanizer::title($packageName),
-                route('dms::package.module.dashboard', ['package' => $packageName, 'module' => $moduleName]) => StringHumanizer::title($moduleName),
+                $router->generateUri('dms::index')                                                         => 'Home',
+                $router->generateUri('dms::package.dashboard', ['package' => $packageName])                => StringHumanizer::title($packageName),
+                $router->generateUri('dms::package.module.dashboard', ['package' => $packageName, 'module' => $moduleName]) => StringHumanizer::title($moduleName),
             ],
             $moduleLoaderCallback
         );

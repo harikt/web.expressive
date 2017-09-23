@@ -18,7 +18,7 @@
                 @endforeach
                 @if($createActionName ?? false)
                     <li class="pull-right dms-general-action-container">
-                        <button class="btn btn-success" data-a-href="{{ $moduleContext->getUrl('action.form', ['package' => $request->getAttribute('package'), 'module' => $request->getAttribute('module'), 'action' => $createActionName, 'object_id' => null]) }}">
+                        <button class="btn btn-success" data-a-href="{{ $moduleContext->getUrl('action.form', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName(), 'action' => $createActionName, 'object_id' => null]) }}">
                             Add <i class="fa fa-plus-circle"></i>
                         </button>
                     </li>
@@ -34,7 +34,7 @@
                             </button>
                         @else
                             <a  class="btn btn-{{ \Dms\Web\Expressive\Util\KeywordTypeIdentifier::getClass($action->getName()) }}"
-                                href="{{ $moduleContext->getUrl('action.form', ['package' => $request->getAttribute('package'), 'module' => $request->getAttribute('module'), 'action' => $action->getName()]) }}"
+                                href="{{ $moduleContext->getUrl('action.form', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName(), 'action' => $action->getName()]) }}"
                             >{{ \Dms\Web\Expressive\Util\ActionLabeler::getActionButtonLabel($action) }}</a>
                         @endif
                     </li>

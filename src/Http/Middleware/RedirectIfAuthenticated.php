@@ -4,36 +4,39 @@ namespace Dms\Web\Expressive\Http\Middleware;
 
 use Closure;
 use Dms\Core\Auth\IAuthSystem;
+use Interop\Http\ServerMiddleware\DelegateInterface;
+use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Zend\Diactoros\Response;
+use Zend\Expressive\Router\RouterInterface;
 
-class RedirectIfAuthenticated
+class RedirectIfAuthenticated implements ServerMiddlewareInterface
 {
     /**
      * @var IAuthSystem
      */
     protected $auth;
 
+    protected $router;
+
     /**
      * Authenticate constructor.
      *
      * @param IAuthSystem $auth
      */
-    public function __construct(IAuthSystem $auth)
+    public function __construct(IAuthSystem $auth, RouterInterface $router)
     {
         $this->auth = $auth;
+        $this->router = $router;
     }
 
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Psr\Http\Message\ServerRequestInterface $request
-     * @param  \Closure                 $next
-     *
-     * @return mixed
-     */
-    public function handle($request, Closure $next)
+    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
         if ($this->auth->isAuthenticated()) {
-            return redirect()->route('dms::index');
+            $response = new Response();
+            $response = $response->withHeader('Location', $this->router->generateUri('dms::index'));
+
+            return $response;
         }
 
         return $next($request);

@@ -84,19 +84,19 @@ class ConfigProvider
             ],
 
             // OauthController@redirectToProvider
-            // [
-            //     'name'            => 'dms::auth.oauth.redirect',
-            //     'path'            => '/dms/auth/oauth/{provider}/redirect',
-            //     'middleware'      => Http\Controllers\Auth\OauthController::class,
-            //     'allowed_methods' => ['GET'],
-            // ],
+            [
+                'name'            => 'dms::auth.oauth.redirect',
+                'path'            => '/dms/auth/oauth/{provider}/redirect',
+                'middleware'      => Http\Controllers\Auth\Oauth\RedirectToProviderController::class,
+                'allowed_methods' => ['GET'],
+            ],
             // OauthController@handleProviderResponse
-            // [
-            //     'name'            => 'dms::auth.oauth.response',
-            //     'path'            => '/dms/auth/oauth/{provider}/response',
-            //     'middleware'      => Http\Controllers\Auth\OauthController::class,
-            //     'allowed_methods' => ['GET'],
-            // ],
+            [
+                'name'            => 'dms::auth.oauth.response',
+                'path'            => '/dms/auth/oauth/{provider}/response',
+                'middleware'      => Http\Controllers\Auth\Oauth\HandleProviderResponseController::class,
+                'allowed_methods' => ['GET'],
+            ],
             // PasswordController@sendResetLinkEmail
             // [
             //     'name'            => 'dms::auth.oauth.response',

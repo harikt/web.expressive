@@ -35,7 +35,7 @@ class ModuleRequestRouter
     protected $currentModuleContextStack = [];
 
     /**
-     * @var Router
+     * @var RouterInterface
      */
     protected $router;
 

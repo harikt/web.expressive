@@ -19,7 +19,11 @@ use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Psr\Http\Message\ServerRequestInterface;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
+use Zend\Diactoros\Response;
+use Zend\Expressive\Router\RouterInterface;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
+// todo
 /**
  * The oauth login controller.
  *
@@ -53,15 +57,15 @@ class HandleProviderResponseController extends DmsController implements ServerMi
     public function __construct(
         ICms $cms,
         IAuthSystem $auth,
+        TemplateRendererInterface $template,
+        RouterInterface $router,
         OauthProviderCollection $providerCollection,
         IAdminRepository $adminRepository,
         IRoleRepository $roleRepository
     ) {
-        parent::__construct($cms, $auth);
+        parent::__construct($cms, $auth, $template, $router);
 
-        // $this->middleware('dms.guest');
         $this->providerCollection = $providerCollection;
-        $this->cms                = $cms;
         $this->adminRepository    = $adminRepository;
         $this->roleRepository     = $roleRepository;
     }
@@ -77,8 +81,11 @@ class HandleProviderResponseController extends DmsController implements ServerMi
         $hasValidState = $state && $state === $request->query('state');
 
         if (!$hasValidState) {
-            return \redirect()->route('dms::auth.login')
-                ->with('error', trans('dms::auth.oauth.invalid-state'));
+            // ->with('error', trans('dms::auth.oauth.invalid-state'));
+            $response = new Response();
+            $response = $response->withHeader('Location', $this->router->generateUri('dms::auth.login'));
+
+            return $response;
         }
 
         $accessToken = $oauthProvider->getProvider()->getAccessToken('authorization_code', [
@@ -90,7 +97,7 @@ class HandleProviderResponseController extends DmsController implements ServerMi
 
         \auth()->guard('dms')->login($adminAccount);
 
-        return \redirect()->intended(route('dms::index'));
+        return \redirect()->intended($this->router->generateUri('dms::index'));
     }
 
     protected function loadAdminAccount(OauthProvider $oauthProvider, ResourceOwnerInterface $resourceOwner) : OauthAdmin
@@ -98,10 +105,12 @@ class HandleProviderResponseController extends DmsController implements ServerMi
         $adminAccountDetails = $oauthProvider->getAdminDetailsFromResourceOwner($resourceOwner);
 
         if (!$oauthProvider->allowsAccount($adminAccountDetails)) {
-            throw new HttpResponseException(
-                \redirect()->route('dms::auth.login')
-                    ->with('error', trans('dms::auth.oauth.invalid-email'))
-            );
+
+            // ->with('error', trans('dms::auth.oauth.invalid-email'))
+            $response = new Response();
+            $response = $response->withHeader('Location', $this->router->generateUri('dms::auth.login'));
+
+            return $response;
         }
 
         $adminsWithEmail = $this->adminRepository->matching(
@@ -121,24 +130,27 @@ class HandleProviderResponseController extends DmsController implements ServerMi
     private function validateExistingAdminMatches(Admin $admin, OauthProvider $oauthProvider, ResourceOwnerInterface $resourceOwner)
     {
         if (!($admin instanceof OauthAdmin)) {
-            throw new HttpResponseException(
-                \redirect()->route('dms::auth.login')
-                    ->with('error', trans('dms::auth.oauth.registered-locally'))
-            );
+            $response = new Response();
+            $response = $response->withHeader('Location', $this->router->generateUri('dms::auth.login'));
+
+            // ->with('error', trans('dms::auth.oauth.registered-locally'))
+            return $response;
         }
 
         if ($admin->getOauthProviderName() !== $oauthProvider->getName()) {
-            throw new HttpResponseException(
-                \redirect()->route('dms::auth.login')
-                    ->with('error', trans('dms::auth.oauth.other-provider'))
-            );
+            $response = new Response();
+            $response = $response->withHeader('Location', $this->router->generateUri('dms::auth.login'));
+
+            // ->with('error', trans('dms::auth.oauth.other-provider'))
+            return $response;
         }
 
         if ($admin->getOauthAccountId() !== $resourceOwner->getId()) {
-            throw new HttpResponseException(
-                \redirect()->route('dms::auth.login')
-                    ->with('error', trans('dms::auth.oauth.id-mismatch'))
-            );
+            $response = new Response();
+            $response = $response->withHeader('Location', $this->router->generateUri('dms::auth.login'));
+
+            // ->with('error', trans('dms::auth.oauth.id-mismatch'))
+            return $response;
         }
     }
 

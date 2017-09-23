@@ -40,10 +40,6 @@ class LoadTableRowsController extends DmsController implements ServerMiddlewareI
      */
     protected $tableRenderer;
 
-    protected $template;
-
-    protected $router;
-
     /**
      * TableController constructor.
      *
@@ -53,14 +49,12 @@ class LoadTableRowsController extends DmsController implements ServerMiddlewareI
     public function __construct(
         ICms $cms,
         IAuthSystem $auth,
-        TableRenderer $tableRenderer,
         TemplateRendererInterface $template,
-        RouterInterface $router
+        RouterInterface $router,
+        TableRenderer $tableRenderer
     ) {
-        parent::__construct($cms, $auth);
+        parent::__construct($cms, $auth, $template, $router);
         $this->tableRenderer = $tableRenderer;
-        $this->template = $template;
-        $this->router = $router;
     }
 
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
@@ -159,7 +153,7 @@ class LoadTableRowsController extends DmsController implements ServerMiddlewareI
         try {
             return $table->getView($viewName);
         } catch (InvalidArgumentException $e) {
-            DmsError::abort($request, 404);
+            return DmsError::abort($request, 404);
         }
     }
 

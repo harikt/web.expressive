@@ -17,6 +17,7 @@ use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\JsonResponse;
 use Zend\Expressive\Helper\UrlHelper;
+use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
@@ -36,8 +37,6 @@ class ResetLinkEmailController extends DmsController implements ServerMiddleware
      */
     protected $passwordResetService;
 
-    protected $template;
-
     /**
      * Create a new password controller instance.
      *
@@ -50,13 +49,12 @@ class ResetLinkEmailController extends DmsController implements ServerMiddleware
         ICms $cms,
         IAuthSystem $auth,
         TemplateRendererInterface $template,
+        RouterInterface $router,
         PasswordBrokerManager $passwordBrokerManager,
         IPasswordResetService $passwordResetService
     ) {
-        parent::__construct($cms, $auth);
+        parent::__construct($cms, $auth, $template, $router);
 
-        $this->template = $template;
-        // $this->middleware('dms.guest');
         $this->passwordBroker       = $passwordBrokerManager->broker('dms');
         $this->passwordResetService = $passwordResetService;
     }
@@ -151,7 +149,11 @@ class ResetLinkEmailController extends DmsController implements ServerMiddleware
 
         switch ($response) {
             case PasswordBroker::PASSWORD_RESET:
-                return redirect()->route('dms::auth.login')->with('success', trans($response));
+                $response = new Response();
+                $response = $response->withHeader('Location', $this->router->generateUri('dms::auth.login'));
+
+                // ->with('success', trans($response))
+                return $response;
 
             default:
                 return redirect()->back()

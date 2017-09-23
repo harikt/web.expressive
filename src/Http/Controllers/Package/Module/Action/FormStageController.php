@@ -42,6 +42,7 @@ use Dms\Web\Expressive\Util\StringHumanizer;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
@@ -90,11 +91,6 @@ class FormStageController extends DmsController implements ServerMiddlewareInter
      */
     protected $actionButtonBuilder;
 
-
-    protected $template;
-
-    protected $router;
-
     /**
      * ActionController constructor.
      *
@@ -110,16 +106,16 @@ class FormStageController extends DmsController implements ServerMiddlewareInter
     public function __construct(
         ICms $cms,
         IAuthSystem $auth,
+        TemplateRendererInterface $template,
+        RouterInterface $router,
         ActionInputTransformerCollection $inputTransformers,
         ActionResultHandlerCollection $resultHandlers,
         ActionExceptionHandlerCollection $exceptionHandlers,
         ActionSafetyChecker $actionSafetyChecker,
         ActionFormRenderer $actionFormRenderer,
-        ObjectActionButtonBuilder $actionButtonBuilder,
-        TemplateRendererInterface $template,
-        RouterInterface $router
+        ObjectActionButtonBuilder $actionButtonBuilder
     ) {
-        parent::__construct($cms, $auth);
+        parent::__construct($cms, $auth, $template, $router);
         $this->lang                = $cms->getLang();
         $this->inputTransformers   = $inputTransformers;
         $this->resultHandlers      = $resultHandlers;
@@ -127,8 +123,6 @@ class FormStageController extends DmsController implements ServerMiddlewareInter
         $this->actionSafetyChecker = $actionSafetyChecker;
         $this->actionFormRenderer  = $actionFormRenderer;
         $this->actionButtonBuilder = $actionButtonBuilder;
-        $this->router = $router;
-        $this->template = $template;
     }
 
     protected function loadFormStage(
@@ -140,6 +134,9 @@ class FormStageController extends DmsController implements ServerMiddlewareInter
         &$object = null
     ) : IForm {
         $action = $this->loadAction($moduleContext->getModule(), $actionName, $request);
+        if ($action instanceof ResponseInterface) {
+            return $action;
+        }
 
         if (!($action instanceof IParameterizedAction)) {
             throw new HttpResponseException(new JsonResponse([
@@ -226,7 +223,7 @@ class FormStageController extends DmsController implements ServerMiddlewareInter
             $action = $module->getAction($actionName);
 
             if (!$action->isAuthorized()) {
-                DmsError::abort($request, 401);
+                return DmsError::abort($request, 401);
             }
 
             return $action;
@@ -236,7 +233,7 @@ class FormStageController extends DmsController implements ServerMiddlewareInter
             ], 404);
         }
 
-        throw new HttpResponseException($response);
+        return $response;
     }
 
     /**
@@ -253,7 +250,7 @@ class FormStageController extends DmsController implements ServerMiddlewareInter
 
             return $this->loadObjectFromDataSource($objectId, $objectFieldType->getObjects());
         } catch (InvalidInputException $e) {
-            DmsError::abort($request, 404);
+            return DmsError::abort($request, 404);
         }
     }
 
