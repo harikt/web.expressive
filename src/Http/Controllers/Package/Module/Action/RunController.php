@@ -181,26 +181,14 @@ class RunController extends DmsController implements ServerMiddlewareInterface
     /**
      * @param \Exception $e
      *
-     * @return \Illuminate\Http\JsonResponse
-     * @throws
+     * @return \Zend\Diactoros\Response\JsonResponse
      */
     protected function handleUnknownHandlerException(\Exception $e)
     {
-        if (app()->isLocal()) {
-            throw $e;
-        } else {
-            if ($e instanceof UnhandleableActionExceptionException) {
-                $e = $e->getPrevious();
-            }
-
-            // log error
-            // $e->getMessage() . $e->getTraceAsString();
-
-            return new JsonResponse([
-                'message_type' => 'danger',
-                'message'      => 'An internal error occurred',
-            ], 500);
-        }
+        return new JsonResponse([
+            'message_type' => 'danger',
+            'message'      => 'An internal error occurred',
+        ], 500);
     }
 
     /**
