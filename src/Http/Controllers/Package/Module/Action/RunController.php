@@ -129,9 +129,9 @@ class RunController extends DmsController implements ServerMiddlewareInterface
         $moduleName = $request->getAttribute('module');
         $actionName = $request->getAttribute('action');
 
-        $package = $this->cms->loadPackage($packageName);
+        $moduleContext = ModuleContext::rootContext($this->router, $packageName, $moduleName, function () use ($packageName, $moduleName) {
+            $package = $this->cms->loadPackage($packageName);
 
-        $moduleContext = ModuleContext::rootContext($this->router, $packageName, $moduleName, function () use ($package, $moduleName) {
             return $package->loadModule($moduleName);
         });
 

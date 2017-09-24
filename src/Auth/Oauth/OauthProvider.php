@@ -138,7 +138,7 @@ abstract class OauthProvider
     }
 
     /**
-     * @return \Dms\Core\Auth\IPermission[]
+     * @return string[]
      */
     public function getRoleNames()
     {

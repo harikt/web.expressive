@@ -119,10 +119,14 @@ class ResetController extends DmsController implements ServerMiddlewareInterface
 
                 return $response;
             default:
-                // todo
-                return redirect()->back()
-                    ->withInput($request->only('email'))
-                    ->withErrors(['email' => trans($response)]);
+                // return redirect()->back()
+                //     ->withInput($request->only('email'))
+                //     ->withErrors(['email' => trans($response)]);
+                $referer = $request->getServerParams()['HTTP_REFERER'];
+                $response = new Response();
+                $response = $response->withHeader('Location', $referer);
+
+                return $response;
         }
     }
 }

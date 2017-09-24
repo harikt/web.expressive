@@ -64,7 +64,8 @@ class PackageController extends DmsController implements ServerMiddlewareInterfa
                 'package' => $this->package->getName(),
                 'module'  => $firstModule,
             ], [
-                '__no_template' => 1,
+                '__no_template' => isset($request->getQueryParams()['__no_template']) ? $request->getQueryParams()['__no_template'] : '',
+                '__content_only' => isset($request->getQueryParams()['__content_only']) ? $request->getQueryParams()['__content_only'] : '',
             ]);
 
             $response = new Response('php://memory', 302);
