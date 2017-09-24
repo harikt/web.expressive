@@ -32,7 +32,7 @@
         "cache/cache": "^0.1.0",
         "dms-org/common.structure": "^0.8",
         "dms-org/core": "^0.8",
-        "harikt/blade-renderer": "0.1.0",
+        "harikt/blade-renderer": "^0.2",
         "illuminate/config": "^5.4",
         "laravel/browser-kit-testing": "^1.0",
         "league/oauth2-google": "^1.0",
