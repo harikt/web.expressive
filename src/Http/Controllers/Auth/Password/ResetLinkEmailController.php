@@ -15,8 +15,7 @@ use Illuminate\Contracts\Auth\PasswordBroker;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\HtmlResponse;
-use Zend\Diactoros\Response\JsonResponse;
-use Zend\Expressive\Helper\UrlHelper;
+use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
@@ -47,12 +46,13 @@ class ResetLinkEmailController extends DmsController implements ServerMiddleware
     public function __construct(
         ICms $cms,
         IAuthSystem $auth,
+        TemplateRendererInterface $template,
+        RouterInterface $router,
         PasswordBrokerManager $passwordBrokerManager,
         IPasswordResetService $passwordResetService
     ) {
-        parent::__construct($cms, $auth);
+        parent::__construct($cms, $auth, $template, $router);
 
-        // $this->middleware('dms.guest');
         $this->passwordBroker       = $passwordBrokerManager->broker('dms');
         $this->passwordResetService = $passwordResetService;
     }
@@ -128,11 +128,11 @@ class ResetLinkEmailController extends DmsController implements ServerMiddleware
      */
     public function reset(ServerRequestInterface $request)
     {
-        $this->validate($request, [
-            'token'    => 'required',
-            'username' => 'required',
-            'password' => 'required|confirmed|min:6|max:50',
-        ]);
+        // $this->validate($request, [
+        //     'token'    => 'required',
+        //     'username' => 'required',
+        //     'password' => 'required|confirmed|min:6|max:50',
+        // ]);
 
         $credentials = $request->only(
             'username',
@@ -147,7 +147,11 @@ class ResetLinkEmailController extends DmsController implements ServerMiddleware
 
         switch ($response) {
             case PasswordBroker::PASSWORD_RESET:
-                return redirect()->route('dms::auth.login')->with('success', trans($response));
+                $response = new Response();
+                $response = $response->withHeader('Location', $this->router->generateUri('dms::auth.login'));
+
+                // ->with('success', trans($response))
+                return $response;
 
             default:
                 return redirect()->back()

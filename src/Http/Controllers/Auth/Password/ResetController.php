@@ -3,7 +3,6 @@
 namespace Dms\Web\Expressive\Http\Controllers\Auth\Password;
 
 use Dms\Core\Auth\IAuthSystem;
-use Dms\Common\Structure\Web\EmailAddress;
 use Dms\Core\Auth\IAdmin;
 use Dms\Core\ICms;
 use Dms\Web\Expressive\Auth\Password\IPasswordResetService;
@@ -15,6 +14,8 @@ use Illuminate\Contracts\Auth\PasswordBroker;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\HtmlResponse;
+use Zend\Expressive\Router\RouterInterface;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
  * The password reset controller
@@ -43,12 +44,13 @@ class ResetController extends DmsController implements ServerMiddlewareInterface
     public function __construct(
         ICms $cms,
         IAuthSystem $auth,
+        TemplateRendererInterface $template,
+        RouterInterface $router,
         PasswordBrokerManager $passwordBrokerManager,
         IPasswordResetService $passwordResetService
     ) {
-        parent::__construct($cms, $auth);
+        parent::__construct($cms, $auth, $template, $router);
 
-        // $this->middleware('dms.guest');
         $this->passwordBroker       = $passwordBrokerManager->broker('dms');
         $this->passwordResetService = $passwordResetService;
     }
@@ -110,13 +112,20 @@ class ResetController extends DmsController implements ServerMiddlewareInterface
         switch ($response) {
             case PasswordBroker::PASSWORD_RESET:
                 // todo find equivalent of with, withInput, withErrors
-                return redirect()->route('dms::auth.login')->with('success', trans($response));
+                // with('success', trans($response));
+                $response = new Response();
+                $response = $response->withHeader('Location', $this->router->generateUri('dms::auth.login'));
 
+                return $response;
             default:
-                // todo
-                return redirect()->back()
-                    ->withInput($request->only('email'))
-                    ->withErrors(['email' => trans($response)]);
+                // return redirect()->back()
+                //     ->withInput($request->only('email'))
+                //     ->withErrors(['email' => trans($response)]);
+                $referer = $request->getServerParams()['HTTP_REFERER'];
+                $response = new Response();
+                $response = $response->withHeader('Location', $referer);
+
+                return $response;
         }
     }
 }

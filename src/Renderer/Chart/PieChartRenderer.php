@@ -5,7 +5,6 @@ namespace Dms\Web\Expressive\Renderer\Chart;
 use Dms\Core\Model\Object\Enum;
 use Dms\Core\Table\Chart\IChartDataTable;
 use Dms\Core\Table\Chart\Structure\PieChart;
-use Dms\Core\Util\Hashing\ValueHasher;
 
 /**
  * The chart renderer for pie charts

@@ -2,7 +2,6 @@
 
 namespace Dms\Web\Expressive\Error;
 
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
 
@@ -17,12 +16,15 @@ class DmsError
      * @param int    $statusCode
      * @param string $message
      *
-     * @return void
+     * @return Response
      */
     public static function abort(ServerRequestInterface $request, int $statusCode, string $message = '')
     {
         if ('XMLHttpRequest' == $request->getHeaderLine('X-Requested-With')) {
             $response = new Response('php://memory', $statusCode);
+            if ($statusCode == 401) {
+                $message = json_encode(['redirect' => '/dms']);
+            }
             $response->getBody()->write($message);
             return $response;
         }

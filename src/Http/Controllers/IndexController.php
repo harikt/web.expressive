@@ -4,13 +4,13 @@ namespace Dms\Web\Expressive\Http\Controllers;
 
 use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\ICms;
-use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Dms\Web\Expressive\Renderer\Package\PackageRendererCollection;
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Expressive\Template\TemplateRendererInterface;
 use Zend\Diactoros\Response\HtmlResponse;
+use Zend\Expressive\Router\RouterInterface;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
  * The root controller.
@@ -19,19 +19,17 @@ use Zend\Diactoros\Response\HtmlResponse;
  */
 class IndexController extends DmsController implements ServerMiddlewareInterface
 {
-    protected $template;
-
     private $dashboardRenderer;
 
     public function __construct(
         ICms $cms,
         IAuthSystem $auth,
         TemplateRendererInterface $template,
+        RouterInterface $router,
         PackageRendererCollection $dashboardRenderer
     ) {
-        parent::__construct($cms, $auth);
+        parent::__construct($cms, $auth, $template, $router);
 
-        $this->template = $template;
         $this->dashboardRenderer = $dashboardRenderer;
     }
 

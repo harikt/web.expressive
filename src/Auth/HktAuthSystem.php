@@ -19,7 +19,7 @@ use Dms\Web\Expressive\Auth\Password\IPasswordHasherFactory;
 use Aura\Session\Session;
 
 /**
- * The auth system implementation using the laravel auth component.
+ * The auth system implementation using aura session.
  *
  * @author Elliot Levin <elliotlevin@hotmail.com>
  */
@@ -171,20 +171,6 @@ class HktAuthSystem extends AuthSystem
     {
         $segment = $this->session->getSegment(__CLASS__);
         $user = $segment->get('auth');
-
-        // @todo Remove
-        // if ($user == null) {
-        // 	$user = new \Dms\Web\Expressive\Auth\LocalAdmin(
-        // 		"Hari KT",
-        //         new \Dms\Common\Structure\Web\EmailAddress("kthari85@gmail.com"),
-        //         "harikt",
-        //         new \Dms\Web\Expressive\Auth\Password\HashedPassword('hash', 'pkbsd', 10),
-        //         true,
-        //         false,
-        //         null
-        // 	);
-        // 	$segment->set('auth', $user);
-        // }
 
         return $user !== null;
     }

@@ -3,7 +3,6 @@
 namespace Dms\Web\Expressive\Http\Controllers\Package\Module\Table;
 
 use Dms\Core\Auth\IAuthSystem;
-use Dms\Core\Common\Crud\Table\ISummaryTable;
 use Dms\Core\Exception\InvalidArgumentException;
 use Dms\Core\ICms;
 use Dms\Core\Model\Criteria\Condition\ConditionOperator;
@@ -17,7 +16,6 @@ use Dms\Web\Expressive\Error\DmsError;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Dms\Web\Expressive\Http\ModuleContext;
 use Dms\Web\Expressive\Renderer\Table\TableRenderer;
-use Dms\Web\Expressive\Util\StringHumanizer;
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -40,10 +38,6 @@ class LoadTableRowsController extends DmsController implements ServerMiddlewareI
      */
     protected $tableRenderer;
 
-    protected $template;
-
-    protected $router;
-
     /**
      * TableController constructor.
      *
@@ -53,14 +47,12 @@ class LoadTableRowsController extends DmsController implements ServerMiddlewareI
     public function __construct(
         ICms $cms,
         IAuthSystem $auth,
-        TableRenderer $tableRenderer,
         TemplateRendererInterface $template,
-        RouterInterface $router
+        RouterInterface $router,
+        TableRenderer $tableRenderer
     ) {
-        parent::__construct($cms, $auth);
+        parent::__construct($cms, $auth, $template, $router);
         $this->tableRenderer = $tableRenderer;
-        $this->template = $template;
-        $this->router = $router;
     }
 
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
@@ -159,7 +151,7 @@ class LoadTableRowsController extends DmsController implements ServerMiddlewareI
         try {
             return $table->getView($viewName);
         } catch (InvalidArgumentException $e) {
-            DmsError::abort($request, 404);
+            return DmsError::abort($request, 404);
         }
     }
 
@@ -179,6 +171,6 @@ class LoadTableRowsController extends DmsController implements ServerMiddlewareI
             ], 404);
         }
 
-        throw new HttpResponseException($response);
+        return $response;
     }
 }

@@ -5,7 +5,6 @@ namespace Dms\Web\Expressive\File;
 use Dms\Common\Structure\DateTime\DateTime;
 use Dms\Common\Structure\FileSystem\File;
 use Dms\Core\File\IFile;
-use Dms\Core\Model\Criteria\CustomSpecification;
 use Dms\Core\Model\Criteria\SpecificationDefinition;
 use Dms\Core\Model\ISpecification;
 use Dms\Core\Model\Object\ClassDefinition;

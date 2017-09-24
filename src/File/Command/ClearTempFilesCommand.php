@@ -46,7 +46,7 @@ class ClearTempFilesCommand extends Command
         $this->filesystem = $filesystem;
     }
 
-    public function fire(ITemporaryFileRepository $tempFileRepo, IClock $clock)
+    public function handle(ITemporaryFileRepository $tempFileRepo, IClock $clock)
     {
         $expiredFiles = $tempFileRepo->matching(
             $tempFileRepo->criteria()

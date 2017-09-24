@@ -136,7 +136,6 @@ return [
     'services'     => [
         'actions' => [
             'input-transformers' => [
-                Dms\Web\Expressive\Action\InputTransformer\SymfonyToDmsUploadedFileTransformer::class,
                 Dms\Web\Expressive\Action\InputTransformer\TempUploadedFileToUploadedFileTransformer::class,
             ],
             'result-handlers'    => [

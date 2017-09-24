@@ -33,7 +33,8 @@ class GoogleOauthProvider extends OauthProvider
         return new Google([
             'clientId'     => $clientId,
             'clientSecret' => $clientSecret,
-            'redirectUri'  => route('dms::auth.oauth.response', $this->name),
+            // todo global route removal
+            'redirectUri'  => route('dms::auth.oauth.response', ['provider' => $this->name]),
         ]);
     }
 

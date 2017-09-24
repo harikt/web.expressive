@@ -2,16 +2,8 @@
 use Aura\Session\Session;
 use Illuminate\Support\HtmlString;
 use Illuminate\Container\Container;
-use Illuminate\Contracts\Bus\Dispatcher;
-use Illuminate\Contracts\Auth\Access\Gate;
-use Illuminate\Contracts\Routing\UrlGenerator;
-use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use Illuminate\Contracts\View\Factory as ViewFactory;
-use Illuminate\Contracts\Cookie\Factory as CookieFactory;
-use Illuminate\Database\Eloquent\Factory as EloquentFactory;
-use Illuminate\Contracts\Validation\Factory as ValidationFactory;
-use Illuminate\Contracts\Broadcasting\Factory as BroadcastFactory;
 use Dms\Web\Expressive\Ioc\LaravelIocContainer;
 use Zend\Expressive\Router\RouterInterface;
 use Zend\Diactoros\Response;

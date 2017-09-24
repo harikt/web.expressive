@@ -5,6 +5,7 @@ namespace Dms\Web\Expressive\Renderer\Table\Column\Component;
 use Dms\Common\Structure\Type\Form\DomainSpecificStringType;
 use Dms\Common\Structure\Type\StringValueObject;
 use Dms\Common\Structure\Web\EmailAddress;
+use Dms\Common\Structure\Web\Html;
 use Dms\Common\Structure\Web\Url;
 use Dms\Core\Exception\InvalidArgumentException;
 use Dms\Core\Form\Field\Type\BoolType;
@@ -77,6 +78,10 @@ class OptimizedScalarValueComponentRenderer implements IColumnComponentRenderer
         if ($value instanceof Url) {
             $url = e($value->asString());
             return '<a href="' . $url . '">' . $url . '</a>';
+        }
+
+        if ($value instanceof Html) {
+            return $value->asString();
         }
 
         if ($value instanceof StringValueObject) {

@@ -51,7 +51,7 @@ abstract class OauthProvider
      * @param string    $clientSecret
      * @param bool      $isSuperUser
      * @param string[]  $roleNames
-     * @param \string[] $allowedEmails
+     * @param string[] $allowedEmails
      *
      * @internal param AbstractProvider $provider
      */
@@ -138,7 +138,7 @@ abstract class OauthProvider
     }
 
     /**
-     * @return \Dms\Core\Auth\IPermission[]
+     * @return string[]
      */
     public function getRoleNames()
     {

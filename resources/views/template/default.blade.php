@@ -1,8 +1,8 @@
-@if(isset($request->getQueryParams()['__content_only']))
+@if($__content_only)
     @yield('content')
     <?php return ?>
 @endif
-@if(isset($request->getQueryParams()['__no_template']))
+@if($__no_template)
     <div id="page">
         <div class="title">{{ ($pageTitle ?? false) ? $pageTitle . ' :: ' : '' }}{{ $title }}</div>
         <div class="scripts">
@@ -32,7 +32,7 @@
                 <!-- mini logo for sidebar mini 50x50 pixels -->
                 <span class="logo-mini"><strong>DMS</strong></span>
                 <!-- logo for regular state and mobile devices -->
-                <span class="logo-lg"><strong>DMS</strong> <small>{{-- '{' . $request->getServerParams()['SERVER_NAME']) . '}' --}}</small></span>
+                <span class="logo-lg"><strong>{{ $title }}</strong></span>
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top" role="navigation">
@@ -106,7 +106,7 @@
                     <li class="active treeview">
                     @foreach($navigation as $element)
                         @if($element instanceof \Dms\Web\Expressive\View\NavigationElementGroup)
-                            <li class="treeview  @if(starts_with($request->getUri(), $element->getAllUrls())) active @endif">
+                            <li class="treeview  @if(starts_with($requestUri, $element->getAllUrls())) active @endif">
                                 <a href="javascript:void(0)">
                                     <i class="fa fa-{{ $element->getIcon() }}"></i>
                                     <span class="dms-nav-label dms-nav-label-group">{{ $element->getLabel() }}</span>
@@ -114,7 +114,7 @@
                                 </a>
                                 <ul class="treeview-menu">
                                     @foreach($element->getElements() as $innerElement)
-                                        <li @if(starts_with($request->getUri(), $innerElement->getUrl())) class="active" @endif>
+                                        <li @if(starts_with($requestUri, $innerElement->getUrl())) class="active" @endif>
                                             <a href="{{ $innerElement->getUrl() }}">
                                                 <i class="fa fa-{{ $innerElement->getIcon() }}"></i>
                                                 <span class="dms-nav-label">{{ $innerElement->getLabel() }}</span>
@@ -124,7 +124,7 @@
                                 </ul>
                             </li>
                         @elseif ($element instanceof \Dms\Web\Expressive\View\NavigationElement)
-                            <li @if($element->getUrl() === route('dms::index') ? $element->getUrl() === $request->getUri() : starts_with($request->getUri(), $element->getUrl())) class="active" @endif>
+                            <li @if($element->getUrl() === route('dms::index') ? $element->getUrl() === $requestUri : starts_with($requestUri, $element->getUrl())) class="active" @endif>
                                 <a href="{{ $element->getUrl() }}">
                                     <i class="fa fa-{{ $element->getIcon() }}"></i>
                                     <span class="dms-nav-label">{{ $element->getLabel() }}</span>

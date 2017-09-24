@@ -9,7 +9,6 @@ use Dms\Common\Structure\FileSystem\PathHelper;
 use Dms\Core\Model\Object\ClassDefinition;
 use Dms\Core\Model\Object\ValueObject;
 use Dms\Core\Model\ValueObjectCollection;
-use Symfony\Component\Finder\Finder;
 
 /**
  * The directory tree object.

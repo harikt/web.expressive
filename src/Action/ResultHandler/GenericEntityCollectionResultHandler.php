@@ -8,7 +8,6 @@ use Dms\Core\Module\IAction;
 use Dms\Core\Table\DataSource\ObjectTableDataSource;
 use Dms\Web\Expressive\Action\ActionResultHandler;
 use Dms\Web\Expressive\Http\ModuleContext;
-use Dms\Web\Expressive\Http\ModuleRequestRouter;
 use Dms\Web\Expressive\Renderer\Table\TableRenderer;
 use Dms\Web\Expressive\Util\EntityModuleMap;
 use Dms\Web\Expressive\Util\StringHumanizer;

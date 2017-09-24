@@ -2,7 +2,6 @@
 
 namespace Dms\Web\Expressive\Action;
 
-use Dms\Core\Exception\InvalidArgumentException;
 use Dms\Core\Module\IAction;
 use Dms\Web\Expressive\Http\ModuleContext;
 use Zend\Diactoros\Response;

@@ -6,13 +6,9 @@ use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\Common\Crud\Table\ISummaryTable;
 use Dms\Core\Exception\InvalidArgumentException;
 use Dms\Core\ICms;
-use Dms\Core\Model\Criteria\Condition\ConditionOperator;
-use Dms\Core\Model\Criteria\OrderingDirection;
 use Dms\Core\Module\IModule;
 use Dms\Core\Module\ITableDisplay;
 use Dms\Core\Module\ITableView;
-use Dms\Core\Table\Criteria\RowCriteria;
-use Dms\Core\Table\ITableStructure;
 use Dms\Web\Expressive\Error\DmsError;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Dms\Web\Expressive\Http\ModuleContext;
@@ -40,10 +36,6 @@ class ShowController extends DmsController implements ServerMiddlewareInterface
      */
     protected $tableRenderer;
 
-    protected $template;
-
-    protected $router;
-
     /**
      * TableController constructor.
      *
@@ -53,20 +45,18 @@ class ShowController extends DmsController implements ServerMiddlewareInterface
     public function __construct(
         ICms $cms,
         IAuthSystem $auth,
-        TableRenderer $tableRenderer,
         TemplateRendererInterface $template,
         RouterInterface $router,
-        UrlHelper $urlHelper
+        TableRenderer $tableRenderer
     ) {
-        parent::__construct($cms, $auth);
+        parent::__construct($cms, $auth, $template, $router);
         $this->tableRenderer = $tableRenderer;
-        $this->template = $template;
-        $this->router = $router;
-        $this->urlHelper = $urlHelper;
+        ;
     }
 
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
+        $urlHelper = new UrlHelper($this->router);
         $packageName = $request->getAttribute('package');
         $moduleName = $request->getAttribute('module');
         $tableName = $request->getAttribute('table');
@@ -81,8 +71,8 @@ class ShowController extends DmsController implements ServerMiddlewareInterface
         $table = $this->loadTable($module, $tableName);
 
         if ($table instanceof ISummaryTable) {
-            $to = $this->urlHelper->generate('dms::package.module.dashboard', [
-                'package' => $this->package->getName(),
+            $to = $urlHelper->generate('dms::package.module.dashboard', [
+                'package' => $package->getName(),
                 'module'  => $firstModule,
             ], [
                 '__no_template' => 1,
@@ -122,7 +112,7 @@ class ShowController extends DmsController implements ServerMiddlewareInterface
         try {
             return $table->getView($viewName);
         } catch (InvalidArgumentException $e) {
-            DmsError::abort($request, 404);
+            return DmsError::abort($request, 404);
         }
     }
 
@@ -142,6 +132,6 @@ class ShowController extends DmsController implements ServerMiddlewareInterface
             ], 404);
         }
 
-        throw new HttpResponseException($response);
+        return $response;
     }
 }

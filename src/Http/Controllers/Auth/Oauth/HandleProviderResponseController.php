@@ -1,10 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace Dms\Web\Expressive\Http\Controllers\Auth;
+namespace Dms\Web\Expressive\Http\Controllers\Auth\Oauth;
 
 use Dms\Core\Auth\IAdminRepository;
 use Dms\Core\Auth\IRoleRepository;
 use Dms\Core\Auth\Permission;
+use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\ICms;
 use Dms\Web\Expressive\Auth\Admin;
 use Dms\Web\Expressive\Auth\Oauth\AdminAccountDetails;
@@ -15,16 +16,19 @@ use Dms\Web\Expressive\Auth\Role;
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Psr\Http\Message\ServerRequestInterface;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
+use Zend\Diactoros\Response;
+use Zend\Expressive\Router\RouterInterface;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
+// todo
 /**
  * The oauth login controller.
  *
  * @author Elliot Levin <elliotlevin@hotmail.com>
  */
-class OauthController extends DmsController implements ServerMiddlewareInterface
+class HandleProviderResponseController extends DmsController implements ServerMiddlewareInterface
 {
     /**
      * @var OauthProviderCollection
@@ -51,32 +55,24 @@ class OauthController extends DmsController implements ServerMiddlewareInterface
      */
     public function __construct(
         ICms $cms,
+        IAuthSystem $auth,
+        TemplateRendererInterface $template,
+        RouterInterface $router,
         OauthProviderCollection $providerCollection,
         IAdminRepository $adminRepository,
         IRoleRepository $roleRepository
     ) {
-        parent::__construct($cms, $auth);
+        parent::__construct($cms, $auth, $template, $router);
 
-        $this->middleware('dms.guest');
         $this->providerCollection = $providerCollection;
-        $this->cms                = $cms;
         $this->adminRepository    = $adminRepository;
         $this->roleRepository     = $roleRepository;
     }
 
-    public function redirectToProvider(string $providerName, ServerRequestInterface $request)
+    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
-        $oauthProvider = $this->getProvider($providerName);
+        $providerName = $request->getAttribute('provider');
 
-        $url = $oauthProvider->getProvider()->getAuthorizationUrl();
-
-        $request->session()->put('dms-oauth-state', $oauthProvider->getProvider()->getState());
-
-        return \redirect($url);
-    }
-
-    public function handleProviderResponse(string $providerName, ServerRequestInterface $request)
-    {
         $oauthProvider = $this->getProvider($providerName);
 
         $state = $request->session()->pull('dms-oauth-state');
@@ -84,8 +80,11 @@ class OauthController extends DmsController implements ServerMiddlewareInterface
         $hasValidState = $state && $state === $request->query('state');
 
         if (!$hasValidState) {
-            return \redirect()->route('dms::auth.login')
-                ->with('error', trans('dms::auth.oauth.invalid-state'));
+            // ->with('error', trans('dms::auth.oauth.invalid-state'));
+            $response = new Response();
+            $response = $response->withHeader('Location', $this->router->generateUri('dms::auth.login'));
+
+            return $response;
         }
 
         $accessToken = $oauthProvider->getProvider()->getAccessToken('authorization_code', [
@@ -97,7 +96,7 @@ class OauthController extends DmsController implements ServerMiddlewareInterface
 
         \auth()->guard('dms')->login($adminAccount);
 
-        return \redirect()->intended(route('dms::index'));
+        return \redirect()->intended($this->router->generateUri('dms::index'));
     }
 
     protected function loadAdminAccount(OauthProvider $oauthProvider, ResourceOwnerInterface $resourceOwner) : OauthAdmin
@@ -105,10 +104,12 @@ class OauthController extends DmsController implements ServerMiddlewareInterface
         $adminAccountDetails = $oauthProvider->getAdminDetailsFromResourceOwner($resourceOwner);
 
         if (!$oauthProvider->allowsAccount($adminAccountDetails)) {
-            throw new HttpResponseException(
-                \redirect()->route('dms::auth.login')
-                    ->with('error', trans('dms::auth.oauth.invalid-email'))
-            );
+
+            // ->with('error', trans('dms::auth.oauth.invalid-email'))
+            $response = new Response();
+            $response = $response->withHeader('Location', $this->router->generateUri('dms::auth.login'));
+
+            return $response;
         }
 
         $adminsWithEmail = $this->adminRepository->matching(
@@ -128,24 +129,27 @@ class OauthController extends DmsController implements ServerMiddlewareInterface
     private function validateExistingAdminMatches(Admin $admin, OauthProvider $oauthProvider, ResourceOwnerInterface $resourceOwner)
     {
         if (!($admin instanceof OauthAdmin)) {
-            throw new HttpResponseException(
-                \redirect()->route('dms::auth.login')
-                    ->with('error', trans('dms::auth.oauth.registered-locally'))
-            );
+            $response = new Response();
+            $response = $response->withHeader('Location', $this->router->generateUri('dms::auth.login'));
+
+            // ->with('error', trans('dms::auth.oauth.registered-locally'))
+            return $response;
         }
 
         if ($admin->getOauthProviderName() !== $oauthProvider->getName()) {
-            throw new HttpResponseException(
-                \redirect()->route('dms::auth.login')
-                    ->with('error', trans('dms::auth.oauth.other-provider'))
-            );
+            $response = new Response();
+            $response = $response->withHeader('Location', $this->router->generateUri('dms::auth.login'));
+
+            // ->with('error', trans('dms::auth.oauth.other-provider'))
+            return $response;
         }
 
         if ($admin->getOauthAccountId() !== $resourceOwner->getId()) {
-            throw new HttpResponseException(
-                \redirect()->route('dms::auth.login')
-                    ->with('error', trans('dms::auth.oauth.id-mismatch'))
-            );
+            $response = new Response();
+            $response = $response->withHeader('Location', $this->router->generateUri('dms::auth.login'));
+
+            // ->with('error', trans('dms::auth.oauth.id-mismatch'))
+            return $response;
         }
     }
 

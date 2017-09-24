@@ -2,30 +2,30 @@
 
 namespace Dms\Web\Expressive\Http\Controllers\Auth;
 
-use Dms\Core\Auth\AdminBannedException;
 use Dms\Core\Auth\IAuthSystem;
-use Dms\Core\Auth\InvalidCredentialsException;
 use Dms\Core\Auth\NotAuthenticatedException;
 use Dms\Core\ICms;
-use Dms\Web\Expressive\Auth\Oauth\OauthProviderCollection;
-use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
 use Interop\Http\ServerMiddleware\DelegateInterface;
-use Illuminate\Cache\RateLimiter;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
 
 /**
- * The login controller.
+ * The logout controller.
  *
  * @author Elliot Levin <elliotlevin@hotmail.com>
  */
-class LogoutController extends DmsController implements ServerMiddlewareInterface
+class LogoutController implements ServerMiddlewareInterface
 {
     /**
-     * @var OauthProviderCollection
+     * @var ICms
      */
-    protected $oauthProviderCollection;
+    protected $cms;
+
+    /**
+     * @var IAuthSystem
+     */
+    protected $auth;
 
     /**
      * Create a new authentication controller instance.
@@ -34,13 +34,10 @@ class LogoutController extends DmsController implements ServerMiddlewareInterfac
      */
     public function __construct(
         ICms $cms,
-        IAuthSystem $auth,
-        OauthProviderCollection $oauthProviderCollection
+        IAuthSystem $auth
     ) {
-        parent::__construct($cms, $auth);
-
-        // $this->middleware('dms.guest', ['except' => 'logout']);
-        $this->oauthProviderCollection = $oauthProviderCollection;
+        $this->cms  = $cms;
+        $this->auth = $auth;
     }
 
     /**

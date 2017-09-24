@@ -4,6 +4,7 @@ namespace Dms\Web\Expressive\Http\Controllers\Package\Module\Chart;
 
 use Dms\Core\Exception\InvalidArgumentException;
 use Dms\Core\ICms;
+use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\Model\Criteria\Condition\ConditionOperator;
 use Dms\Core\Model\Criteria\OrderingDirection;
 use Dms\Core\Module\IChartDisplay;
@@ -15,13 +16,11 @@ use Dms\Web\Expressive\Error\DmsError;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Dms\Web\Expressive\Http\ModuleContext;
 use Dms\Web\Expressive\Renderer\Chart\ChartControlRenderer;
-use Dms\Web\Expressive\Util\StringHumanizer;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
-use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\JsonResponse;
 
 /**
@@ -36,38 +35,33 @@ class LoadChartDataController extends DmsController implements ServerMiddlewareI
      */
     protected $chartRenderer;
 
-    protected $template;
-
-    protected $moduleContext;
-
-    protected $chartName;
-
-    protected $viewName;
-
     public function __construct(
         ICms $cms,
         IAuthSystem $auth,
         TemplateRendererInterface $template,
-        ChartControlRenderer $chartRenderer,
-        ModuleContext $moduleContext,
-        string $chartName,
-        string $viewName
+        RouterInterface $router,
+        ChartControlRenderer $chartRenderer
      ) {
-        parent::__construct($cms, $auth);
-        $this->template = $template;
+        parent::__construct($cms, $auth, $template, $router);
         $this->chartRenderer = $chartRenderer;
-        $this->moduleContext = $moduleContext;
-        $this->chartName = $chartName;
-        $this->viewName = $viewName;
     }
 
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
-        $module = $this->moduleContext->getModule();
+        $chartName = $request->getAttribute('chart');
+        $viewName = $request->getAttribute('view');
+        $packageName = $request->getAttribute('package');
+        $moduleName = $request->getAttribute('module');
 
-        $chart = $this->loadChart($module, $this->chartName);
+        $package = $this->cms->loadPackage($packageName);
+        $moduleContext = ModuleContext::rootContext($this->router, $packageName, $moduleName, function () use ($package, $moduleName) {
+            return $package->loadModule($moduleName);
+        });
+        $module = $moduleContext->getModule();
 
-        $chartView = $this->loadChartView($chart, $this->viewName);
+        $chart = $this->loadChart($module, $chartName);
+
+        $chartView = $this->loadChartView($chart, $viewName);
 
         $criteria = $chartView->getCriteriaCopy() ?: $chart->getDataSource()->criteria();
 
@@ -88,13 +82,13 @@ class LoadChartDataController extends DmsController implements ServerMiddlewareI
             $axisNames[] = $axis->getName();
         }
 
-        $this->validate($request, [
-            'conditions.*.axis'     => 'required|in:' . implode(',', $axisNames),
-            'conditions.*.operator' => 'required|in:' . implode(',', ConditionOperator::getAll()),
-            'conditions.*.value'    => 'required',
-            'orderings.*.component' => 'required|in:' . implode(',', $axisNames),
-            'orderings.*.direction' => 'required|in' . implode(',', OrderingDirection::getAll()),
-        ]);
+        // $this->validate($request, [
+        //     'conditions.*.axis'     => 'required|in:' . implode(',', $axisNames),
+        //     'conditions.*.operator' => 'required|in:' . implode(',', ConditionOperator::getAll()),
+        //     'conditions.*.value'    => 'required',
+        //     'orderings.*.component' => 'required|in:' . implode(',', $axisNames),
+        //     'orderings.*.direction' => 'required|in' . implode(',', OrderingDirection::getAll()),
+        // ]);
 
         if ($request->has('conditions')) {
             foreach ($request->input('conditions') as $condition) {
@@ -120,7 +114,7 @@ class LoadChartDataController extends DmsController implements ServerMiddlewareI
         try {
             return $chart->hasView($chartView) ? $chart->getView($chartView) : $chart->getDefaultView();
         } catch (InvalidArgumentException $e) {
-            DmsError::abort($request, 404);
+            return DmsError::abort($request, 404);
         }
     }
 
@@ -142,6 +136,6 @@ class LoadChartDataController extends DmsController implements ServerMiddlewareI
             ], 404);
         }
 
-        throw new HttpResponseException($response);
+        return $response;
     }
 }

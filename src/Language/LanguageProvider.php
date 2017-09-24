@@ -7,7 +7,6 @@ use Dms\Core\Language\ILanguageProvider;
 use Dms\Core\Language\Message;
 use Dms\Core\Language\MessageNotFoundException;
 use Symfony\Component\Translation\Translator;
-use Symfony\Component\Translation\MessageSelector;
 
 /**
  * The laravel language provider.
