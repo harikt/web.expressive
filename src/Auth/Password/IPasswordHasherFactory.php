@@ -3,7 +3,6 @@
 namespace Dms\Web\Expressive\Auth\Password;
 
 use Dms\Core\Auth\IHashedPassword;
-use Dms\Core\Exception;
 
 interface IPasswordHasherFactory
 {

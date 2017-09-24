@@ -3,7 +3,6 @@
 namespace Dms\Web\Expressive\Http\Controllers\Auth\Password;
 
 use Dms\Core\Auth\IAuthSystem;
-use Dms\Common\Structure\Web\EmailAddress;
 use Dms\Core\Auth\IAdmin;
 use Dms\Core\ICms;
 use Dms\Web\Expressive\Auth\Password\IPasswordResetService;

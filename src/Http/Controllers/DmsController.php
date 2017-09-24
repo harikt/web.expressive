@@ -74,7 +74,8 @@ class DmsController
             '__no_template' => isset($request->getQueryParams()['__no_template']) ? $request->getQueryParams()['__no_template'] : null,
         ];
         foreach ($params as $param => $value) {
-            $this->template->addDefaultParam(TemplateRendererInterface::TEMPLATE_ALL,
+            $this->template->addDefaultParam(
+                TemplateRendererInterface::TEMPLATE_ALL,
                 $param,
                 $value
             );

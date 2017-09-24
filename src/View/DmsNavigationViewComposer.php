@@ -11,7 +11,6 @@ use Dms\Core\Package\IPackage;
 use Dms\Web\Expressive\Auth\LaravelAuthSystem;
 use Dms\Web\Expressive\Util\ModuleLabeler;
 use Dms\Web\Expressive\Util\PackageLabeler;
-use Dms\Web\Expressive\Util\StringHumanizer;
 use Illuminate\Cache\Repository as Cache;
 use Illuminate\View\View;
 

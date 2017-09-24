@@ -2,22 +2,15 @@
 
 namespace Dms\Web\Expressive\Http\Controllers\File;
 
-use Dms\Core\Auth\IAuthSystem;
-use Dms\Common\Structure\FileSystem\InMemoryFile;
-use Dms\Common\Structure\FileSystem\UploadedFileFactory;
 use Dms\Core\ICms;
 use Dms\Core\Model\EntityNotFoundException;
 use Dms\Web\Expressive\Error\DmsError;
 use Dms\Web\Expressive\File\ITemporaryFileService;
-use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Illuminate\Contracts\Config\Repository;
-use Illuminate\Cookie\CookieJar;
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Zend\Diactoros\Response;
-use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
  * The file upload/download controller.
@@ -61,7 +54,6 @@ class PreviewController implements ServerMiddlewareInterface
         $response = new Response();
         try {
             $file = $this->tempFileService->getTempFile($token);
-
             $isImage = @getimagesize($file->getFile()->getFullPath()) !== false;
 
             if ($isImage) {

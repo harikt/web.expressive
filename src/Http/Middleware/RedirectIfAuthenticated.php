@@ -2,7 +2,6 @@
 
 namespace Dms\Web\Expressive\Http\Middleware;
 
-use Closure;
 use Dms\Core\Auth\IAuthSystem;
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;

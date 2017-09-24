@@ -3,7 +3,6 @@
 namespace Dms\Web\Expressive\Renderer\Module;
 
 use Dms\Core\Exception\InvalidArgumentException;
-use Dms\Core\Module\IModule;
 use Dms\Web\Expressive\Http\ModuleContext;
 
 /**

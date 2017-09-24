@@ -16,7 +16,6 @@ use Dms\Web\Expressive\Auth\Role;
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Psr\Http\Message\ServerRequestInterface;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use Zend\Diactoros\Response;

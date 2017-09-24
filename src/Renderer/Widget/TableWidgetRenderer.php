@@ -2,7 +2,6 @@
 
 namespace Dms\Web\Expressive\Renderer\Widget;
 
-use Dms\Core\Module\IModule;
 use Dms\Core\Widget\IWidget;
 use Dms\Core\Widget\TableWidget;
 use Dms\Web\Expressive\Http\ModuleContext;

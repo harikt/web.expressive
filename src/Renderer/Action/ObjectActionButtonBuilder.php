@@ -2,7 +2,6 @@
 
 namespace Dms\Web\Expressive\Renderer\Action;
 
-use Dms\Core\Common\Crud\Action\Object\IObjectAction;
 use Dms\Core\Common\Crud\Action\Table\IReorderAction;
 use Dms\Core\Common\Crud\IReadModule;
 use Dms\Core\Model\ITypedObject;

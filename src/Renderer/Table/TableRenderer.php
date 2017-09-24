@@ -13,7 +13,6 @@ use Dms\Web\Expressive\Http\ModuleContext;
 use Dms\Web\Expressive\Renderer\Action\ActionButton;
 use Dms\Web\Expressive\Renderer\Action\ObjectActionButtonBuilder;
 use Zend\Expressive\Template\TemplateRendererInterface;
-use Zend\Diactoros\Response\HtmlResponse;
 
 /**
  * The table renderer class.

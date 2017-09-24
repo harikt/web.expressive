@@ -2,7 +2,6 @@
 
 namespace Dms\Web\Expressive\Error;
 
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
 

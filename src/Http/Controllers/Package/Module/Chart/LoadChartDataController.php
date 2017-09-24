@@ -16,14 +16,11 @@ use Dms\Web\Expressive\Error\DmsError;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Dms\Web\Expressive\Http\ModuleContext;
 use Dms\Web\Expressive\Renderer\Chart\ChartControlRenderer;
-use Dms\Web\Expressive\Util\StringHumanizer;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
-use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\JsonResponse;
 
 /**

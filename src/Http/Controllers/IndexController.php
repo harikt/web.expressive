@@ -4,7 +4,6 @@ namespace Dms\Web\Expressive\Http\Controllers;
 
 use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\ICms;
-use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Dms\Web\Expressive\Renderer\Package\PackageRendererCollection;
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;

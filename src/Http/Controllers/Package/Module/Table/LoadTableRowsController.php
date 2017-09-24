@@ -3,7 +3,6 @@
 namespace Dms\Web\Expressive\Http\Controllers\Package\Module\Table;
 
 use Dms\Core\Auth\IAuthSystem;
-use Dms\Core\Common\Crud\Table\ISummaryTable;
 use Dms\Core\Exception\InvalidArgumentException;
 use Dms\Core\ICms;
 use Dms\Core\Model\Criteria\Condition\ConditionOperator;
@@ -17,7 +16,6 @@ use Dms\Web\Expressive\Error\DmsError;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Dms\Web\Expressive\Http\ModuleContext;
 use Dms\Web\Expressive\Renderer\Table\TableRenderer;
-use Dms\Web\Expressive\Util\StringHumanizer;
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;

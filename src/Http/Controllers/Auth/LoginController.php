@@ -6,7 +6,6 @@ use BehEh\Flaps\Flap;
 use Dms\Core\Auth\AdminBannedException;
 use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\Auth\InvalidCredentialsException;
-use Dms\Core\Auth\NotAuthenticatedException;
 use Dms\Core\ICms;
 use Dms\Web\Expressive\Auth\Oauth\OauthProviderCollection;
 use Dms\Web\Expressive\Http\Controllers\DmsController;

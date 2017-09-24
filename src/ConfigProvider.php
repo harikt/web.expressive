@@ -2,7 +2,6 @@
 
 namespace Dms\Web\Expressive;
 
-use Dms\Web\Expressive\Middleware\AuthenticationMiddleware;
 use Zend\Expressive\Router\Route;
 
 /**
