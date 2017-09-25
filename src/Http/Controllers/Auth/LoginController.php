@@ -80,12 +80,9 @@ class LoginController extends DmsController implements ServerMiddlewareInterface
         // ]);
 
         if (! $this->flap->limit($this->getThrottleKey($request))) {
-            $response = new Response();
-
-            // @todo
-            $response->getBody()->write("Failed!");
-
-            return $response;
+            // too many login attempts
+            $response = new Response('php://memory', 302);
+            return $response->withHeader('Location', $this->router->generateUri('dms::auth.login'));
         }
 
         try {
@@ -110,7 +107,10 @@ class LoginController extends DmsController implements ServerMiddlewareInterface
         }
 
         if ('XMLHttpRequest' == $request->getHeaderLine('X-Requested-With')) {
-            return response('Failed', 400);
+            $response = new Response('php://memory', 400);
+            $response->getBody()->write('Failed');
+
+            return $response;
         } else {
             $to = $this->router->generateUri('dms::auth.login');
             $response = new Response('php://memory', 302);
