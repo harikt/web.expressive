@@ -14,6 +14,7 @@ use Dms\Core\Table\Criteria\RowCriteria;
 use Dms\Core\Table\ITableStructure;
 use Dms\Web\Expressive\Error\DmsError;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
+use Dms\Web\Expressive\Http\Controllers\Package\Module\ModuleContextTrait;
 use Dms\Web\Expressive\Http\ModuleContext;
 use Dms\Web\Expressive\Renderer\Table\TableRenderer;
 use Interop\Http\ServerMiddleware\DelegateInterface;
@@ -33,6 +34,8 @@ use Dms\Web\Expressive\Http\CurrentModuleContext;
  */
 class LoadTableRowsController extends DmsController implements ServerMiddlewareInterface
 {
+    use ModuleContextTrait;
+
     /**
      * @var TableRenderer
      */
@@ -57,14 +60,10 @@ class LoadTableRowsController extends DmsController implements ServerMiddlewareI
 
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
-        $packageName = $request->getAttribute('package');
-        $moduleName = $request->getAttribute('module');
         $tableName = $request->getAttribute('table');
         $viewName = $request->getAttribute('view');
-        $package = $this->cms->loadPackage($packageName);
-        $moduleContext = ModuleContext::rootContext($this->router, $packageName, $moduleName, function () use ($package, $moduleName) {
-            return $package->loadModule($moduleName);
-        });
+
+        $moduleContext = $this->getModuleContext($request, $this->router, $this->cms);
 
         CurrentModuleContext::setInstance($moduleContext);
 

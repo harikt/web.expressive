@@ -11,6 +11,7 @@ use Dms\Core\Module\ITableDisplay;
 use Dms\Core\Module\ITableView;
 use Dms\Web\Expressive\Error\DmsError;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
+use Dms\Web\Expressive\Http\Controllers\Package\Module\ModuleContextTrait;
 use Dms\Web\Expressive\Http\ModuleContext;
 use Dms\Web\Expressive\Renderer\Table\TableRenderer;
 use Dms\Web\Expressive\Util\StringHumanizer;
@@ -31,6 +32,8 @@ use Zend\Expressive\Router\RouterInterface;
  */
 class ShowController extends DmsController implements ServerMiddlewareInterface
 {
+    use ModuleContextTrait;
+
     /**
      * @var TableRenderer
      */
@@ -57,14 +60,10 @@ class ShowController extends DmsController implements ServerMiddlewareInterface
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
         $urlHelper = new UrlHelper($this->router);
-        $packageName = $request->getAttribute('package');
-        $moduleName = $request->getAttribute('module');
         $tableName = $request->getAttribute('table');
         $viewName = $request->getAttribute('view');
-        $package = $this->cms->loadPackage($packageName);
-        $moduleContext = ModuleContext::rootContext($this->router, $packageName, $moduleName, function () use ($package, $moduleName) {
-            return $package->loadModule($moduleName);
-        });
+
+        $moduleContext = $this->getModuleContext($request, $this->router, $this->cms);
 
         $module = $moduleContext->getModule();
 
@@ -75,7 +74,9 @@ class ShowController extends DmsController implements ServerMiddlewareInterface
                 'package' => $package->getName(),
                 'module'  => $firstModule,
             ], [
-                '__no_template' => 1,
+                '__content_only' => isset($request->getQueryParams()['__content_only']) ? $request->getQueryParams()['__content_only'] : null,
+                '__template_only' => isset($request->getQueryParams()['__template_only']) ? $request->getQueryParams()['__template_only'] : null,
+                '__no_template' => isset($request->getQueryParams()['__no_template']) ? $request->getQueryParams()['__no_template'] : null,
             ]);
 
             $response = new Response('php://memory', 302);

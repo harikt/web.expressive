@@ -17,6 +17,7 @@ use Dms\Web\Expressive\Action\UnhandleableActionExceptionException;
 use Dms\Web\Expressive\Action\UnhandleableActionResultException;
 use Dms\Web\Expressive\Error\DmsError;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
+use Dms\Web\Expressive\Http\Controllers\Package\Module\ModuleContextTrait;
 use Dms\Web\Expressive\Http\ModuleContext;
 use Dms\Web\Expressive\Renderer\Action\ObjectActionButtonBuilder;
 use Dms\Web\Expressive\Renderer\Form\ActionFormRenderer;
@@ -36,6 +37,8 @@ use Zend\Diactoros\Response\JsonResponse;
  */
 class RunController extends DmsController implements ServerMiddlewareInterface
 {
+    use ModuleContextTrait;
+
     /**
      * @var ILanguageProvider
      */
@@ -107,15 +110,9 @@ class RunController extends DmsController implements ServerMiddlewareInterface
 
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
-        $packageName = $request->getAttribute('package');
-        $moduleName = $request->getAttribute('module');
         $actionName = $request->getAttribute('action');
 
-        $moduleContext = ModuleContext::rootContext($this->router, $packageName, $moduleName, function () use ($packageName, $moduleName) {
-            $package = $this->cms->loadPackage($packageName);
-
-            return $package->loadModule($moduleName);
-        });
+        $moduleContext = $this->getModuleContext($request, $this->router, $this->cms);
 
         $action = $this->loadAction($moduleContext->getModule(), $actionName, $request);
         if ($action instanceof ResponseInterface) {

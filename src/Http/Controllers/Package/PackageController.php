@@ -11,6 +11,7 @@ use Dms\Web\Expressive\Renderer\Package\PackageRendererCollection;
 use Dms\Web\Expressive\Util\StringHumanizer;
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Expressive\Helper\UrlHelper;
 use Zend\Expressive\Router\RouterInterface;
@@ -54,7 +55,12 @@ class PackageController extends DmsController implements ServerMiddlewareInterfa
 
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
-        $this->loadPackage($request);
+        $result = $this->loadPackage($request);
+
+        if ($result instanceof ResponseInterface) {
+            // todo move as middleware ?
+            return $result;
+        }
 
         if (!$this->package->hasDashboard() || !$this->package->loadDashboard()->getAuthorizedWidgets()) {
             $moduleNames = $this->package->getModuleNames();
@@ -98,7 +104,7 @@ class PackageController extends DmsController implements ServerMiddlewareInterfa
         $packageName = $request->getAttribute('package');
 
         if (!$this->cms->hasPackage($packageName)) {
-            DmsError::abort($request, 404, 'Unrecognized package name');
+            return DmsError::abort($request, 404, 'Unrecognized package name');
         }
 
         $this->package = $this->cms->loadPackage($packageName);

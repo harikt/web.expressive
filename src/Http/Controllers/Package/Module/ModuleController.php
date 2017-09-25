@@ -5,6 +5,7 @@ namespace Dms\Web\Expressive\Http\Controllers\Package\Module;
 use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\ICms;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
+use Dms\Web\Expressive\Http\Controllers\Package\Module\ModuleContextTrait;
 use Dms\Web\Expressive\Http\ModuleContext;
 use Dms\Web\Expressive\Renderer\Module\ModuleRendererCollection;
 use Dms\Web\Expressive\Util\StringHumanizer;
@@ -22,6 +23,8 @@ use Zend\Diactoros\Response\HtmlResponse;
  */
 class ModuleController extends DmsController implements ServerMiddlewareInterface
 {
+    use ModuleContextTrait;
+
     /**
      * @var ModuleRendererCollection
      */
@@ -44,23 +47,18 @@ class ModuleController extends DmsController implements ServerMiddlewareInterfac
     ) {
         parent::__construct($cms, $auth, $template, $router);
         $this->moduleRenderers = $moduleRenderers;
-        // $this->moduleContext = $moduleContext;
     }
 
     /**
-     * @param ModuleContext $moduleContext
+     * @param ServerRequestInterface $request
+     * @param DelegateInterface      $delegate
      *
-     * @return mixed
+     * @return \Zend\Diactoros\Response
      */
-    //  public function showDashboard(ModuleContext $moduleContext)
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
-        $packageName = $request->getAttribute('package');
-        $moduleName = $request->getAttribute('module');
-        $package = $this->cms->loadPackage($packageName);
-        $moduleContext = ModuleContext::rootContext($this->router, $packageName, $moduleName, function () use ($package, $moduleName) {
-            return $package->loadModule($moduleName);
-        });
+        $moduleContext = $this->getModuleContext($request, $this->router, $this->cms);
+
         $module = $moduleContext->getModule();
 
         $this->loadSharedViewVariables($request);

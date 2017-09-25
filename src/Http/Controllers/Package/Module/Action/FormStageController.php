@@ -22,6 +22,7 @@ use Dms\Web\Expressive\Action\ActionInputTransformerCollection;
 use Dms\Web\Expressive\Action\ActionResultHandlerCollection;
 use Dms\Web\Expressive\Error\DmsError;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
+use Dms\Web\Expressive\Http\Controllers\Package\Module\ModuleContextTrait;
 use Dms\Web\Expressive\Http\ModuleContext;
 use Dms\Web\Expressive\Renderer\Action\ObjectActionButtonBuilder;
 use Dms\Web\Expressive\Renderer\Form\ActionFormRenderer;
@@ -44,6 +45,8 @@ use Zend\Diactoros\Response\JsonResponse;
  */
 class FormStageController extends DmsController implements ServerMiddlewareInterface
 {
+    use ModuleContextTrait;
+
     /**
      * @var ILanguageProvider
      */
@@ -163,16 +166,9 @@ class FormStageController extends DmsController implements ServerMiddlewareInter
         return $form->getFormForStage($stageNumber, $input);
     }
 
-    // public function getFormStage(ServerRequestInterface $request, ModuleContext $moduleContext, string $actionName, int $stageNumber, string $objectId = null)
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
-        $packageName = $request->getAttribute('package');
-        $moduleName = $request->getAttribute('module');
-        $actionName = $request->getAttribute('action');
-        $package = $this->cms->loadPackage($packageName);
-        $moduleContext = ModuleContext::rootContext($this->router, $packageName, $moduleName, function () use ($package, $moduleName) {
-            return $package->loadModule($moduleName);
-        });
+        $moduleContext = $this->getModuleContext($request, $this->router, $this->cms);
 
         $objectId = $request->getAttribute('object_id');
         $actionName = $request->getAttribute('action');
