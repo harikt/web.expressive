@@ -14,6 +14,7 @@ use Dms\Core\Table\Chart\Criteria\ChartCriteria;
 use Dms\Core\Table\Chart\IChartStructure;
 use Dms\Web\Expressive\Error\DmsError;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
+use Dms\Web\Expressive\Http\Controllers\Package\Module\ModuleContextTrait;
 use Dms\Web\Expressive\Http\ModuleContext;
 use Dms\Web\Expressive\Renderer\Chart\ChartControlRenderer;
 use Interop\Http\ServerMiddleware\DelegateInterface;
@@ -30,6 +31,8 @@ use Zend\Diactoros\Response\JsonResponse;
  */
 class LoadChartDataController extends DmsController implements ServerMiddlewareInterface
 {
+    use ModuleContextTrait;
+
     /**
      * @var ChartControlRenderer
      */
@@ -50,13 +53,8 @@ class LoadChartDataController extends DmsController implements ServerMiddlewareI
     {
         $chartName = $request->getAttribute('chart');
         $viewName = $request->getAttribute('view');
-        $packageName = $request->getAttribute('package');
-        $moduleName = $request->getAttribute('module');
 
-        $package = $this->cms->loadPackage($packageName);
-        $moduleContext = ModuleContext::rootContext($this->router, $packageName, $moduleName, function () use ($package, $moduleName) {
-            return $package->loadModule($moduleName);
-        });
+        $moduleContext = $this->getModuleContext($request, $this->router, $this->cms);
         $module = $moduleContext->getModule();
 
         $chart = $this->loadChart($module, $chartName);

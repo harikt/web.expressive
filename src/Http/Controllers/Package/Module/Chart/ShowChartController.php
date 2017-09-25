@@ -14,6 +14,7 @@ use Dms\Core\Table\Chart\Criteria\ChartCriteria;
 use Dms\Core\Table\Chart\IChartStructure;
 use Dms\Web\Expressive\Error\DmsError;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
+use Dms\Web\Expressive\Http\Controllers\Package\Module\ModuleContextTrait;
 use Dms\Web\Expressive\Http\ModuleContext;
 use Dms\Web\Expressive\Renderer\Chart\ChartControlRenderer;
 use Dms\Web\Expressive\Util\StringHumanizer;
@@ -32,6 +33,8 @@ use Zend\Diactoros\Response\JsonResponse;
  */
 class ShowChartController extends DmsController implements ServerMiddlewareInterface
 {
+    use ModuleContextTrait;
+
     /**
      * @var ChartControlRenderer
      */
@@ -52,12 +55,8 @@ class ShowChartController extends DmsController implements ServerMiddlewareInter
     {
         $chartName = $request->getAttribute('chart');
         $viewName = $request->getAttribute('view');
-        $packageName = $request->getAttribute('package');
-        $moduleName = $request->getAttribute('module');
-        $package = $this->cms->loadPackage($packageName);
-        $moduleContext = ModuleContext::rootContext($this->router, $packageName, $moduleName, function () use ($package, $moduleName) {
-            return $package->loadModule($moduleName);
-        });
+
+        $moduleContext = $this->getModuleContext($request, $this->router, $this->cms);
         $module = $moduleContext->getModule();
         $chart  = $this->loadChart($module, $chartName);
 
@@ -78,35 +77,6 @@ class ShowChartController extends DmsController implements ServerMiddlewareInter
                 ]
             )
         );
-    }
-
-    protected function filterCriteriaFromRequest(ServerRequestInterface $request, IChartStructure $structure, ChartCriteria $criteria)
-    {
-        $axisNames = [];
-
-        foreach ($structure->getAxes() as $axis) {
-            $axisNames[] = $axis->getName();
-        }
-
-        // $this->validate($request, [
-        //     'conditions.*.axis'     => 'required|in:' . implode(',', $axisNames),
-        //     'conditions.*.operator' => 'required|in:' . implode(',', ConditionOperator::getAll()),
-        //     'conditions.*.value'    => 'required',
-        //     'orderings.*.component' => 'required|in:' . implode(',', $axisNames),
-        //     'orderings.*.direction' => 'required|in' . implode(',', OrderingDirection::getAll()),
-        // ]);
-
-        if ($request->has('conditions')) {
-            foreach ($request->input('conditions') as $condition) {
-                $criteria->where($condition['axis'], $condition['operator'], $condition['value']);
-            }
-        }
-
-        if ($request->has('orderings')) {
-            foreach ($request->input('orderings') as $ordering) {
-                $criteria->orderBy($ordering['component'], $ordering['direction']);
-            }
-        }
     }
 
     /**
