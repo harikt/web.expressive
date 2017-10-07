@@ -306,7 +306,7 @@ return [
         ],
     ],
 
-	"path" => [
-		"storage" => dirname(__DIR__) . "/data/cache"
-	]
+    "path" => [
+        "storage" => dirname(__DIR__) . "/data/cache"
+    ]
 ];

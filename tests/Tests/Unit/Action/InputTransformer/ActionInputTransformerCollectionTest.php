@@ -1,11 +1,11 @@
 <?php
 
-namespace Dms\Web\Laravel\Tests\Unit\Action\InputTransformer;
+namespace Dms\Web\Expressive\Tests\Unit\Action\InputTransformer;
 
 use Dms\Core\Module\IParameterizedAction;
-use Dms\Web\Laravel\Action\ActionInputTransformerCollection;
-use Dms\Web\Laravel\Action\IActionInputTransformer;
-use Dms\Web\Laravel\Http\ModuleContext;
+use Dms\Web\Expressive\Action\ActionInputTransformerCollection;
+use Dms\Web\Expressive\Action\IActionInputTransformer;
+use Dms\Web\Expressive\Http\ModuleContext;
 
 /**
  * @author Elliot Levin <elliotlevin@hotmail.com>

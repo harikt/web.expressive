@@ -19,5 +19,5 @@ if (file_exists($projectAutoLoaderPath)) {
 
 $composerAutoLoader->addPsr4(__NAMESPACE__ . '\\', __DIR__);
 
-Factory::getInstance()->register(new ObjectCollectionComparator());
-Testing\Bootstrapper::run(__NAMESPACE__, __DIR__, 'phpunit.xml');
+// Factory::getInstance()->register(new ObjectCollectionComparator());
+// Testing\Bootstrapper::run(__NAMESPACE__, dirname(__DIR__), 'phpunit.xml.dist');

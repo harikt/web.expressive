@@ -1,14 +1,14 @@
 <?php
 
-namespace Dms\Web\Laravel\Tests\Unit\Action\ExceptionHandler;
+namespace Dms\Web\Expressive\Tests\Unit\Action\ExceptionHandler;
 
 use Dms\Common\Structure\Field;
 use Dms\Core\Form\Builder\Form;
 use Dms\Core\Form\InvalidFormSubmissionException;
-use Dms\Web\Laravel\Action\ExceptionHandler\InvalidFormSubmissionExceptionHandler;
-use Dms\Web\Laravel\Action\IActionExceptionHandler;
-use Dms\Web\Laravel\Tests\Mock\Language\MockLanguageProvider;
-use Illuminate\Http\JsonResponse;
+use Dms\Web\Expressive\Action\ExceptionHandler\InvalidFormSubmissionExceptionHandler;
+use Dms\Web\Expressive\Action\IActionExceptionHandler;
+use Dms\Web\Expressive\Tests\Mock\Language\MockLanguageProvider;
+use Zend\Diactoros\Response\JsonResponse;
 
 /**
  * @author Elliot Levin <elliotlevin@hotmail.com>
@@ -100,6 +100,6 @@ class InvalidFormSubmissionExceptionHandlerTest extends ExceptionHandlerTest
     {
         /** @var JsonResponse $expected */
         /** @var JsonResponse $actual */
-        $this->assertEquals(json_decode($expected->content(), true), json_decode($actual->content(), true));
+        $this->assertEquals(json_decode($expected->getBody(), true), json_decode($actual->getBody(), true));
     }
 }

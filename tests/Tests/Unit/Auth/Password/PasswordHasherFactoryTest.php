@@ -1,17 +1,17 @@
 <?php
 
-namespace Dms\Web\Laravel\Tests\Unit\Auth\Password;
+namespace Dms\Web\Expressive\Tests\Unit\Auth\Password;
 
-use Dms\Web\Laravel\Auth\Password\BcryptPasswordHasher;
-use Dms\Web\Laravel\Auth\Password\HashAlgorithmNotFoundException;
-use Dms\Web\Laravel\Auth\Password\HashedPassword;
-use Dms\Web\Laravel\Auth\Password\PasswordHasherFactory;
-use Dms\Web\Laravel\Tests\Unit\UnitTest;
+use Dms\Web\Expressive\Auth\Password\BcryptPasswordHasher;
+use Dms\Web\Expressive\Auth\Password\HashAlgorithmNotFoundException;
+use Dms\Web\Expressive\Auth\Password\HashedPassword;
+use Dms\Web\Expressive\Auth\Password\PasswordHasherFactory;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Elliot Levin <elliotlevin@hotmail.com>
  */
-class PasswordHasherFactoryTest extends UnitTest
+class PasswordHasherFactoryTest extends TestCase
 {
     /**
      * @var PasswordHasherFactory
@@ -48,9 +48,13 @@ class PasswordHasherFactoryTest extends UnitTest
         $this->assertInstanceOf(BcryptPasswordHasher::class, $hasher);
         $this->assertSame(5, $hasher->getCostFactor());
 
-        $this->assertThrows(function () {
-            $this->factory->build('some-invalid-algorithm', 10);
-        }, HashAlgorithmNotFoundException::class);
+        $this->expectException(HashAlgorithmNotFoundException::class);
+
+        $this->factory->build('some-invalid-algorithm', 10);
+
+        // $this->assertThrows(function () {
+        //     $this->factory->build('some-invalid-algorithm', 10);
+        // }, HashAlgorithmNotFoundException::class);
     }
 
     public function testBuildForExistingPassword()
@@ -62,8 +66,8 @@ class PasswordHasherFactoryTest extends UnitTest
         $this->assertInstanceOf(BcryptPasswordHasher::class, $hasher);
         $this->assertSame(8, $hasher->getCostFactor());
 
-        $this->assertThrows(function () {
-            $this->factory->buildFor(new HashedPassword('--some-hash--', 'some-invalid-algorithm', 8));
-        }, HashAlgorithmNotFoundException::class);
+        $this->expectException(HashAlgorithmNotFoundException::class);
+
+        $this->factory->buildFor(new HashedPassword('--some-hash--', 'some-invalid-algorithm', 8));
     }
 }

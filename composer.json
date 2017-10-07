@@ -47,6 +47,8 @@
         }
     },
     "require-dev": {
-        "dms-org/package.content": "^0.8"
+        "dms-org/package.content": "^0.8",
+        "dms-org/library.testing": "dev-master",
+        "dms-org/common.testing": "dev-master"
     }
 }

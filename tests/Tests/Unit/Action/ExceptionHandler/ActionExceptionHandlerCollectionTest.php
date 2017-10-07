@@ -1,22 +1,22 @@
 <?php
 
-namespace Dms\Web\Laravel\Tests\Unit\Action\ExceptionHandler;
+namespace Dms\Web\Expressive\Tests\Unit\Action\ExceptionHandler;
 
 use Dms\Core\Auth\AdminForbiddenException;
 use Dms\Core\Form\InvalidFormSubmissionException;
 use Dms\Core\Module\IAction;
-use Dms\Web\Laravel\Action\ActionExceptionHandlerCollection;
-use Dms\Web\Laravel\Action\ExceptionHandler\InvalidFormSubmissionExceptionHandler;
-use Dms\Web\Laravel\Action\ExceptionHandler\AdminForbiddenExceptionHandler;
-use Dms\Web\Laravel\Action\UnhandleableActionExceptionException;
-use Dms\Web\Laravel\Http\ModuleContext;
-use Dms\Web\Laravel\Tests\Mock\Language\MockLanguageProvider;
-use Dms\Web\Laravel\Tests\Unit\UnitTest;
+use Dms\Web\Expressive\Action\ActionExceptionHandlerCollection;
+use Dms\Web\Expressive\Action\ExceptionHandler\InvalidFormSubmissionExceptionHandler;
+use Dms\Web\Expressive\Action\ExceptionHandler\AdminForbiddenExceptionHandler;
+use Dms\Web\Expressive\Action\UnhandleableActionExceptionException;
+use Dms\Web\Expressive\Http\ModuleContext;
+use Dms\Web\Expressive\Tests\Mock\Language\MockLanguageProvider;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Elliot Levin <elliotlevin@hotmail.com>
  */
-class ActionExceptionHandlerCollectionTest extends UnitTest
+class ActionExceptionHandlerCollectionTest extends TestCase
 {
     /**
      * @var ActionExceptionHandlerCollection

@@ -1,18 +1,18 @@
 <?php
 
-namespace Dms\Web\Laravel\Tests\Unit\Action\ExceptionHandler;
+namespace Dms\Web\Expressive\Tests\Unit\Action\ExceptionHandler;
 
 use Dms\Common\Testing\CmsTestCase;
 use Dms\Core\Exception\InvalidArgumentException;
 use Dms\Core\Module\IAction;
-use Dms\Web\Laravel\Action\IActionExceptionHandler;
-use Dms\Web\Laravel\Http\ModuleContext;
-use Dms\Web\Laravel\Tests\Unit\UnitTest;
+use Dms\Web\Expressive\Action\IActionExceptionHandler;
+use Dms\Web\Expressive\Http\ModuleContext;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Elliot Levin <elliotlevin@hotmail.com>
  */
-abstract class ExceptionHandlerTest extends UnitTest
+abstract class ExceptionHandlerTest extends TestCase
 {
     /**
      * @var IActionExceptionHandler
@@ -53,7 +53,7 @@ abstract class ExceptionHandlerTest extends UnitTest
     public function testHandleThrowsOnInvalidException(IAction $action, \Exception $exception)
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->handler->handle($this->mockModuleContext(),$action, $exception);
+        $this->handler->handle($this->mockModuleContext(), $action, $exception);
     }
 
     /**
@@ -63,7 +63,7 @@ abstract class ExceptionHandlerTest extends UnitTest
     {
         $this->assertResponsesMatch(
             $response,
-            $this->handler->handle($this->mockModuleContext(),$action, $exception)
+            $this->handler->handle($this->mockModuleContext(), $action, $exception)
         );
     }
 

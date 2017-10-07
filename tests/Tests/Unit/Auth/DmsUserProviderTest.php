@@ -1,15 +1,15 @@
 <?php
 
-namespace Dms\Web\Laravel\Tests\Unit\Auth;
+namespace Dms\Web\Expressive\Tests\Unit\Auth;
 
 use Dms\Core\Persistence\Db\Mapping\IOrm;
 use Dms\Core\Tests\Persistence\Db\Integration\Mapping\DbIntegrationTest;
-use Dms\Web\Laravel\Auth\Admin;
-use Dms\Web\Laravel\Auth\AdminDmsUserProvider;
-use Dms\Web\Laravel\Auth\Password\BcryptPasswordHasher;
-use Dms\Web\Laravel\Auth\Password\PasswordHasherFactory;
-use Dms\Web\Laravel\Auth\Persistence\AdminRepository;
-use Dms\Web\Laravel\Auth\Persistence\AuthOrm;
+use Dms\Web\Expressive\Auth\Admin;
+use Dms\Web\Expressive\Auth\AdminDmsUserProvider;
+use Dms\Web\Expressive\Auth\Password\BcryptPasswordHasher;
+use Dms\Web\Expressive\Auth\Password\PasswordHasherFactory;
+use Dms\Web\Expressive\Auth\Persistence\AdminRepository;
+use Dms\Web\Expressive\Auth\Persistence\AuthOrm;
 
 /**
  * @author Elliot Levin <elliotlevin@hotmail.com>

@@ -1,14 +1,14 @@
 <?php
 
-namespace Dms\Web\Laravel\Tests\Unit\Auth\Password;
+namespace Dms\Web\Expressive\Tests\Unit\Auth\Password;
 
-use Dms\Web\Laravel\Auth\Password\BcryptPasswordHasher;
-use Dms\Web\Laravel\Tests\Unit\UnitTest;
+use Dms\Web\Expressive\Auth\Password\BcryptPasswordHasher;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Elliot Levin <elliotlevin@hotmail.com>
  */
-class BcryptPasswordHasherTest extends UnitTest
+class BcryptPasswordHasherTest extends TestCase
 {
     /**
      * @var BcryptPasswordHasher

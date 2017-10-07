@@ -1,6 +1,6 @@
 <?php
 
-namespace Dms\Web\Laravel\Tests\Mock\Language;
+namespace Dms\Web\Expressive\Tests\Mock\Language;
 
 use Dms\Core\Exception\InvalidArgumentException;
 use Dms\Core\Exception\NotImplementedException;

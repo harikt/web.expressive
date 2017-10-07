@@ -1,18 +1,18 @@
 <?php
 
-namespace Dms\Web\Laravel\Tests\Unit\Action\ResultHandler;
+namespace Dms\Web\Expressive\Tests\Unit\Action\ResultHandler;
 
 use Dms\Core\Exception\InvalidArgumentException;
 use Dms\Core\Module\IAction;
-use Dms\Web\Laravel\Action\IActionResultHandler;
-use Dms\Web\Laravel\Http\ModuleContext;
-use Dms\Web\Laravel\Tests\Unit\UnitTest;
-use Symfony\Component\HttpFoundation\Response;
+use Dms\Web\Expressive\Action\IActionResultHandler;
+use Dms\Web\Expressive\Http\ModuleContext;
+use PHPUnit\Framework\TestCase;
+use Zend\Diactoros\Response;
 
 /**
  * @author Elliot Levin <elliotlevin@hotmail.com>
  */
-abstract class ResultHandlerTest extends UnitTest
+abstract class ResultHandlerTest extends TestCase
 {
     /**
      * @var IActionResultHandler
@@ -73,15 +73,7 @@ abstract class ResultHandlerTest extends UnitTest
 
     protected function assertResponsesMatch($expected, $actual)
     {
-        if ($expected instanceof Response) {
-            $expected->headers->remove('date');
-        }
-
-        if ($actual instanceof Response) {
-            $actual->headers->remove('date');
-        }
-
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals($expected->getBody()->__toString(), $actual->getBody()->__toString());
     }
 
     protected function mockModuleContext() : ModuleContext

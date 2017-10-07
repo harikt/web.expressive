@@ -1,19 +1,18 @@
 <?php
 
-namespace Dms\Web\Laravel\Tests\Unit\Action\ResultHandler;
+namespace Dms\Web\Expressive\Tests\Unit\Action\ResultHandler;
 
 use Dms\Core\Language\Message;
-use Dms\Web\Laravel\Action\IActionResultHandler;
-use Dms\Web\Laravel\Action\ResultHandler\MessageResultHandler;
-use Dms\Web\Laravel\Tests\Mock\Language\MockLanguageProvider;
-use Illuminate\Http\JsonResponse;
+use Dms\Web\Expressive\Action\IActionResultHandler;
+use Dms\Web\Expressive\Action\ResultHandler\MessageResultHandler;
+use Dms\Web\Expressive\Tests\Mock\Language\MockLanguageProvider;
+use Zend\Diactoros\Response\JsonResponse;
 
 /**
  * @author Elliot Levin <elliotlevin@hotmail.com>
  */
 class MessageResultHandlerTest extends ResultHandlerTest
 {
-
     protected function buildHandler() : IActionResultHandler
     {
         return new MessageResultHandler(new MockLanguageProvider());

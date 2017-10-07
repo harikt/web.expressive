@@ -1,16 +1,16 @@
 <?php
 
-namespace Dms\Web\Laravel\Tests\Unit\Action\InputTransformer;
+namespace Dms\Web\Expressive\Tests\Unit\Action\InputTransformer;
 
 use Dms\Core\Module\IParameterizedAction;
-use Dms\Web\Laravel\Action\IActionInputTransformer;
-use Dms\Web\Laravel\Http\ModuleContext;
-use Dms\Web\Laravel\Tests\Unit\UnitTest;
+use Dms\Web\Expressive\Action\IActionInputTransformer;
+use Dms\Web\Expressive\Http\ModuleContext;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Elliot Levin <elliotlevin@hotmail.com>
  */
-abstract class ActionInputTransformerTest extends UnitTest
+abstract class ActionInputTransformerTest extends TestCase
 {
     /**
      * @var IActionInputTransformer

@@ -181,16 +181,12 @@ class FormRenderingContext
     public function getFieldActionUrl(IField $field) : string
     {
         $moduleContext = $this->moduleContext;
+        $currentModule = $moduleContext->getModule();
         if ($this->objectId) {
-            /** @var ICrudModule|IReadModule $currentModule */
-            $currentModule = $moduleContext->getModule();
-
             $url = $moduleContext->getUrl('action.form.object.stage.field.action', [
                 'package' => $currentModule->getPackageName(),
                 'module' =>  $currentModule->getName(),
-                'action' => $currentModule instanceof ICrudModule && $currentModule->getEditAction()
-                    ? $currentModule->getEditAction()->getName()
-                    : $this->getAction()->getName(),
+                'action' => $this->getAction()->getName(),
                 'object_id' => $this->getObjectId(),
                 'stage' => $this->getCurrentStageNumber(),
                 'field_name' => $field->getName(),
