@@ -1,5 +1,7 @@
 # harikt/web.expressive
 
+[![Build Status](https://travis-ci.org/harikt/web.expressive.png?branch=master)](https://travis-ci.org/harikt/web.expressive)
+
 If you are interested to play with, [use the example repo](https://github.com/harikt/dms-expressive-skeleton#usage)
 
 Aims to integrate [DMS](https://github.com/dms-org/) with the zend expressive.
