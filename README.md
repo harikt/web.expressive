@@ -54,7 +54,6 @@ Aims to integrate [DMS](https://github.com/dms-org/) with the zend expressive.
 
 ## Todo
 
-* Update integration Test
 * Remove unused code
 * Remove `src/helper.php`
 * Validation
