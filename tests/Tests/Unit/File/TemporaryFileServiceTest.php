@@ -1,6 +1,6 @@
 <?php
 
-namespace Dms\Web\Laravel\Tests\Unit\File\Persistence;
+namespace Dms\Web\Expressive\Tests\Unit\File\Persistence;
 
 use Dms\Common\Structure\DateTime\DateTime;
 use Dms\Common\Structure\FileSystem\File;
@@ -8,9 +8,9 @@ use Dms\Common\Testing\CmsTestCase;
 use Dms\Core\Model\EntityNotFoundException;
 use Dms\Core\Persistence\ArrayRepository;
 use Dms\Core\Util\IClock;
-use Dms\Web\Laravel\File\Persistence\ITemporaryFileRepository;
-use Dms\Web\Laravel\File\TemporaryFile;
-use Dms\Web\Laravel\File\TemporaryFileService;
+use Dms\Web\Expressive\File\Persistence\ITemporaryFileRepository;
+use Dms\Web\Expressive\File\TemporaryFile;
+use Dms\Web\Expressive\File\TemporaryFileService;
 use Illuminate\Config\Repository;
 
 /**
@@ -30,16 +30,13 @@ class TemporaryFileServiceTest extends CmsTestCase
 
     protected function mockRepo() : ITemporaryFileRepository
     {
-        return new class(TemporaryFile::collection()) extends ArrayRepository implements ITemporaryFileRepository
-        {
-
+        return new class(TemporaryFile::collection()) extends ArrayRepository implements ITemporaryFileRepository {
         };
     }
 
     protected function mockClock() : IClock
     {
-        return new class() implements IClock
-        {
+        return new class() implements IClock {
             public function now() : \DateTimeImmutable
             {
                 throw new \Exception('Should use UTC');

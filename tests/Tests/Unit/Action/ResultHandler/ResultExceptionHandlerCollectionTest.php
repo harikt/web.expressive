@@ -1,21 +1,21 @@
 <?php
 
-namespace Dms\Web\Laravel\Tests\Unit\Action\ResultHandler;
+namespace Dms\Web\Expressive\Tests\Unit\Action\ResultHandler;
 
 use Dms\Core\Language\Message;
 use Dms\Core\Module\IAction;
-use Dms\Web\Laravel\Action\ActionResultHandlerCollection;
-use Dms\Web\Laravel\Action\ResultHandler\MessageResultHandler;
-use Dms\Web\Laravel\Action\ResultHandler\NullResultHandler;
-use Dms\Web\Laravel\Action\UnhandleableActionResultException;
-use Dms\Web\Laravel\Http\ModuleContext;
-use Dms\Web\Laravel\Tests\Mock\Language\MockLanguageProvider;
-use Dms\Web\Laravel\Tests\Unit\UnitTest;
+use Dms\Web\Expressive\Action\ActionResultHandlerCollection;
+use Dms\Web\Expressive\Action\ResultHandler\MessageResultHandler;
+use Dms\Web\Expressive\Action\ResultHandler\NullResultHandler;
+use Dms\Web\Expressive\Action\UnhandleableActionResultException;
+use Dms\Web\Expressive\Http\ModuleContext;
+use Dms\Web\Expressive\Tests\Mock\Language\MockLanguageProvider;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Elliot Levin <elliotlevin@hotmail.com>
  */
-class ActionResultHandlerCollectionTest extends UnitTest
+class ActionResultHandlerCollectionTest extends TestCase
 {
     /**
      * @var ActionResultHandlerCollection

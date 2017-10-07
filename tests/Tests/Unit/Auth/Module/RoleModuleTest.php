@@ -1,6 +1,6 @@
 <?php
 
-namespace Dms\Web\Laravel\Tests\Unit\Auth\Module;
+namespace Dms\Web\Expressive\Tests\Unit\Auth\Module;
 
 use Dms\Common\Structure\Web\EmailAddress;
 use Dms\Core\Auth\IHashedPassword;
@@ -17,10 +17,10 @@ use Dms\Core\Persistence\ArrayRepository;
 use Dms\Core\Persistence\IRepository;
 use Dms\Core\Tests\Common\Crud\Modules\CrudModuleTest;
 use Dms\Core\Tests\Module\Mock\MockAuthSystem;
-use Dms\Web\Laravel\Auth\LocalAdmin;
-use Dms\Web\Laravel\Auth\Module\RoleModule;
-use Dms\Web\Laravel\Auth\Role;
-use Dms\Web\Laravel\Auth\Admin;
+use Dms\Web\Expressive\Auth\LocalAdmin;
+use Dms\Web\Expressive\Auth\Module\RoleModule;
+use Dms\Web\Expressive\Auth\Role;
+use Dms\Web\Expressive\Auth\Admin;
 
 /**
  * @author Elliot Levin <elliotlevin@hotmail.com>
@@ -39,8 +39,7 @@ class RoleModuleTest extends CrudModuleTest
         $defaultRole->setId(2);
 
 
-        return new class(Role::collection([$adminRole, $defaultRole])) extends ArrayRepository implements IRoleRepository
-        {
+        return new class(Role::collection([$adminRole, $defaultRole])) extends ArrayRepository implements IRoleRepository {
         };
     }
 
@@ -71,8 +70,7 @@ class RoleModuleTest extends CrudModuleTest
         $person = new LocalAdmin('test', new EmailAddress('person@person.com'), 'person', $this->getMockForAbstractClass(IHashedPassword::class));
         $person->setId(2);
 
-        return new class(Admin::collection([$admin, $person])) extends ArrayRepository implements IAdminRepository
-        {
+        return new class(Admin::collection([$admin, $person])) extends ArrayRepository implements IAdminRepository {
         };
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Dms\Web\Laravel\Tests\Unit\Auth\Module;
+namespace Dms\Web\Expressive\Tests\Unit\Auth\Module;
 
 use Dms\Common\Structure\Web\EmailAddress;
 use Dms\Core\Auth\IAdminRepository;
@@ -17,15 +17,15 @@ use Dms\Core\Persistence\ArrayRepository;
 use Dms\Core\Tests\Common\Crud\Modules\CrudModuleTest;
 use Dms\Core\Tests\Module\Mock\MockAuthSystem;
 use Dms\Core\Widget\TableWidget;
-use Dms\Web\Laravel\Auth\Admin;
-use Dms\Web\Laravel\Auth\LocalAdmin;
-use Dms\Web\Laravel\Auth\Module\AdminUserModule;
-use Dms\Web\Laravel\Auth\OauthAdmin;
-use Dms\Web\Laravel\Auth\Password\HashedPassword;
-use Dms\Web\Laravel\Auth\Password\IPasswordHasher;
-use Dms\Web\Laravel\Auth\Password\IPasswordHasherFactory;
-use Dms\Web\Laravel\Auth\Password\IPasswordResetService;
-use Dms\Web\Laravel\Auth\Role;
+use Dms\Web\Expressive\Auth\Admin;
+use Dms\Web\Expressive\Auth\LocalAdmin;
+use Dms\Web\Expressive\Auth\Module\AdminUserModule;
+use Dms\Web\Expressive\Auth\OauthAdmin;
+use Dms\Web\Expressive\Auth\Password\HashedPassword;
+use Dms\Web\Expressive\Auth\Password\IPasswordHasher;
+use Dms\Web\Expressive\Auth\Password\IPasswordHasherFactory;
+use Dms\Web\Expressive\Auth\Password\IPasswordResetService;
+use Dms\Web\Expressive\Auth\Role;
 
 /**
  * @author Elliot Levin <elliotlevin@hotmail.com>
@@ -56,8 +56,7 @@ class AdminUserModuleTest extends CrudModuleTest
         $oauthAdmin = new OauthAdmin('google', '1233', 'Google Guy', new EmailAddress('person@person.com'), 'person');
         $oauthAdmin->setId(3);
 
-        return new class(Admin::collection([$admin, $person, $oauthAdmin])) extends ArrayRepository implements IAdminRepository
-        {
+        return new class(Admin::collection([$admin, $person, $oauthAdmin])) extends ArrayRepository implements IAdminRepository {
         };
     }
 
@@ -95,8 +94,7 @@ class AdminUserModuleTest extends CrudModuleTest
         $defaultRole->setId(2);
 
 
-        return new class(Role::collection([$adminRole, $defaultRole])) extends ArrayRepository implements IRoleRepository
-        {
+        return new class(Role::collection([$adminRole, $defaultRole])) extends ArrayRepository implements IRoleRepository {
         };
     }
 
@@ -116,7 +114,6 @@ class AdminUserModuleTest extends CrudModuleTest
         $hasherFactory = $this->getMockForAbstractClass(IPasswordHasherFactory::class);
         $hasherFactory->method('buildDefault')
             ->willReturnCallback(function () {
-
                 $hasher = $this->getMockForAbstractClass(IPasswordHasher::class);
                 $hasher->method('hash')
                     ->willReturnCallback(function () {

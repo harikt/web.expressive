@@ -1,5 +1,7 @@
 # harikt/web.expressive
 
+[![Build Status](https://travis-ci.org/harikt/web.expressive.png?branch=master)](https://travis-ci.org/harikt/web.expressive)
+
 If you are interested to play with, [use the example repo](https://github.com/harikt/dms-expressive-skeleton#usage)
 
 Aims to integrate [DMS](https://github.com/dms-org/) with the zend expressive.
@@ -42,14 +44,17 @@ Aims to integrate [DMS](https://github.com/dms-org/) with the zend expressive.
 
 ![Content Page Edit](https://user-images.githubusercontent.com/120454/30545343-f0c297b0-9ca6-11e7-94ea-23d4080e07c9.png)
 
+## Done
+
+* Unit tests are back
+
 ## Planned / Working
 
-* Migrations
+* Migrations ( Almost there )
 
 ## Todo
 
-* Bring back bug fixes from [web.laravel](https://github.com/dms-org/web.laravel/).
-* Update Tests
+* Update integration Test
 * Remove unused code
 * Remove `src/helper.php`
 * Validation

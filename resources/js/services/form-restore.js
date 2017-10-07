@@ -58,6 +58,14 @@ Dms.global.initializeCallbacks.push(function () {
             }
         });
 
+        this.find('.form-group[data-field-name]').each(function () {
+            var additionalDataToSubmit = $(this).triggerHandler('dms-get-input-data');
+
+            if (additionalDataToSubmit) {
+                data[$(this).attr('data-field-name')] = additionalDataToSubmit;
+            }
+        });
+
         return data;
     };
 
@@ -81,6 +89,15 @@ Dms.global.initializeCallbacks.push(function () {
                 } else {
                     $this.val(value);
                 }
+            }
+        });
+
+        this.find('.form-group[data-field-name]').each(function () {
+            var formGroup = $(this);
+            var fieldValue = data[formGroup.attr('data-field-name')];
+
+            if (fieldValue) {
+                formGroup.triggerHandler('dms-set-input-data', fieldValue);
             }
         });
 

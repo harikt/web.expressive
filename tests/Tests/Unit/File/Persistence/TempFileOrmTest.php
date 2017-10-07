@@ -1,15 +1,15 @@
 <?php
 
-namespace Dms\Web\Laravel\Tests\Unit\File\Persistence;
+namespace Dms\Web\Expressive\Tests\Unit\File\Persistence;
 
 use Dms\Common\Structure\DateTime\DateTime;
 use Dms\Common\Structure\FileSystem\File;
 use Dms\Common\Structure\FileSystem\PathHelper;
 use Dms\Core\Persistence\Db\Mapping\IOrm;
 use Dms\Core\Tests\Persistence\Db\Integration\Mapping\DbIntegrationTest;
-use Dms\Web\Laravel\File\Persistence\TempFileOrm;
-use Dms\Web\Laravel\File\Persistence\TemporaryFileRepository;
-use Dms\Web\Laravel\File\TemporaryFile;
+use Dms\Web\Expressive\File\Persistence\TempFileOrm;
+use Dms\Web\Expressive\File\Persistence\TemporaryFileRepository;
+use Dms\Web\Expressive\File\TemporaryFile;
 
 /**
  * @author Elliot Levin <elliotlevin@hotmail.com>

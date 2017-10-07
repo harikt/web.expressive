@@ -1,14 +1,14 @@
 <?php
 
-namespace Dms\Web\Laravel\Tests\Ioc;
+namespace Dms\Web\Expressive\Tests\Ioc;
 
-use Dms\Web\Laravel\Ioc\LaravelIocContainer;
-use Dms\Web\Laravel\Tests\Unit\UnitTest;
+use Dms\Web\Expressive\Ioc\LaravelIocContainer;
+use PHPUnit\Framework\TestCase;
 use Illuminate\Container\Container;
 use Interop\Container\ContainerInterface;
 use Monii\Interop\Container\Laravel\LaravelContainer;
 
-class LaravelContainerTest extends UnitTest
+class LaravelContainerTest extends TestCase
 {
     public function provideFalseData()
     {

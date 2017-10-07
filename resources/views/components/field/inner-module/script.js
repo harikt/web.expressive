@@ -63,6 +63,10 @@ Dms.form.initializeCallbacks.push(function (element) {
                 }
             },
             after: function (options, response, data) {
+                if (response.statusText === 'abort') {
+                    return;
+                }
+
                 if (data) {
                     currentValue = data['new_state'];
 
@@ -158,6 +162,15 @@ Dms.form.initializeCallbacks.push(function (element) {
             return fieldData;
         });
 
+        innerModule.closest('.form-group').on('dms-set-input-data', function (event, fieldData) {
+            var newValue = fieldData[fieldName] || [];
+
+            if (currentValue != newValue) {
+                currentValue = newValue;
+                innerModule.find('.dms-table').triggerHandler('dms-load-table-data');
+            }
+        });
+
         stagedForm.on('dms-before-submit', function () {
             innerModuleForm.empty();
         });
@@ -169,7 +182,7 @@ Dms.form.initializeCallbacks.push(function (element) {
             } else {
                 hasReset = true;
             }
-            
+
             Dms.ajax.interceptors.splice(Dms.ajax.interceptors.indexOf(interceptor), 1);
             Dms.action.responseHandler = originalResponseHandler;
         };
