@@ -2,15 +2,15 @@
 
 namespace Dms\Web\Expressive\Http\Controllers\Auth\Password;
 
-use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\Auth\IAdmin;
+use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\ICms;
 use Dms\Web\Expressive\Auth\Password\IPasswordResetService;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
-use Interop\Http\ServerMiddleware\DelegateInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
 use Illuminate\Auth\Passwords\PasswordBrokerManager;
 use Illuminate\Contracts\Auth\PasswordBroker;
+use Interop\Http\ServerMiddleware\DelegateInterface;
+use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\HtmlResponse;

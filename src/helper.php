@@ -1,12 +1,12 @@
 <?php
 use Aura\Session\Session;
-use Illuminate\Support\HtmlString;
+use Dms\Web\Expressive\Ioc\LaravelIocContainer;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use Illuminate\Contracts\View\Factory as ViewFactory;
-use Dms\Web\Expressive\Ioc\LaravelIocContainer;
-use Zend\Expressive\Router\RouterInterface;
+use Illuminate\Support\HtmlString;
 use Zend\Diactoros\Response;
+use Zend\Expressive\Router\RouterInterface;
 
 if (! function_exists('abort')) {
     /**

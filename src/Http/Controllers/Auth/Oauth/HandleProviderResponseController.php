@@ -3,9 +3,9 @@
 namespace Dms\Web\Expressive\Http\Controllers\Auth\Oauth;
 
 use Dms\Core\Auth\IAdminRepository;
+use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\Auth\IRoleRepository;
 use Dms\Core\Auth\Permission;
-use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\ICms;
 use Dms\Web\Expressive\Auth\Admin;
 use Dms\Web\Expressive\Auth\Oauth\AdminAccountDetails;
@@ -13,11 +13,11 @@ use Dms\Web\Expressive\Auth\Oauth\OauthProvider;
 use Dms\Web\Expressive\Auth\Oauth\OauthProviderCollection;
 use Dms\Web\Expressive\Auth\OauthAdmin;
 use Dms\Web\Expressive\Auth\Role;
+use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
-use Dms\Web\Expressive\Http\Controllers\DmsController;
-use Psr\Http\Message\ServerRequestInterface;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
 use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;

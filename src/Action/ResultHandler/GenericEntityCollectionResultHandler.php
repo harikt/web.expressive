@@ -21,16 +21,24 @@ use Zend\Diactoros\Response\JsonResponse;
 class GenericEntityCollectionResultHandler extends ActionResultHandler
 {
     /**
-     * @var EntityModuleMap|null
+     * @var EntityModuleMap
      */
     protected $entityModuleMap;
 
+    /**
+     * @var TableRenderer
+     */
+    protected $tableRenderer;
+
+    public function __construct(EntityModuleMap $entityModuleMap, TableRenderer $tableRenderer)
+    {
+        $this->entityModuleMap = $entityModuleMap;
+        $this->tableRenderer = $tableRenderer;
+        parent::__construct();
+    }
+
     protected function getEntityModuleMap() : EntityModuleMap
     {
-        if (!$this->entityModuleMap) {
-            $this->entityModuleMap = app(EntityModuleMap::class);
-        }
-
         return $this->entityModuleMap;
     }
 
@@ -72,10 +80,7 @@ class GenericEntityCollectionResultHandler extends ActionResultHandler
         /** @var ObjectTableDataSource $tableDataSource */
         $tableDataSource = $module->getSummaryTable()->getDataSource();
 
-        /** @var TableRenderer $tableRenderer */
-        $tableRenderer = app(TableRenderer::class);
-
-        $tableHtml = $tableRenderer->renderTableData(
+        $tableHtml = $this->tableRenderer->renderTableData(
             ModuleContext::rootContextForModule($moduleContext->getRouter(), $module),
             $module->getSummaryTable(),
             $tableDataSource->loadFromObjects($result->asArray()),

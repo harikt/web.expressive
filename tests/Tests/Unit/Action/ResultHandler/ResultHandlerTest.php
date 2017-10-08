@@ -7,7 +7,6 @@ use Dms\Core\Module\IAction;
 use Dms\Web\Expressive\Action\IActionResultHandler;
 use Dms\Web\Expressive\Http\ModuleContext;
 use PHPUnit\Framework\TestCase;
-use Zend\Diactoros\Response;
 
 /**
  * @author Elliot Levin <elliotlevin@hotmail.com>

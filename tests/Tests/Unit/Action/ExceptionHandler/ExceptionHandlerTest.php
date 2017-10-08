@@ -2,7 +2,6 @@
 
 namespace Dms\Web\Expressive\Tests\Unit\Action\ExceptionHandler;
 
-use Dms\Common\Testing\CmsTestCase;
 use Dms\Core\Exception\InvalidArgumentException;
 use Dms\Core\Module\IAction;
 use Dms\Web\Expressive\Action\IActionExceptionHandler;

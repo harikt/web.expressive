@@ -5,16 +5,14 @@ namespace Dms\Web\Expressive\Http\Controllers\Package\Module;
 use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\ICms;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
-use Dms\Web\Expressive\Http\Controllers\Package\Module\ModuleContextTrait;
-use Dms\Web\Expressive\Http\ModuleContext;
 use Dms\Web\Expressive\Renderer\Module\ModuleRendererCollection;
 use Dms\Web\Expressive\Util\StringHumanizer;
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Expressive\Template\TemplateRendererInterface;
-use Zend\Expressive\Router\RouterInterface;
 use Zend\Diactoros\Response\HtmlResponse;
+use Zend\Expressive\Router\RouterInterface;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
  * The module controller.
