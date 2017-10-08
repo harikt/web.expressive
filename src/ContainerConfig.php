@@ -270,7 +270,7 @@ class ContainerConfig
             // get the package locator
             $packages = $translators->getPackages();
 
-            $directory = dirname(dirname(__DIR__)) . '/resources/lang/';
+            $directory = dirname(__DIR__) . '/resources/lang/';
             foreach (new \DirectoryIterator($directory) as $fileInfo) {
                 if ($fileInfo->isDot()) {
                     continue;
