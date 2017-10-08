@@ -59,6 +59,8 @@ use Dms\Web\Expressive\Renderer\Widget\WidgetRendererCollection;
 use Dms\Web\Expressive\View\DmsNavigationViewComposer;
 use Doctrine\Common\Cache\FilesystemCache;
 use Harikt\Blade\BladeViewFactory;
+use Illuminate\Config\Repository;
+use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Events\Dispatcher;
@@ -105,27 +107,27 @@ class ContainerConfig
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, PackageRendererCollection::class, function () use ($container) {
             return new PackageRendererCollection($container->makeAll(
-                config('dms.services.renderers.packages')
+                $container->get(Repository::class)->get('dms.services.renderers.packages')
             ));
         });
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, FormRendererCollection::class, function () use ($container) {
             return new FormRendererCollection($container->makeAll(
-                config('dms.services.renderers.forms')
+                $container->get(Repository::class)->get('dms.services.renderers.forms')
             ));
         });
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, FieldRendererCollection::class, function () use ($container) {
             return new FieldRendererCollection($container->makeAll(
-                config('dms.services.renderers.form-fields')
+                $container->get(Repository::class)->get('dms.services.renderers.form-fields')
             ));
         });
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, ColumnComponentRendererCollection::class, function () use ($container) {
             return new ColumnComponentRendererCollection($container->makeAll(
                 array_merge(
-                    config('dms.services.renderers.table.column-components'),
-                    config('dms.services.renderers.form-fields')
+                    $container->get(Repository::class)->get('dms.services.renderers.table.column-components'),
+                    $container->get(Repository::class)->get('dms.services.renderers.form-fields')
                 )
             ));
         });
@@ -134,26 +136,26 @@ class ContainerConfig
             return new ColumnRendererFactoryCollection(
                 $container->make(ColumnComponentRendererCollection::class),
                 $container->makeAll(
-                    config('dms.services.renderers.table.columns')
+                    $container->get(Repository::class)->get('dms.services.renderers.table.columns')
                 )
             );
         });
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, ChartRendererCollection::class, function () use ($container) {
             return new ChartRendererCollection($container->makeAll(
-                config('dms.services.renderers.charts')
+                $container->get(Repository::class)->get('dms.services.renderers.charts')
             ));
         });
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, WidgetRendererCollection::class, function () use ($container) {
             return new WidgetRendererCollection($container->makeAll(
-                config('dms.services.renderers.widgets')
+                $container->get(Repository::class)->get('dms.services.renderers.widgets')
             ));
         });
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, ModuleRendererCollection::class, function () use ($container) {
             return new ModuleRendererCollection($container->makeAll(
-                config('dms.services.renderers.modules')
+                $container->get(Repository::class)->get('dms.services.renderers.modules')
             ));
         });
 
@@ -199,10 +201,10 @@ class ContainerConfig
             return new \Dms\Core\Persistence\Db\Doctrine\DoctrineConnection($connection);
         });
 
-        $container->bindCallback(IIocContainer::SCOPE_SINGLETON, OauthProviderCollection::class, function () {
+        $container->bindCallback(IIocContainer::SCOPE_SINGLETON, OauthProviderCollection::class, function () use ($container) {
             $providers = [];
 
-            foreach (config('dms.auth.oauth-providers', []) as $providerConfig) {
+            foreach ($container->get(Repository::class)->get('dms.auth.oauth-providers', []) as $providerConfig) {
                 /** @var OauthProvider $providerClass */
                 $providerClass = $providerConfig['provider'];
                 $providers[]   = $providerClass::fromConfiguration($providerConfig);
@@ -219,10 +221,8 @@ class ContainerConfig
 
         $dmsconfig = require dirname(__DIR__) . '/config/dms.php';
 
-        $container->bindValue('laravel.config', new \Illuminate\Config\Repository(['dms' => $dmsconfig]));
-
-        $container->alias('laravel.config', \Illuminate\Config\Repository::class);
-        $container->alias('laravel.config', \Illuminate\Contracts\Config\Repository::class);
+        $container->bindValue(Repository::class, new Repository(['dms' => $dmsconfig]));
+        $container->alias(Repository::class, ConfigRepository::class);
 
         $container->bind(IIocContainer::SCOPE_SINGLETON, IClock::class, DateTimeClock::class);
         $container->bind(IIocContainer::SCOPE_SINGLETON, ITemporaryFileService::class, TemporaryFileService::class);
@@ -245,19 +245,19 @@ class ContainerConfig
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, ActionInputTransformerCollection::class, function () use ($container) {
             return new ActionInputTransformerCollection($container->makeAll(
-                config('dms.services.actions.input-transformers')
+                $container->get(Repository::class)->get('dms.services.actions.input-transformers')
             ));
         });
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, ActionResultHandlerCollection::class, function () use ($container) {
             return new ActionResultHandlerCollection($container->makeAll(
-                config('dms.services.actions.result-handlers')
+                $container->get(Repository::class)->get('dms.services.actions.result-handlers')
             ));
         });
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, ActionExceptionHandlerCollection::class, function () use ($container) {
             return new ActionExceptionHandlerCollection($container->makeAll(
-                config('dms.services.actions.exception-handlers')
+                $container->get(Repository::class)->get('dms.services.actions.exception-handlers')
             ));
         });
 
@@ -292,8 +292,8 @@ class ContainerConfig
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, PublicFileModule::class, function () use ($container) {
             return new PublicFileModule(
-               DirectoryTree::from(config('dms.storage.public-files.dir')),
-               DirectoryTree::from(config('dms.storage.trashed-files.dir')),
+               DirectoryTree::from($container->get(Repository::class)->get('dms.storage.public-files.dir')),
+               DirectoryTree::from($container->get(Repository::class)->get('dms.storage.trashed-files.dir')),
                $container->get(IAuthSystem::class)
            );
         });

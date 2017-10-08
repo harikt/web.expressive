@@ -8,6 +8,7 @@ use Dms\Core\Form\IField;
 use Dms\Core\Form\IFieldOptions;
 use Dms\Core\Form\IFieldType;
 use Dms\Web\Expressive\Renderer\Form\FormRenderingContext;
+use Illuminate\Contracts\Config\Repository;
 
 /**
  * The money field renderer
@@ -16,6 +17,15 @@ use Dms\Web\Expressive\Renderer\Form\FormRenderingContext;
  */
 class MoneyFieldRenderer extends BladeFieldRenderer
 {
+    /**
+     * @param Repository $configRepository
+     */
+    public function __construct(Repository $configRepository)
+    {
+        $this->configRepository = $configRepository;
+        parent::__construct();
+    }
+
     /**
      * Gets the expected class of the field type for the field.
      *
@@ -48,7 +58,7 @@ class MoneyFieldRenderer extends BladeFieldRenderer
             ],
             [
                 'currencyOptions' => $currencyOptions,
-                'defaultCurrency' => config('dms.localisation.form.defaults.currency'),
+                'defaultCurrency' => $this->configRepository->get('dms.localisation.form.defaults.currency'),
             ]
         );
     }
