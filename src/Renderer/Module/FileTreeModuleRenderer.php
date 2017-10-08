@@ -7,6 +7,7 @@ use Dms\Web\Expressive\Document\PublicFileModule;
 use Dms\Web\Expressive\Http\ModuleContext;
 use Dms\Web\Expressive\Renderer\Table\TableRenderer;
 use Dms\Web\Expressive\Renderer\Widget\WidgetRendererCollection;
+use Illuminate\Contracts\Config\Repository;
 
 /**
  * The file tree module renderer.
@@ -20,16 +21,23 @@ class FileTreeModuleRenderer extends ModuleRenderer
      */
     protected $tableRenderer;
 
+    protected $configRepository;
+
     /**
      * ReadModuleRenderer constructor.
      *
      * @param TableRenderer            $tableRenderer
      * @param WidgetRendererCollection $widgetRenderers
+     * @param Repository               $configRepository
      */
-    public function __construct(TableRenderer $tableRenderer, WidgetRendererCollection $widgetRenderers)
-    {
+    public function __construct(
+        TableRenderer $tableRenderer,
+        WidgetRendererCollection $widgetRenderers,
+        Repository $configRepository
+    ) {
         parent::__construct($widgetRenderers);
         $this->tableRenderer = $tableRenderer;
+        $this->configRepository = $configRepository;
     }
 
     /**
@@ -60,7 +68,7 @@ class FileTreeModuleRenderer extends ModuleRenderer
         return view('dms::package.module.dashboard.file-tree')
             ->with([
                 'isPublic'           => starts_with($rootDirectory, [
-                    rtrim(PathHelper::normalize(config('dms.storage.public-files.dir')), '/\\'),
+                    rtrim(PathHelper::normalize($this->configRepository->get('dms.storage.public-files.dir')), '/\\'),
                     rtrim(public_path(), '/\\'),
                 ]),
                 'moduleContext'      => $moduleContext,

@@ -1,6 +1,7 @@
 <?php
 use Aura\Session\Session;
 use Dms\Web\Expressive\Ioc\LaravelIocContainer;
+use Illuminate\Config\Repository;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use Illuminate\Contracts\View\Factory as ViewFactory;
@@ -119,25 +120,15 @@ if (! function_exists('config')) {
      */
     function config($key = null, $default = null)
     {
-        // if (is_null($key)) {
-        // 	$config = new \Illuminate\Config\Repository(require __DIR__ . '/web.expressive/config/dms.php');
-        //     return $config;
-        // }
-        //
-        // if (is_array($key)) {
-        //     return $config->set($key);
-        // }
-        //
-        // return $config->get($key, $default);
         if (is_null($key)) {
-            return app('laravel.config');
+            return app(Repository::class);
         }
 
         if (is_array($key)) {
-            return app('laravel.config')->set($key);
+            return app(Repository::class)->set($key);
         }
 
-        return app('laravel.config')->get($key, $default);
+        return app(Repository::class)->get($key, $default);
     }
 }
 
