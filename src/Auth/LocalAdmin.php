@@ -109,7 +109,7 @@ class LocalAdmin extends Admin implements CanResetPassword
     /**
      * Set the token value for the "remember me" session.
      *
-     * @param  string $value
+     * @param string $value
      *
      * @return void
      */

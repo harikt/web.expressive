@@ -60,7 +60,7 @@ class ResetController extends DmsController implements ServerMiddlewareInterface
      *
      * If no token is present, display the link request form.
      *
-     * @param  string|null $token
+     * @param string|null $token
      *
      * @return \Zend\Diactoros\Response
      */
@@ -85,7 +85,7 @@ class ResetController extends DmsController implements ServerMiddlewareInterface
     /**
      * Reset the given user's password.
      *
-     * @param  \Psr\Http\Message\ServerRequestInterface $request
+     * @param \Psr\Http\Message\ServerRequestInterface $request
      *
      * @return \Zend\Diactoros\Response
      */

@@ -77,8 +77,8 @@ class RunController extends DmsController implements ServerMiddlewareInterface
     /**
      * ActionController constructor.
      *
-     * @param ICms                      	   $cms
-     * @param IAuthSystem 			    	   $auth
+     * @param ICms                             $cms
+     * @param IAuthSystem                      $auth
      * @param ActionInputTransformerCollection $inputTransformers
      * @param ActionResultHandlerCollection    $resultHandlers
      * @param ActionExceptionHandlerCollection $exceptionHandlers
@@ -135,10 +135,10 @@ class RunController extends DmsController implements ServerMiddlewareInterface
     }
 
     /**
-     * @param ServerRequestInterface       $request
-     * @param ModuleContext $moduleContext
-     * @param IAction       $action
-     * @param array         $extraData
+     * @param ServerRequestInterface $request
+     * @param ModuleContext          $moduleContext
+     * @param IAction                $action
+     * @param array                  $extraData
      *
      * @return mixed
      */

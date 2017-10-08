@@ -57,6 +57,7 @@ abstract class ExceptionHandlerTest extends TestCase
 
     /**
      * @dataProvider exceptionsHandlingTests
+     * @param mixed $response
      */
     public function testHandleException(IAction $action, \Exception $exception, $response)
     {

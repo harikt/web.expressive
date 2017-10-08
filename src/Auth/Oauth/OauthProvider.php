@@ -45,12 +45,12 @@ abstract class OauthProvider
     /**
      * OauthProvider constructor.
      *
-     * @param string    $name
-     * @param string    $label
-     * @param string    $clientId
-     * @param string    $clientSecret
-     * @param bool      $isSuperUser
-     * @param string[]  $roleNames
+     * @param string   $name
+     * @param string   $label
+     * @param string   $clientId
+     * @param string   $clientSecret
+     * @param bool     $isSuperUser
+     * @param string[] $roleNames
      * @param string[] $allowedEmails
      *
      * @internal param AbstractProvider $provider

@@ -46,7 +46,7 @@ class TableWidgetRenderer extends WidgetRenderer
      * Gets an array of links for the supplied widget.
      *
      * @param ModuleContext $moduleContext
-     * @param IWidget $widget
+     * @param IWidget       $widget
      *
      * @return array
      */
@@ -76,7 +76,7 @@ class TableWidgetRenderer extends WidgetRenderer
      * Renders the supplied widget input as a html string.
      *
      * @param ModuleContext $moduleContext
-     * @param IWidget $widget
+     * @param IWidget       $widget
      *
      * @return string
      */

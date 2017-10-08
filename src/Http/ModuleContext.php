@@ -54,7 +54,7 @@ class ModuleContext
      * @param RouterInterface  $router
      * @param string           $rootUrl
      * @param array            $titles
-     * @param string[]        $breadcrumbs
+     * @param string[]         $breadcrumbs
      * @param IModule|callable $moduleLoaderCallback
      */
     public function __construct(RouterInterface $router, string $rootUrl, array $titles, array $breadcrumbs, $moduleLoaderCallback, bool $isSubmodule = false)
@@ -81,10 +81,10 @@ class ModuleContext
     }
 
     /**
-     * @param RouterInterface   $router
-     * @param string   $packageName
-     * @param string   $moduleName
-     * @param callable $moduleLoaderCallback
+     * @param RouterInterface $router
+     * @param string          $packageName
+     * @param string          $moduleName
+     * @param callable        $moduleLoaderCallback
      *
      * @return ModuleContext
      */
@@ -104,8 +104,8 @@ class ModuleContext
     }
 
     /**
-     * @param RouterInterface  $router
-     * @param IModule $module
+     * @param RouterInterface $router
+     * @param IModule         $module
      *
      * @return ModuleContext
      */
@@ -145,8 +145,9 @@ class ModuleContext
     }
 
     /**
-     * @param string $name
-     * @param array  $parameters
+     * @param string     $name
+     * @param array      $parameters
+     * @param null|mixed $fragmentIdentifier
      *
      * @return string
      */

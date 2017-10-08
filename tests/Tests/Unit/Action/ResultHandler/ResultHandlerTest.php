@@ -52,6 +52,7 @@ abstract class ResultHandlerTest extends TestCase
 
     /**
      * @dataProvider unhandleableResultTests
+     * @param mixed $result
      */
     public function testHandleThrowsOnInvalidException(IAction $action, $result)
     {
@@ -61,6 +62,8 @@ abstract class ResultHandlerTest extends TestCase
 
     /**
      * @dataProvider resultHandlingTests
+     * @param mixed $result
+     * @param mixed $response
      */
     public function testHandleException(IAction $action, $result, $response)
     {

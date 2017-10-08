@@ -32,7 +32,7 @@ class ModuleController extends DmsController implements ServerMiddlewareInterfac
      * ModuleController constructor.
      *
      * @param ICms                      $cms
-     * @param IAuthSystem 			    $auth
+     * @param IAuthSystem               $auth
      * @param ModuleRendererCollection  $moduleRenderers
      * @param TemplateRendererInterface $template
      */

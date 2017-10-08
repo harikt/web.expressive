@@ -84,8 +84,8 @@ class FormRendererController extends DmsController implements ServerMiddlewareIn
     /**
      * ActionController constructor.
      *
-     * @param ICms                      	   $cms
-     * @param IAuthSystem 			    	   $auth
+     * @param ICms                             $cms
+     * @param IAuthSystem                      $auth
      * @param ActionInputTransformerCollection $inputTransformers
      * @param ActionResultHandlerCollection    $resultHandlers
      * @param ActionExceptionHandlerCollection $exceptionHandlers

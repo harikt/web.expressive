@@ -86,8 +86,8 @@ class ShowResultController extends DmsController implements ServerMiddlewareInte
     /**
      * ActionController constructor.
      *
-     * @param ICms                      	   $cms
-     * @param IAuthSystem 			    	   $auth
+     * @param ICms                             $cms
+     * @param IAuthSystem                      $auth
      * @param ActionInputTransformerCollection $inputTransformers
      * @param ActionResultHandlerCollection    $resultHandlers
      * @param ActionExceptionHandlerCollection $exceptionHandlers
@@ -168,10 +168,10 @@ class ShowResultController extends DmsController implements ServerMiddlewareInte
     }
 
     /**
-     * @param ServerRequestInterface       $request
-     * @param ModuleContext $moduleContext
-     * @param IAction       $action
-     * @param array         $extraData
+     * @param ServerRequestInterface $request
+     * @param ModuleContext          $moduleContext
+     * @param IAction                $action
+     * @param array                  $extraData
      *
      * @return mixed
      */
