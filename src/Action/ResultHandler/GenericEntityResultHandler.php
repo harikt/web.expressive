@@ -26,12 +26,14 @@ class GenericEntityResultHandler extends ActionResultHandler
      */
     protected $entityModuleMap;
 
+    public function __construct(EntityModuleMap $entityModuleMap)
+    {
+        $this->entityModuleMap = $entityModuleMap;
+        parent::__construct();
+    }
+
     protected function getEntityModuleMap() : EntityModuleMap
     {
-        if (!$this->entityModuleMap) {
-            $this->entityModuleMap = app(EntityModuleMap::class);
-        }
-
         return $this->entityModuleMap;
     }
 

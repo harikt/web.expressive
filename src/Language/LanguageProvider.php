@@ -2,11 +2,11 @@
 
 namespace Dms\Web\Expressive\Language;
 
+use Aura\Intl\TranslatorLocator;
 use Dms\Core\Exception\InvalidArgumentException;
 use Dms\Core\Language\ILanguageProvider;
 use Dms\Core\Language\Message;
 use Dms\Core\Language\MessageNotFoundException;
-use Symfony\Component\Translation\Translator;
 
 /**
  * The laravel language provider.
@@ -16,17 +16,17 @@ use Symfony\Component\Translation\Translator;
 class LanguageProvider implements ILanguageProvider
 {
     /**
-     * @var Translator
+     * @var TranslatorLocator
      */
-    protected $translator;
+    protected $translators;
 
     /**
      * LaravelLanguageProvider constructor.
      *
      */
-    public function __construct(Translator $translator)
+    public function __construct(TranslatorLocator $translators)
     {
-        $this->translator = $translator;
+        $this->translators = $translators;
     }
 
     /**
@@ -46,20 +46,12 @@ class LanguageProvider implements ILanguageProvider
             $namespace .= '.' . $message->getNamespace();
         }
 
-        $messageId = $namespace . '::' . $message->getId();
+        $translator = $this->translators->get($namespace);
 
-        $response = $this->translator->trans(
-            $messageId,
+        $response = $translator->translate(
+            $message->getId(),
             $params = $this->processParameters($message->getParameters())
         );
-
-        // @todo
-        // if ($response === $messageId) {
-        //     throw MessageNotFoundException::format(
-        //         'Could not translate message: unknown message id \'%s\' with params %s',
-        //         $messageId, $this->debugFormatParams($params)
-        //     );
-        // }
 
         return $response;
     }
@@ -116,6 +108,6 @@ class LanguageProvider implements ILanguageProvider
      */
     public function addResourceDirectory(string $namespace, string $directory)
     {
-        $this->translator->addNamespace('dms.' . $namespace, $directory);
+        // do nothing
     }
 }

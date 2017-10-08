@@ -25,6 +25,26 @@ use Zend\Diactoros\Response\JsonResponse;
  */
 class InnerModuleFieldRenderer extends BladeFieldRendererWithActions implements IFieldRendererWithActions
 {
+
+    /**
+     * @var ReadModuleRenderer
+     */
+    protected $readModuleRenderer;
+
+    /**
+     * @var TableRenderer
+     */
+    protected $tableRenderer;
+
+    // @todo
+    // Find out why : PHP Fatal error:  Maximum function nesting level of '256' reached, aborting!
+    // public function __construct(ReadModuleRenderer $readModuleRenderer, TableRenderer $tableRenderer)
+    // {
+    //     $this->readModuleRenderer = $readModuleRenderer;
+    //     $this->tableRenderer = $tableRenderer;
+    //     parent::__construct();
+    // }
+
     /**
      * Gets the expected class of the field type for the field.
      *
@@ -44,15 +64,15 @@ class InnerModuleFieldRenderer extends BladeFieldRendererWithActions implements 
     {
         $innerModuleContext = $this->loadInnerModuleContext($field, $renderingContext);
 
-        /** @var ReadModuleRenderer $renderer */
-        $renderer = app(ReadModuleRenderer::class);
+        $this->readModuleRenderer = app(ReadModuleRenderer::class);
+
         return $this->renderView(
             $field,
             'dms::components.field.inner-module.input',
             [],
             [
                 'rootUrl'       => $innerModuleContext->getRootUrl(),
-                'moduleContent' => $renderer->render($innerModuleContext),
+                'moduleContent' => $this->readModuleRenderer->render($innerModuleContext),
             ]
         );
     }
@@ -63,9 +83,6 @@ class InnerModuleFieldRenderer extends BladeFieldRendererWithActions implements 
         /** @var IReadModule $innerModule */
         $innerModule        = $fieldType->getModule();
         $innerModuleContext = $this->loadInnerModuleContext($field, $renderingContext);
-
-        /** @var TableRenderer $tableRenderer */
-        $tableRenderer = app(TableRenderer::class);
 
         $actionButtons = [];
         if ($innerModule->allowsDetails()) {
@@ -82,7 +99,9 @@ class InnerModuleFieldRenderer extends BladeFieldRendererWithActions implements 
             );
         }
 
-        $tableData = $tableRenderer->renderTableData(
+        $this->tableRenderer = app(TableRenderer::class);
+
+        $tableData = $this->tableRenderer->renderTableData(
             $innerModuleContext,
             $innerModule->getSummaryTable(),
             $innerModule->getSummaryTable()->getDataSource()->load(),

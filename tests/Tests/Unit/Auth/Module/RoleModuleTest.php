@@ -3,10 +3,10 @@
 namespace Dms\Web\Expressive\Tests\Unit\Auth\Module;
 
 use Dms\Common\Structure\Web\EmailAddress;
+use Dms\Core\Auth\IAdminRepository;
 use Dms\Core\Auth\IHashedPassword;
 use Dms\Core\Auth\IPermission;
 use Dms\Core\Auth\IRoleRepository;
-use Dms\Core\Auth\IAdminRepository;
 use Dms\Core\Auth\Permission;
 use Dms\Core\Common\Crud\Action\Object\IObjectAction;
 use Dms\Core\Common\Crud\ICrudModule;
@@ -14,13 +14,12 @@ use Dms\Core\ICms;
 use Dms\Core\Model\EntityIdCollection;
 use Dms\Core\Model\IMutableObjectSet;
 use Dms\Core\Persistence\ArrayRepository;
-use Dms\Core\Persistence\IRepository;
 use Dms\Core\Tests\Common\Crud\Modules\CrudModuleTest;
 use Dms\Core\Tests\Module\Mock\MockAuthSystem;
+use Dms\Web\Expressive\Auth\Admin;
 use Dms\Web\Expressive\Auth\LocalAdmin;
 use Dms\Web\Expressive\Auth\Module\RoleModule;
 use Dms\Web\Expressive\Auth\Role;
-use Dms\Web\Expressive\Auth\Admin;
 
 /**
  * @author Elliot Levin <elliotlevin@hotmail.com>

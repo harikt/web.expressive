@@ -2,29 +2,24 @@
 
 namespace Dms\Web\Expressive\Http\Controllers\Package\Module\Chart;
 
+use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\Exception\InvalidArgumentException;
 use Dms\Core\ICms;
-use Dms\Core\Auth\IAuthSystem;
-use Dms\Core\Model\Criteria\Condition\ConditionOperator;
-use Dms\Core\Model\Criteria\OrderingDirection;
 use Dms\Core\Module\IChartDisplay;
 use Dms\Core\Module\IChartView;
 use Dms\Core\Module\IModule;
-use Dms\Core\Table\Chart\Criteria\ChartCriteria;
-use Dms\Core\Table\Chart\IChartStructure;
 use Dms\Web\Expressive\Error\DmsError;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Dms\Web\Expressive\Http\Controllers\Package\Module\ModuleContextTrait;
-use Dms\Web\Expressive\Http\ModuleContext;
 use Dms\Web\Expressive\Renderer\Chart\ChartControlRenderer;
 use Dms\Web\Expressive\Util\StringHumanizer;
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Expressive\Router\RouterInterface;
-use Zend\Expressive\Template\TemplateRendererInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\JsonResponse;
+use Zend\Expressive\Router\RouterInterface;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
  * The chart controller

@@ -2,9 +2,9 @@
 
 namespace Dms\Web\Expressive\File;
 
-use Dms\Core\File\IUploadedFile;
-use Dms\Common\Structure\FileSystem\UploadedImage;
 use Dms\Common\Structure\FileSystem\UploadedFile;
+use Dms\Common\Structure\FileSystem\UploadedImage;
+use Dms\Core\File\IUploadedFile;
 
 /**
  * The uploaded file factory class.

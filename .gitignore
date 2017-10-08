@@ -6,3 +6,5 @@
 /bower_components/
 /tests/Tests/Integration/temp/
 /composer.lock
+/.php_cs
+/.php_cs.cache

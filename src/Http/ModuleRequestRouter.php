@@ -6,12 +6,12 @@ use Dms\Core\Exception\InvalidOperationException;
 use Dms\Core\ICms;
 use Dms\Core\Module\IModule;
 use Dms\Web\Expressive\Error\DmsError;
-use Psr\Http\Message\ServerRequestInterface;
 use Illuminate\Routing\RouteGroup;
+use Psr\Http\Message\ServerRequestInterface;
 // use Illuminate\Routing\Router;
-use Zend\Expressive\Router\RouterInterface;
-use Zend\Expressive\Router\Route;
 use Symfony\Component\HttpFoundation\Response;
+use Zend\Expressive\Router\Route;
+use Zend\Expressive\Router\RouterInterface;
 
 /**
  * The module request router

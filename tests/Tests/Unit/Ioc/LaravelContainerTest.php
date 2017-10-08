@@ -3,10 +3,9 @@
 namespace Dms\Web\Expressive\Tests\Ioc;
 
 use Dms\Web\Expressive\Ioc\LaravelIocContainer;
-use PHPUnit\Framework\TestCase;
 use Illuminate\Container\Container;
 use Interop\Container\ContainerInterface;
-use Monii\Interop\Container\Laravel\LaravelContainer;
+use PHPUnit\Framework\TestCase;
 
 class LaravelContainerTest extends TestCase
 {

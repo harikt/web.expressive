@@ -9,8 +9,8 @@ use Dms\Core\Module\IAction;
 use Dms\Web\Expressive\Action\ActionResultHandler;
 use Dms\Web\Expressive\Http\ModuleContext;
 use Dms\Web\Expressive\Util\StringHumanizer;
-use Zend\Diactoros\Response\JsonResponse;
 use Zend\Diactoros\Response;
+use Zend\Diactoros\Response\JsonResponse;
 
 /**
  * The edited object action result handler.

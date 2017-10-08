@@ -27,6 +27,7 @@
     "require": {
         "php": ">=7.0.0",
         "akrabat/rka-ip-address-middleware": "^0.5.0",
+        "aura/intl": "^3.0",
         "aura/session": "^2.1",
         "beheh/flaps": "^0.2.0",
         "cache/cache": "^0.1.0",
@@ -37,7 +38,6 @@
         "laravel/browser-kit-testing": "^1.0",
         "league/oauth2-google": "^1.0",
         "marcj/topsort": "^1.0",
-        "symfony/translation": "^3.3",
         "zendframework/zend-expressive": "^2.0.2"
     },
     "autoload-dev": {

@@ -5,8 +5,8 @@ namespace Dms\Web\Expressive\Auth\Persistence\Mapper;
 use Dms\Core\Auth\Permission;
 use Dms\Core\Persistence\Db\Mapping\Definition\MapperDefinition;
 use Dms\Core\Persistence\Db\Mapping\EntityMapper;
-use Dms\Web\Expressive\Auth\Role;
 use Dms\Web\Expressive\Auth\Admin;
+use Dms\Web\Expressive\Auth\Role;
 
 /**
  * The role entity mapper.
