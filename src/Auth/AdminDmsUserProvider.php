@@ -40,7 +40,7 @@ class AdminDmsUserProvider implements UserProvider
     /**
      * Retrieve a user by their unique identifier.
      *
-     * @param  mixed $id
+     * @param mixed $id
      *
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
@@ -52,8 +52,8 @@ class AdminDmsUserProvider implements UserProvider
     /**
      * Retrieve a user by their unique identifier and "remember me" token.
      *
-     * @param  mixed  $id
-     * @param  string $token
+     * @param mixed  $id
+     * @param string $token
      *
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
@@ -78,8 +78,8 @@ class AdminDmsUserProvider implements UserProvider
     /**
      * Update the "remember me" token for the given user in storage.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable $admin
-     * @param  string                                     $token
+     * @param \Illuminate\Contracts\Auth\Authenticatable $admin
+     * @param string                                     $token
      *
      * @return void
      */
@@ -96,7 +96,7 @@ class AdminDmsUserProvider implements UserProvider
     /**
      * Retrieve a user by the given credentials.
      *
-     * @param  array $credentials
+     * @param array $credentials
      *
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
@@ -130,8 +130,8 @@ class AdminDmsUserProvider implements UserProvider
     /**
      * Validate a user against the given credentials.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable $admin
-     * @param  array                                      $credentials
+     * @param \Illuminate\Contracts\Auth\Authenticatable $admin
+     * @param array                                      $credentials
      *
      * @return bool
      */

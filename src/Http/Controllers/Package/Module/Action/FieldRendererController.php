@@ -87,8 +87,8 @@ class FieldRendererController extends DmsController implements ServerMiddlewareI
     /**
      * ActionController constructor.
      *
-     * @param ICms                      	   $cms
-     * @param IAuthSystem 			    	   $auth
+     * @param ICms                             $cms
+     * @param IAuthSystem                      $auth
      * @param ActionInputTransformerCollection $inputTransformers
      * @param ActionResultHandlerCollection    $resultHandlers
      * @param ActionExceptionHandlerCollection $exceptionHandlers

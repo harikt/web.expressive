@@ -41,9 +41,9 @@ class DmsController
     /**
      * DmsController constructor.
      *
-     * @param ICms $cms
+     * @param ICms        $cms
      * @param IAuthSystem $auth
-     * @param ICms $cms
+     * @param ICms        $cms
      * @param IAuthSystem $auth
      *
      */

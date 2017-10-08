@@ -81,7 +81,7 @@ class ResetLinkEmailController extends DmsController implements ServerMiddleware
     /**
      * Send a reset link to the given user.
      *
-     * @param  \Psr\Http\Message\ServerRequestInterface $request
+     * @param \Psr\Http\Message\ServerRequestInterface $request
      *
      * @return \Zend\Diactoros\Response
      */
@@ -106,7 +106,7 @@ class ResetLinkEmailController extends DmsController implements ServerMiddleware
      *
      * If no token is present, display the link request form.
      *
-     * @param  string|null $token
+     * @param string|null $token
      *
      * @return \Zend\Diactoros\Response
      */
@@ -122,7 +122,7 @@ class ResetLinkEmailController extends DmsController implements ServerMiddleware
     /**
      * Reset the given user's password.
      *
-     * @param  \Psr\Http\Message\ServerRequestInterface $request
+     * @param \Psr\Http\Message\ServerRequestInterface $request
      *
      * @return \Zend\Diactoros\Response
      */

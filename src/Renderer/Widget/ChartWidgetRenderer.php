@@ -38,7 +38,7 @@ class ChartWidgetRenderer extends WidgetRenderer
      * Gets an array of links for the supplied widget.
      *
      * @param ModuleContext $moduleContext
-     * @param IWidget $widget
+     * @param IWidget       $widget
      *
      * @return array
      */
@@ -66,7 +66,7 @@ class ChartWidgetRenderer extends WidgetRenderer
      * Renders the supplied widget input as a html string.
      *
      * @param ModuleContext $moduleContext
-     * @param IWidget $widget
+     * @param IWidget       $widget
      *
      * @return string
      */

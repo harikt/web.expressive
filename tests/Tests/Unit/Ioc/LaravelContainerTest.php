@@ -46,7 +46,7 @@ class LaravelContainerTest extends TestCase
 
     /**
      * @param ContainerInterface $container
-     * @param string $id
+     * @param string             $id
      * @dataProvider provideFalseData
      */
     public function testFalse(ContainerInterface $container, $id)
@@ -57,8 +57,8 @@ class LaravelContainerTest extends TestCase
 
     /**
      * @param ContainerInterface $container
-     * @param string $id
-     * @param string $expectedType
+     * @param string             $id
+     * @param string             $expectedType
      * @dataProvider provideTrueData
      */
     public function testTrue(ContainerInterface $container, $id, $expectedType)

@@ -14,7 +14,7 @@ interface IPasswordResetService
     /**
      * Resets the user's password.
      *
-     * @param IAdmin  $user
+     * @param IAdmin $user
      * @param string $newPassword
      *
      * @return void

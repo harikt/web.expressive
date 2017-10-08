@@ -43,8 +43,8 @@ class RoleModuleTest extends CrudModuleTest
     }
 
     /**
-     * @param IMutableObjectSet    $dataSource
-     * @param MockAuthSystem $authSystem
+     * @param IMutableObjectSet $dataSource
+     * @param MockAuthSystem    $authSystem
      *
      * @return ICrudModule
      */

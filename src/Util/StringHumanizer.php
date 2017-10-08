@@ -10,7 +10,7 @@ namespace Dms\Web\Expressive\Util;
 class StringHumanizer
 {
     /**
-     * @param string $input
+     * @param  string $input
      * @return string
      */
     public static function humanize(string $input) : string
@@ -23,7 +23,7 @@ class StringHumanizer
     }
 
     /**
-     * @param string $input
+     * @param  string $input
      * @return string
      */
     public static function title(string $input) : string

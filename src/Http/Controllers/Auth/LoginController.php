@@ -35,9 +35,9 @@ class LoginController extends DmsController implements ServerMiddlewareInterface
     /**
      * Create a new authentication controller instance.
      *
-     * @param ICms $cms
-     * @param IAuthSystem $auth
-     * @param OauthProviderCollection $oauthProviderCollection
+     * @param ICms                      $cms
+     * @param IAuthSystem               $auth
+     * @param OauthProviderCollection   $oauthProviderCollection
      * @param TemplateRendererInterface $template
      */
     public function __construct(
@@ -68,7 +68,7 @@ class LoginController extends DmsController implements ServerMiddlewareInterface
     /**
      * Handle a login request to the application.
      *
-     * @param  \Psr\Http\Message\ServerRequestInterface $request
+     * @param \Psr\Http\Message\ServerRequestInterface $request
      *
      * @return Response
      */
@@ -122,7 +122,7 @@ class LoginController extends DmsController implements ServerMiddlewareInterface
     /**
      * Get the throttle key for the given request.
      *
-     * @param  \Psr\Http\Message\ServerRequestInterface $request
+     * @param \Psr\Http\Message\ServerRequestInterface $request
      *
      * @return string
      */
