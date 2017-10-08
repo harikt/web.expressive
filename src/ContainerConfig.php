@@ -270,17 +270,20 @@ class ContainerConfig
             // get the package locator
             $packages = $translators->getPackages();
 
-            // place into the locator for dms
-            $packages->set('dms', 'en_US', function () {
-                // create a US English message set
-                $package = new Package;
-                $directory = dirname(dirname(__DIR__)) . '/resources/lang/en/';
-                foreach (new \DirectoryIterator($directory) as $fileInfo) {
-                    $package->setMessages(require $fileInfo->getFilename());
+            $directory = dirname(__DIR__) . '/resources/lang/';
+            foreach (new \DirectoryIterator($directory) as $fileInfo) {
+                if ($fileInfo->isDot()) {
+                    continue;
                 }
 
-                return $package;
-            });
+                // place into the locator for dms
+                $packages->set('dms', $fileInfo->getBasename('.php'), function () {
+                    $package = new Package;
+                    $package->setMessages(require $fileInfo->getFilename());
+
+                    return $package;
+                });
+            }
 
             return $translators;
         });
@@ -294,35 +297,6 @@ class ContainerConfig
                $container->get(IAuthSystem::class)
            );
         });
-
-        // use Illuminate\Database\Migrations\MigrationRepositoryInterface;
-        // use Illuminate\Database\Migrations\DatabaseMigrationRepository;
-        // use Illuminate\Database\ConnectionResolverInterface;
-        // $container->bindCallback(IIocContainer::SCOPE_SINGLETON, MigrationRepositoryInterface::class, function () use ($container) {
-        //     return new DatabaseMigrationRepository($container->get(ConnectionResolverInterface::class), 'migrations');
-        // });
-        //
-        // $container->bindCallback(IIocContainer::SCOPE_SINGLETON, ConnectionResolverInterface::class, function () use ($container) {
-        //
-        //     $settings = array(
-        //         'driver' => getenv('driver'),
-        //         'host' => getenv('host'),
-        //         'database' => getenv('database'),
-        //         'username' => getenv('username'),
-        //         'password' => getenv('password'),
-        //         'collation' => getenv('collation'),
-        //         'prefix' => ''
-        //     );
-        //
-        //     $connFactory = new \Illuminate\Database\Connectors\ConnectionFactory($container->getLaravelContainer());
-        //     $conn = $connFactory->make($settings);
-        //     $resolver = new \Illuminate\Database\ConnectionResolver();
-        //     $resolver->addConnection('default', $conn);
-        //     $resolver->setDefaultConnection('default');
-        //     \Illuminate\Support\Facades\Schema::setFacadeApplication($container->getLaravelContainer());
-        //
-        //     return $resolver;
-        // });
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, Flap::class, function () use ($container) {
             $cache = new FilesystemCache(dirname(__DIR__) . '/data/cache');
