@@ -92,21 +92,6 @@ if (! function_exists('auth')) {
     }
 }
 
-if (! function_exists('back')) {
-    /**
-     * Create a new redirect response to the previous location.
-     *
-     * @param  int                               $status
-     * @param  array                             $headers
-     * @param  mixed                             $fallback
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    function back($status = 302, $headers = [], $fallback = false)
-    {
-        return app('redirect')->back($status, $headers, $fallback);
-    }
-}
-
 // modified
 if (! function_exists('config')) {
     /**
