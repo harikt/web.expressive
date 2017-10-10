@@ -57,5 +57,4 @@ Aims to integrate [DMS](https://github.com/dms-org/) with the zend expressive.
 * Remove unused code
 * Remove `src/helper.php`
 * Validation
-* Translation
 * Showing error message after redirect ( Flash messages )
