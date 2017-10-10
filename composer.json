@@ -35,8 +35,6 @@
         "dms-org/core": "^0.8",
         "harikt/blade-renderer": "^0.2",
         "illuminate/config": "^5.4",
-        "laravel/browser-kit-testing": "^1.0",
-        "league/oauth2-google": "^1.0",
         "marcj/topsort": "^1.0",
         "zendframework/zend-expressive": "^2.0.2"
     },

@@ -24,19 +24,19 @@ return [
             'lockout-time' => 60,
         ],
         'oauth-providers' => [
-            [
-                'name'           => 'developer',
-                'label'          => 'Developer Login',
-                'provider'       => \Dms\Web\Expressive\Auth\Oauth\Provider\GoogleOauthProvider::class,
-                'client-id'      => '',
-                'client-secret'  => '',
-                'super-user'     => true,
-                'roles'          => ['Developer'],
-                'allowed-emails' => [
-                    // 'some@mail.com',
-                    // '*@some-domain.com.au',
-                ],
-            ],
+            // [
+            //     'name'           => 'developer',
+            //     'label'          => 'Developer Login',
+            //     'provider'       => \Dms\Web\Expressive\Auth\Oauth\Provider\GoogleOauthProvider::class,
+            //     'client-id'      => '',
+            //     'client-secret'  => '',
+            //     'super-user'     => true,
+            //     'roles'          => ['Developer'],
+            //     'allowed-emails' => [
+            //         // 'some@mail.com',
+            //         // '*@some-domain.com.au',
+            //     ],
+            // ],
         ],
     ],
 
