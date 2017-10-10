@@ -47,7 +47,7 @@ class DmsError
     {
         return view('dms::errors.' . $statusCode)
             ->with('title', $statusCode)
-            ->with('user', request()->user())
+            // ->with('user', request()->user())
             ->with('pageTitle', $statusCode)
             ->with('finalBreadcrumb', $statusCode)
             ->render();

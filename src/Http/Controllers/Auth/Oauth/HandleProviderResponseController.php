@@ -96,7 +96,11 @@ class HandleProviderResponseController extends DmsController implements ServerMi
 
         \auth()->guard('dms')->login($adminAccount);
 
-        return \redirect()->intended($this->router->generateUri('dms::index'));
+        $response = new Response();
+        $response = $response->withHeader('Location', $this->router->generateUri('dms::index'));
+
+        return $response;
+        // return \redirect()->intended($this->router->generateUri('dms::index'));
     }
 
     protected function loadAdminAccount(OauthProvider $oauthProvider, ResourceOwnerInterface $resourceOwner) : OauthAdmin

@@ -255,52 +255,6 @@ if (! function_exists('public_path')) {
     }
 }
 
-if (! function_exists('redirect')) {
-    /**
-     * Get an instance of the redirector.
-     *
-     * @param  string|null                                                      $to
-     * @param  int                                                              $status
-     * @param  array                                                            $headers
-     * @param  bool                                                             $secure
-     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
-     */
-    function redirect($to = null, $status = 302, $headers = [], $secure = null)
-    {
-        if (is_null($to)) {
-            throw new \Exception("Not found");
-            return app('redirect');
-        }
-
-        $response = new Response('php://memory', $status, $headers);
-        $response->withHeader('Location', $to);
-        return $response;
-        // return app('redirect')->to($to, $status, $headers, $secure);
-    }
-}
-
-if (! function_exists('request')) {
-    /**
-     * Get an instance of the current request or an input item from the request.
-     *
-     * @param  array|string                                          $key
-     * @param  mixed                                                 $default
-     * @return \Psr\Http\Message\ServerRequestInterface|string|array
-     */
-    function request($key = null, $default = null)
-    {
-        if (is_null($key)) {
-            return app('request');
-        }
-
-        if (is_array($key)) {
-            return app('request')->only($key);
-        }
-
-        return data_get(app('request')->all(), $key, $default);
-    }
-}
-
 if (! function_exists('resource_path')) {
     /**
      * Get the path to the resources folder.

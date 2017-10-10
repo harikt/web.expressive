@@ -92,12 +92,23 @@ class ResetLinkEmailController extends DmsController implements ServerMiddleware
         $credentials = ['emailAddress' => new EmailAddress($request->get('email'))];
         $response    = $this->passwordBroker->sendResetLink($credentials);
 
+        $to = '';
+
+        throw new \Exception("Not done");
+
+        // todo change redirect method calls
         switch ($response) {
             case PasswordBroker::RESET_LINK_SENT:
-                return redirect()->back()->with('success', trans($response));
+                $response = new Response('php://memory', '302');
+                $response->withHeader('Location', $to);
+                return $response;
+                // return redirect()->back()->with('success', trans($response));
 
             case PasswordBroker::INVALID_USER:
-                return redirect()->back()->withErrors(['email' => trans($response)]);
+                $response = new Response('php://memory', '302');
+                $response->withHeader('Location', $to);
+                return $response;
+                // return redirect()->back()->withErrors(['email' => trans($response)]);
         }
     }
 
@@ -154,9 +165,13 @@ class ResetLinkEmailController extends DmsController implements ServerMiddleware
                 return $response;
 
             default:
-                return redirect()->back()
-                    ->withInput($request->only('email'))
-                    ->withErrors(['email' => trans($response)]);
+                $response = new Response();
+                $response = $response->withHeader('Location', $this->router->generateUri('dms::auth.login'));
+
+                return $response;
+                // return redirect()->back()
+                //     ->withInput($request->only('email'))
+                //     ->withErrors(['email' => trans($response)]);
         }
     }
 }
