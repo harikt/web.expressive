@@ -12,7 +12,7 @@
         <input type="hidden" name="token" value="{{ $token }}">
 
         <div class="form-group{{ $errors->has('username') ? ' has-error' : '' }}">
-            <input type="text" class="form-control" name="username" placeholder="Username" value="{{ old('username') }}">
+            <input type="text" class="form-control" name="username" placeholder="Username" value="{{-- old('username') --}}">
 
             @if ($errors->has('username'))
                 <span class="help-block">

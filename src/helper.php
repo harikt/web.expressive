@@ -228,20 +228,6 @@ if (! function_exists('event')) {
     }
 }
 
-if (! function_exists('old')) {
-    /**
-     * Retrieve an old input item.
-     *
-     * @param  string $key
-     * @param  mixed  $default
-     * @return mixed
-     */
-    function old($key = null, $default = null)
-    {
-        return app('request')->old($key, $default);
-    }
-}
-
 if (! function_exists('public_path')) {
     /**
      * Get the path to the public folder.
