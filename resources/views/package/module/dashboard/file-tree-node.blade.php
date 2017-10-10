@@ -29,7 +29,7 @@
                 >
                     <div class="panel panel-default">
                         <div class="panel-heading" style="text-overflow: ellipsis; white-space: nowrap;overflow: hidden">
-                            <img src="{{ asset('/vendor/dms/img/file/icon/' . strtolower($file->getExtension()) . '.png') }}"/>
+                            <img src="{{ '/vendor/dms/img/file/icon/' . strtolower($file->getExtension()) . '.png' }}"/>
 
                             {{ $file->getClientFileNameWithFallback() }}
                         </div>

@@ -70,7 +70,7 @@ class FilePreviewComponentRenderer implements IColumnComponentRenderer
 
             return '<img src="' . e($url) . '" alt="' . e($name) . '" />';
         } else {
-            $url = asset('vendor/dms/img/file/icon/' . strtolower(array_last(explode('.', $name))) . '.png');
+            $url = '/vendor/dms/img/file/icon/' . strtolower(array_last(explode('.', $name))) . '.png';
 
             return '<img class="dms-file-icon" src="' . e($url) . '" alt="' . e($name) . '" />';
         }

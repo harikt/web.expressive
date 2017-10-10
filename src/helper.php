@@ -58,21 +58,6 @@ if (! function_exists('app_path')) {
     }
 }
 
-if (! function_exists('asset')) {
-    /**
-     * Generate an asset path for the application.
-     *
-     * @param  string $path
-     * @param  bool   $secure
-     * @return string
-     */
-    function asset($path, $secure = null)
-    {
-        return $path;
-        // return app('url')->asset($path, $secure);
-    }
-}
-
 // if (! function_exists('auth')) {
 //     /**
 //      * Get the available auth instance.
@@ -223,19 +208,6 @@ if (! function_exists('route')) {
     }
 }
 
-if (! function_exists('secure_asset')) {
-    /**
-     * Generate an asset path for the application.
-     *
-     * @param  string $path
-     * @return string
-     */
-    function secure_asset($path)
-    {
-        return asset($path, true);
-    }
-}
-
 if (! function_exists('session')) {
     /**
      * Get / set the specified session value.
@@ -269,18 +241,18 @@ if (! function_exists('session')) {
     }
 }
 
-if (! function_exists('storage_path')) {
-    /**
-     * Get the path to the storage folder.
-     *
-     * @param  string $path
-     * @return string
-     */
-    function storage_path($path = '')
-    {
-        return app('path.storage').($path ? DIRECTORY_SEPARATOR.$path : $path);
-    }
-}
+// if (! function_exists('storage_path')) {
+//     /**
+//      * Get the path to the storage folder.
+//      *
+//      * @param  string $path
+//      * @return string
+//      */
+//     function storage_path($path = '')
+//     {
+//         return app('path.storage').($path ? DIRECTORY_SEPARATOR.$path : $path);
+//     }
+// }
 
 if (! function_exists('view')) {
     /**
@@ -340,7 +312,7 @@ if (!function_exists('asset_file_url')) {
 
         $relativePath = substr($filePath, strlen($publicPath));
 
-        return asset(str_replace(DIRECTORY_SEPARATOR, '/', $relativePath));
+        return str_replace(DIRECTORY_SEPARATOR, '/', $relativePath);
     }
 }
 
