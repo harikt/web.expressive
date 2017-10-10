@@ -21,7 +21,7 @@ class NullResultHandler extends ActionResultHandler
      */
     protected $translocator;
 
-    public function __construct(EntityModuleMap $entityModuleMap, TranslatorLocator $translocator)
+    public function __construct(TranslatorLocator $translocator)
     {
         $this->translocator = $translocator;
         parent::__construct();
