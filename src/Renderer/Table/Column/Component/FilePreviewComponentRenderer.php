@@ -70,7 +70,7 @@ class FilePreviewComponentRenderer implements IColumnComponentRenderer
 
             return '<img src="' . e($url) . '" alt="' . e($name) . '" />';
         } else {
-            $url = asset('vendor/dms/img/file/icon/' . strtolower(array_last(explode('.', $name))) . '.png');
+            $url = '/vendor/dms/img/file/icon/' . strtolower(array_last(explode('.', $name))) . '.png';
 
             return '<img class="dms-file-icon" src="' . e($url) . '" alt="' . e($name) . '" />';
         }
@@ -78,6 +78,6 @@ class FilePreviewComponentRenderer implements IColumnComponentRenderer
 
     private function isPublicFile(IFile $file)
     {
-        return strpos($file->getFullPath(), PathHelper::normalize(public_path())) === 0;
+        return strpos($file->getFullPath(), PathHelper::normalize($this->config->get('dms.public.path'))) === 0;
     }
 }
