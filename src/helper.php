@@ -314,27 +314,6 @@ if (! function_exists('resource_path')) {
     }
 }
 
-if (! function_exists('response')) {
-    /**
-     * Return a new response from the application.
-     *
-     * @param  string                                                                                   $content
-     * @param  int                                                                                      $status
-     * @param  array                                                                                    $headers
-     * @return \Symfony\Component\HttpFoundation\Response|\Illuminate\Contracts\Routing\ResponseFactory
-     */
-    function response($content = '', $status = 200, array $headers = [])
-    {
-        $response = new Response('php://memory', $status, $headers);
-
-        if (func_num_args() === 0) {
-            return $response;
-        }
-
-        return $response->withBody($content);
-    }
-}
-
 if (! function_exists('route')) {
     /**
      * Generate the URL to a named route.
