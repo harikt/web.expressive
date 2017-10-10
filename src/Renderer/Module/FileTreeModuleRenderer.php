@@ -69,7 +69,7 @@ class FileTreeModuleRenderer extends ModuleRenderer
             ->with([
                 'isPublic'           => starts_with($rootDirectory, [
                     rtrim(PathHelper::normalize($this->configRepository->get('dms.storage.public-files.dir')), '/\\'),
-                    rtrim(public_path(), '/\\'),
+                    rtrim($this->configRepository->get('dms.public.path'), '/\\'),
                 ]),
                 'moduleContext'      => $moduleContext,
                 'directoryTree'      => $module->getDirectoryTree(),

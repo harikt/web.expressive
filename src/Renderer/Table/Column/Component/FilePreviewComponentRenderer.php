@@ -78,6 +78,6 @@ class FilePreviewComponentRenderer implements IColumnComponentRenderer
 
     private function isPublicFile(IFile $file)
     {
-        return strpos($file->getFullPath(), PathHelper::normalize(public_path())) === 0;
+        return strpos($file->getFullPath(), PathHelper::normalize($this->config->get('dms.public.path'))) === 0;
     }
 }

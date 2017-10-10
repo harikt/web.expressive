@@ -30,13 +30,13 @@ class LaravelApplicationDirectories implements IApplicationDirectories
     /**
      * LaravelApplicationDirectories constructor.
      */
-    public function __construct()
+    public function __construct(string $basePath, string $storagePath, string $publicPath)
     {
-        $this->root           = new Directory(base_path());
-        $this->privateStorage = new Directory(storage_path());
-        $this->publicStorage  = new Directory(public_path());
+        $this->root           = new Directory($basePath);
+        $this->privateStorage = new Directory($storagePath);
+        $this->publicStorage  = new Directory($publicPath);
     }
-    
+
     /**
      * Gets the root directory of the application.
      *

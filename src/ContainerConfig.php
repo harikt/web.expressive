@@ -67,12 +67,17 @@ use Illuminate\Events\Dispatcher;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 use Psr\Cache\CacheItemPoolInterface;
-use Zend\Expressive\Helper\UrlHelper;
 
 class ContainerConfig
 {
     public function define(LaravelIocContainer $container)
     {
+        $container->bindValue(Repository::class, new Repository($container->get('config')));
+        $container->alias(Repository::class, ConfigRepository::class);
+
+        $container->bindValue('path.storage', $container->get(Repository::class)->get('dms.datastorage.path') . '/cache');
+        $container->bindValue('path.public', $container->get(Repository::class)->get('dms.public.path'));
+
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, IIocContainer::class, function () use ($container) {
             return $container;
         });
@@ -159,12 +164,13 @@ class ContainerConfig
             ));
         });
 
-
-
         $container->bind(IIocContainer::SCOPE_SINGLETON, ILanguageProvider::class, LanguageProvider::class);
 
-        $container->bindCallback(IIocContainer::SCOPE_SINGLETON, CacheItemPoolInterface::class, function () {
-            return new FilesystemCachePool(new Filesystem(new Local(storage_path('dms/cache'))));
+        $container->bindCallback(IIocContainer::SCOPE_SINGLETON, CacheItemPoolInterface::class, function () use ($container) {
+            $repository = $container->get(Repository::class);
+            $storage = $repository->get('dms.datastorage.path') . '/dms/cache';
+
+            return new FilesystemCachePool(new Filesystem(new Local($storage)));
         });
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, IEventDispatcher::class, function () {
@@ -213,21 +219,18 @@ class ContainerConfig
             return new OauthProviderCollection($providers);
         });
 
-        $container->bindValue('path.storage', dirname(__DIR__) . '/data/cache');
-        // $container->bindValue('url', $container->get(UrlHelper::class));
-        // $container->bindValue('route', $container->get(UrlHelper::class));
-
-        $container->bindValue('path.public', dirname(__DIR__) . '/public');
-
-        $dmsconfig = require dirname(__DIR__) . '/config/dms.php';
-
-        $container->bindValue(Repository::class, new Repository(['dms' => $dmsconfig]));
-        $container->alias(Repository::class, ConfigRepository::class);
-
         $container->bind(IIocContainer::SCOPE_SINGLETON, IClock::class, DateTimeClock::class);
         $container->bind(IIocContainer::SCOPE_SINGLETON, ITemporaryFileService::class, TemporaryFileService::class);
         $container->bind(IIocContainer::SCOPE_SINGLETON, ITemporaryFileRepository::class, TemporaryFileRepository::class);
-        $container->bind(IIocContainer::SCOPE_SINGLETON, IApplicationDirectories::class, LaravelApplicationDirectories::class);
+        $container->bindCallback(IIocContainer::SCOPE_SINGLETON, IApplicationDirectories::class, function () use ($container) {
+            $repository = $container->get(Repository::class);
+
+            return new LaravelApplicationDirectories(
+                $repository->get('dms.base.path'),
+                $repository->get('dms.storage.path'),
+                $repository->get('dms.public.path')
+            );
+        });
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, ViewFactory::class, function () use ($container) {
             $factory = new BladeViewFactory();
