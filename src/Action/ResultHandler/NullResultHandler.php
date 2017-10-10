@@ -59,7 +59,7 @@ class NullResultHandler extends ActionResultHandler
         $translator = $this->translocator->get('dms');
 
         return new JsonResponse([
-            'message' => $translator->translate('dms::action.generic-response'),
+            'message' => $translator->translate('action.generic-response'),
         ]);
     }
 }
