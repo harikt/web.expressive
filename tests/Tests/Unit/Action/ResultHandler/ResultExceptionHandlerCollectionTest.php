@@ -2,6 +2,7 @@
 
 namespace Dms\Web\Expressive\Tests\Unit\Action\ResultHandler;
 
+use Aura\Intl\TranslatorLocatorFactory;
 use Dms\Core\Language\Message;
 use Dms\Core\Module\IAction;
 use Dms\Web\Expressive\Action\ActionResultHandlerCollection;
@@ -24,8 +25,10 @@ class ActionResultHandlerCollectionTest extends TestCase
 
     public function setUp()
     {
+        $factory = new TranslatorLocatorFactory();
+        $translators = $factory->newInstance();
         $this->collection = new ActionResultHandlerCollection([
-            new NullResultHandler(),
+            new NullResultHandler($translators),
             new MessageResultHandler(new MockLanguageProvider()),
         ]);
     }

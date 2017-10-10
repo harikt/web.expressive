@@ -2,6 +2,7 @@
 
 namespace Dms\Web\Expressive\Action\ResultHandler;
 
+use Aura\Intl\TranslatorLocator;
 use Dms\Core\Common\Crud\Action\Crud\CreateAction;
 use Dms\Core\Common\Crud\Action\Crud\EditAction;
 use Dms\Core\Common\Crud\Action\Crud\ViewDetailsAction;
@@ -26,9 +27,15 @@ class GenericEntityResultHandler extends ActionResultHandler
      */
     protected $entityModuleMap;
 
-    public function __construct(EntityModuleMap $entityModuleMap)
+    /**
+     * @var TranslatorLocator
+     */
+    protected $translocator;
+
+    public function __construct(EntityModuleMap $entityModuleMap, TranslatorLocator $translocator)
     {
         $this->entityModuleMap = $entityModuleMap;
+        $this->translocator = $translocator;
         parent::__construct();
     }
 
@@ -82,8 +89,10 @@ class GenericEntityResultHandler extends ActionResultHandler
         /** @var Entity $result */
         $url = route('dms::package.module.action.show', ['package' => $module->getPackageName(), 'module' => $module->getName(), 'action' => $module->getDetailsAction()->getName(), 'object_id' => $result->getId()]);
 
+        $translator = $this->translocator->get('dms');
+
         return new JsonResponse([
-            'message'  => trans('dms::action.generic-response'),
+            'message'  => $translator->translate('action.generic-response'),
             'redirect' => $url,
         ]);
     }

@@ -5,8 +5,6 @@ use Illuminate\Config\Repository;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use Illuminate\Contracts\View\Factory as ViewFactory;
-use Illuminate\Support\HtmlString;
-use Zend\Diactoros\Response;
 use Zend\Expressive\Router\RouterInterface;
 
 if (! function_exists('abort')) {
@@ -75,37 +73,22 @@ if (! function_exists('asset')) {
     }
 }
 
-if (! function_exists('auth')) {
-    /**
-     * Get the available auth instance.
-     *
-     * @param  string|null                                                                                                  $guard
-     * @return \Illuminate\Contracts\Auth\Factory|\Illuminate\Contracts\Auth\Guard|\Illuminate\Contracts\Auth\StatefulGuard
-     */
-    function auth($guard = null)
-    {
-        if (is_null($guard)) {
-            return app(AuthFactory::class);
-        } else {
-            return app(AuthFactory::class)->guard($guard);
-        }
-    }
-}
-
-if (! function_exists('back')) {
-    /**
-     * Create a new redirect response to the previous location.
-     *
-     * @param  int                               $status
-     * @param  array                             $headers
-     * @param  mixed                             $fallback
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    function back($status = 302, $headers = [], $fallback = false)
-    {
-        return app('redirect')->back($status, $headers, $fallback);
-    }
-}
+// if (! function_exists('auth')) {
+//     /**
+//      * Get the available auth instance.
+//      *
+//      * @param  string|null                                                                                                  $guard
+//      * @return \Illuminate\Contracts\Auth\Factory|\Illuminate\Contracts\Auth\Guard|\Illuminate\Contracts\Auth\StatefulGuard
+//      */
+//     function auth($guard = null)
+//     {
+//         if (is_null($guard)) {
+//             return app(AuthFactory::class);
+//         } else {
+//             return app(AuthFactory::class)->guard($guard);
+//         }
+//     }
+// }
 
 // modified
 if (! function_exists('config')) {
@@ -145,18 +128,6 @@ if (! function_exists('config_path')) {
     }
 }
 
-if (! function_exists('csrf_field')) {
-    /**
-     * Generate a CSRF token form field.
-     *
-     * @return \Illuminate\Support\HtmlString
-     */
-    function csrf_field()
-    {
-        return new HtmlString('<input type="hidden" name="_token" value="'.csrf_token().'">');
-    }
-}
-
 if (! function_exists('csrf_token')) {
     /**
      * Get the CSRF token value.
@@ -173,74 +144,45 @@ if (! function_exists('csrf_token')) {
     }
 }
 
-if (! function_exists('elixir')) {
-    /**
-     * Get the path to a versioned Elixir file.
-     *
-     * @param  string $file
-     * @param  string $buildDirectory
-     * @return string
-     *
-     * @throws \InvalidArgumentException
-     */
-    function elixir($file, $buildDirectory = 'build')
-    {
-        static $manifest = [];
-        static $manifestPath;
-
-        if (empty($manifest) || $manifestPath !== $buildDirectory) {
-            $path = public_path($buildDirectory.'/rev-manifest.json');
-
-            if (file_exists($path)) {
-                $manifest = json_decode(file_get_contents($path), true);
-                $manifestPath = $buildDirectory;
-            }
-        }
-
-        $file = ltrim($file, '/');
-
-        if (isset($manifest[$file])) {
-            return '/'.trim($buildDirectory.'/'.$manifest[$file], '/');
-        }
-
-        $unversioned = public_path($file);
-
-        if (file_exists($unversioned)) {
-            return '/'.trim($file, '/');
-        }
-
-        throw new InvalidArgumentException("File {$file} not defined in asset manifest.");
-    }
-}
-
-if (! function_exists('event')) {
-    /**
-     * Dispatch an event and call the listeners.
-     *
-     * @param  string|object $event
-     * @param  mixed         $payload
-     * @param  bool          $halt
-     * @return array|null
-     */
-    function event(...$args)
-    {
-        return app('events')->dispatch(...$args);
-    }
-}
-
-if (! function_exists('old')) {
-    /**
-     * Retrieve an old input item.
-     *
-     * @param  string $key
-     * @param  mixed  $default
-     * @return mixed
-     */
-    function old($key = null, $default = null)
-    {
-        return app('request')->old($key, $default);
-    }
-}
+// if (! function_exists('elixir')) {
+//     /**
+//      * Get the path to a versioned Elixir file.
+//      *
+//      * @param  string $file
+//      * @param  string $buildDirectory
+//      * @return string
+//      *
+//      * @throws \InvalidArgumentException
+//      */
+//     function elixir($file, $buildDirectory = 'build')
+//     {
+//         static $manifest = [];
+//         static $manifestPath;
+//
+//         if (empty($manifest) || $manifestPath !== $buildDirectory) {
+//             $path = public_path($buildDirectory.'/rev-manifest.json');
+//
+//             if (file_exists($path)) {
+//                 $manifest = json_decode(file_get_contents($path), true);
+//                 $manifestPath = $buildDirectory;
+//             }
+//         }
+//
+//         $file = ltrim($file, '/');
+//
+//         if (isset($manifest[$file])) {
+//             return '/'.trim($buildDirectory.'/'.$manifest[$file], '/');
+//         }
+//
+//         $unversioned = public_path($file);
+//
+//         if (file_exists($unversioned)) {
+//             return '/'.trim($file, '/');
+//         }
+//
+//         throw new InvalidArgumentException("File {$file} not defined in asset manifest.");
+//     }
+// }
 
 if (! function_exists('public_path')) {
     /**
@@ -252,86 +194,6 @@ if (! function_exists('public_path')) {
     function public_path($path = '')
     {
         return app()->make('path.public').($path ? DIRECTORY_SEPARATOR.ltrim($path, DIRECTORY_SEPARATOR) : $path);
-    }
-}
-
-if (! function_exists('redirect')) {
-    /**
-     * Get an instance of the redirector.
-     *
-     * @param  string|null                                                      $to
-     * @param  int                                                              $status
-     * @param  array                                                            $headers
-     * @param  bool                                                             $secure
-     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
-     */
-    function redirect($to = null, $status = 302, $headers = [], $secure = null)
-    {
-        if (is_null($to)) {
-            throw new \Exception("Not found");
-            return app('redirect');
-        }
-
-        $response = new Response('php://memory', $status, $headers);
-        $response->withHeader('Location', $to);
-        return $response;
-        // return app('redirect')->to($to, $status, $headers, $secure);
-    }
-}
-
-if (! function_exists('request')) {
-    /**
-     * Get an instance of the current request or an input item from the request.
-     *
-     * @param  array|string                                          $key
-     * @param  mixed                                                 $default
-     * @return \Psr\Http\Message\ServerRequestInterface|string|array
-     */
-    function request($key = null, $default = null)
-    {
-        if (is_null($key)) {
-            return app('request');
-        }
-
-        if (is_array($key)) {
-            return app('request')->only($key);
-        }
-
-        return data_get(app('request')->all(), $key, $default);
-    }
-}
-
-if (! function_exists('resource_path')) {
-    /**
-     * Get the path to the resources folder.
-     *
-     * @param  string $path
-     * @return string
-     */
-    function resource_path($path = '')
-    {
-        return app()->resourcePath($path);
-    }
-}
-
-if (! function_exists('response')) {
-    /**
-     * Return a new response from the application.
-     *
-     * @param  string                                                                                   $content
-     * @param  int                                                                                      $status
-     * @param  array                                                                                    $headers
-     * @return \Symfony\Component\HttpFoundation\Response|\Illuminate\Contracts\Routing\ResponseFactory
-     */
-    function response($content = '', $status = 200, array $headers = [])
-    {
-        $response = new Response('php://memory', $status, $headers);
-
-        if (func_num_args() === 0) {
-            return $response;
-        }
-
-        return $response->withBody($content);
     }
 }
 
@@ -417,56 +279,6 @@ if (! function_exists('storage_path')) {
     function storage_path($path = '')
     {
         return app('path.storage').($path ? DIRECTORY_SEPARATOR.$path : $path);
-    }
-}
-
-if (! function_exists('trans')) {
-    /**
-     * Translate the given message.
-     *
-     * @param  string                                                         $key
-     * @param  array                                                          $replace
-     * @param  string                                                         $locale
-     * @return \Illuminate\Contracts\Translation\Translator|string|array|null
-     */
-    function trans($key = null, $replace = [], $locale = null)
-    {
-        if (is_null($key)) {
-            return app('translator');
-        }
-
-        return app('translator')->trans($key, $replace, $locale);
-    }
-}
-
-if (! function_exists('trans_choice')) {
-    /**
-     * Translates the given message based on a count.
-     *
-     * @param  string               $key
-     * @param  int|array|\Countable $number
-     * @param  array                $replace
-     * @param  string               $locale
-     * @return string
-     */
-    function trans_choice($key, $number, array $replace = [], $locale = null)
-    {
-        return app('translator')->transChoice($key, $number, $replace, $locale);
-    }
-}
-
-if (! function_exists('__')) {
-    /**
-     * Translate the given message.
-     *
-     * @param  string                                              $key
-     * @param  array                                               $replace
-     * @param  string                                              $locale
-     * @return \Illuminate\Contracts\Translation\Translator|string
-     */
-    function __($key = null, $replace = [], $locale = null)
-    {
-        return app('translator')->getFromJson($key, $replace, $locale);
     }
 }
 
