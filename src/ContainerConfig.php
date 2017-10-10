@@ -288,7 +288,7 @@ class ContainerConfig
             return $translators;
         });
 
-        $container->alias(TranslatorLocator::class, 'translator');
+        // $container->alias(TranslatorLocator::class, 'translator');
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, PublicFileModule::class, function () use ($container) {
             return new PublicFileModule(

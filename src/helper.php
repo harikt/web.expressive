@@ -5,8 +5,6 @@ use Illuminate\Config\Repository;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use Illuminate\Contracts\View\Factory as ViewFactory;
-use Illuminate\Support\HtmlString;
-use Zend\Diactoros\Response;
 use Zend\Expressive\Router\RouterInterface;
 
 if (! function_exists('abort')) {
@@ -75,22 +73,22 @@ if (! function_exists('asset')) {
     }
 }
 
-if (! function_exists('auth')) {
-    /**
-     * Get the available auth instance.
-     *
-     * @param  string|null                                                                                                  $guard
-     * @return \Illuminate\Contracts\Auth\Factory|\Illuminate\Contracts\Auth\Guard|\Illuminate\Contracts\Auth\StatefulGuard
-     */
-    function auth($guard = null)
-    {
-        if (is_null($guard)) {
-            return app(AuthFactory::class);
-        } else {
-            return app(AuthFactory::class)->guard($guard);
-        }
-    }
-}
+// if (! function_exists('auth')) {
+//     /**
+//      * Get the available auth instance.
+//      *
+//      * @param  string|null                                                                                                  $guard
+//      * @return \Illuminate\Contracts\Auth\Factory|\Illuminate\Contracts\Auth\Guard|\Illuminate\Contracts\Auth\StatefulGuard
+//      */
+//     function auth($guard = null)
+//     {
+//         if (is_null($guard)) {
+//             return app(AuthFactory::class);
+//         } else {
+//             return app(AuthFactory::class)->guard($guard);
+//         }
+//     }
+// }
 
 // modified
 if (! function_exists('config')) {
@@ -281,56 +279,6 @@ if (! function_exists('storage_path')) {
     function storage_path($path = '')
     {
         return app('path.storage').($path ? DIRECTORY_SEPARATOR.$path : $path);
-    }
-}
-
-if (! function_exists('trans')) {
-    /**
-     * Translate the given message.
-     *
-     * @param  string                                                         $key
-     * @param  array                                                          $replace
-     * @param  string                                                         $locale
-     * @return \Illuminate\Contracts\Translation\Translator|string|array|null
-     */
-    function trans($key = null, $replace = [], $locale = null)
-    {
-        if (is_null($key)) {
-            return app('translator');
-        }
-
-        return app('translator')->trans($key, $replace, $locale);
-    }
-}
-
-if (! function_exists('trans_choice')) {
-    /**
-     * Translates the given message based on a count.
-     *
-     * @param  string               $key
-     * @param  int|array|\Countable $number
-     * @param  array                $replace
-     * @param  string               $locale
-     * @return string
-     */
-    function trans_choice($key, $number, array $replace = [], $locale = null)
-    {
-        return app('translator')->transChoice($key, $number, $replace, $locale);
-    }
-}
-
-if (! function_exists('__')) {
-    /**
-     * Translate the given message.
-     *
-     * @param  string                                              $key
-     * @param  array                                               $replace
-     * @param  string                                              $locale
-     * @return \Illuminate\Contracts\Translation\Translator|string
-     */
-    function __($key = null, $replace = [], $locale = null)
-    {
-        return app('translator')->getFromJson($key, $replace, $locale);
     }
 }
 

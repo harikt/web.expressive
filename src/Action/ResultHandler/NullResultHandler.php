@@ -2,6 +2,7 @@
 
 namespace Dms\Web\Expressive\Action\ResultHandler;
 
+use Aura\Intl\TranslatorLocator;
 use Dms\Core\Module\IAction;
 use Dms\Web\Expressive\Action\ActionResultHandler;
 use Dms\Web\Expressive\Http\ModuleContext;
@@ -14,6 +15,17 @@ use Zend\Diactoros\Response\JsonResponse;
  */
 class NullResultHandler extends ActionResultHandler
 {
+
+    /**
+     * @var TranslatorLocator
+     */
+    protected $translocator;
+
+    public function __construct(EntityModuleMap $entityModuleMap, TranslatorLocator $translocator)
+    {
+        $this->translocator = $translocator;
+        parent::__construct();
+    }
 
     /**
      * @return string|null
@@ -44,8 +56,10 @@ class NullResultHandler extends ActionResultHandler
      */
     protected function handleResult(ModuleContext $moduleContext, IAction $action, $result)
     {
+        $translator = $this->translocator->get('dms');
+
         return new JsonResponse([
-            'message' => trans('dms::action.generic-response'),
+            'message' => $translator->translate('dms::action.generic-response'),
         ]);
     }
 }
