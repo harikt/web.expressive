@@ -1,14 +1,12 @@
 <?php
 
-if (! defined(PUBLIC_PATH)) {
+if (! defined("PUBLIC_PATH")) {
     define('PUBLIC_PATH', dirname(dirname(__DIR__)) . '/public');
 }
-
-if (! defined(BASE_PATH)) {
+if (! defined("BASE_PATH")) {
     define('BASE_PATH', dirname(dirname(__DIR__)));
 }
-
-if (! defined(STORAGE_PATH)) {
+if (! defined("STORAGE_PATH")) {
     define('STORAGE_PATH', dirname(dirname(__DIR__)) . '/data');
 }
 
@@ -23,7 +21,7 @@ return [
             'path' => BASE_PATH
         ],
 
-        'storage' => [
+        'datastorage' => [
             'path' => STORAGE_PATH
         ],
 

@@ -279,13 +279,18 @@ class ContainerConfig
                     continue;
                 }
 
-                // place into the locator for dms
-                $packages->set('dms', $fileInfo->getBasename('.php'), function () {
-                    $package = new Package;
-                    $package->setMessages(require $fileInfo->getFilename());
+                $file = $fileInfo->getPathname();
 
-                    return $package;
-                });
+                if (is_readable($file)) {
+                    // place into the locator for dms
+                    $packages->set('dms', $fileInfo->getBasename('.php'), function () use ($file) {
+
+                        $package = new Package;
+                        $package->setMessages(require $file);
+
+                        return $package;
+                    });
+                }
             }
 
             return $translators;
