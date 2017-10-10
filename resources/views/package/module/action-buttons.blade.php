@@ -8,7 +8,7 @@
         </a>
     @elseif($actionButton->isPost())
         <div class="dms-run-action-form inline" data-action="{{ $actionButton->getUrl($objectId) }}" data-method="post" data-reload-page-after-submit="1">
-            {!! csrf_field() !!}
+            <input type="hidden" name="_token" value="{!! csrf_token() !!}">
             <button type="submit"
                     class="btn btn-{{ \Dms\Web\Expressive\Util\KeywordTypeIdentifier::getClass($actionButton->getName()) ?? 'default' }}">
                 {{ $actionButton->getLabel() }}

@@ -3,7 +3,7 @@
     <p class="login-box-msg">Enter your email to reset your password</p>
 
     <form action="{{ route('dms::auth.password.forgot') }}" method="post">
-        {!! csrf_field() !!}
+        <input type="hidden" name="_token" value="{!! csrf_token() !!}">
 
         <div class="form-group has-feedback{{ $errors->has('email') ? ' has-error' : '' }}">
             <input type="email" name="email" class="form-control" placeholder="Email">

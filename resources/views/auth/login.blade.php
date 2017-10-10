@@ -7,9 +7,7 @@
         </div>
     @endif
     <form action="" method="post">
-        {{--
-            {!! csrf_field() !!}
-        --}}
+        <input type="hidden" name="_token" value="{!! csrf_token() !!}">
 
         <div class="form-group has-feedback}}">
             <input type="text" name="username" class="form-control" placeholder="Username" value="">
