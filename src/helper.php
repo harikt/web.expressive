@@ -255,19 +255,6 @@ if (! function_exists('public_path')) {
     }
 }
 
-if (! function_exists('resource_path')) {
-    /**
-     * Get the path to the resources folder.
-     *
-     * @param  string $path
-     * @return string
-     */
-    function resource_path($path = '')
-    {
-        return app()->resourcePath($path);
-    }
-}
-
 if (! function_exists('route')) {
     /**
      * Generate the URL to a named route.
