@@ -3,8 +3,6 @@ use Aura\Session\Session;
 use Dms\Web\Expressive\Ioc\LaravelIocContainer;
 use Illuminate\Config\Repository;
 use Illuminate\Container\Container;
-use Illuminate\Contracts\Auth\Factory as AuthFactory;
-use Illuminate\Contracts\View\Factory as ViewFactory;
 use Zend\Expressive\Router\RouterInterface;
 
 if (! function_exists('abort')) {

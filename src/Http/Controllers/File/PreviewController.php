@@ -5,6 +5,7 @@ namespace Dms\Web\Expressive\Http\Controllers\File;
 use Dms\Core\ICms;
 use Dms\Core\Model\EntityNotFoundException;
 use Dms\Web\Expressive\File\ITemporaryFileService;
+use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Illuminate\Contracts\Config\Repository;
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
@@ -16,10 +17,8 @@ use Zend\Diactoros\Response;
  *
  * @author Elliot Levin <elliotlevin@hotmail.com>
  */
-class PreviewController implements ServerMiddlewareInterface
+class PreviewController extends DmsController implements ServerMiddlewareInterface
 {
-    protected $cms;
-
     /**
      * @var ITemporaryFileService
      */
@@ -31,18 +30,24 @@ class PreviewController implements ServerMiddlewareInterface
     protected $config;
 
     /**
-     * FileController constructor.
+     * PreviewController constructor.
      *
-     * @param ICms                  $cms
-     * @param ITemporaryFileService $tempFileService
-     * @param Repository            $config
+     * @param ICms                      $cms
+     * @param IAuthSystem               $auth
+     * @param TemplateRendererInterface $template
+     * @param RouterInterface           $router
+     * @param ITemporaryFileService     $tempFileService
+     * @param Repository                $config
      */
     public function __construct(
         ICms $cms,
+        IAuthSystem $auth,
+        TemplateRendererInterface $template,
+        RouterInterface $router,
         ITemporaryFileService $tempFileService,
         Repository $config
     ) {
-        $this->cms = $cms;
+        parent::__construct($cms, $auth, $template, $router);
         $this->tempFileService = $tempFileService;
         $this->config          = $config;
     }
