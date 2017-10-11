@@ -43,15 +43,16 @@ abstract class BladeFieldRenderer extends FieldRenderer
         $viewParams['value'] = $field->getUnprocessedInitialValue();
         $viewParams['processedValue'] = $field->getInitialValue();
 
-        return view($viewName)
-            ->with('field', $field)
-            ->with('name', $field->getName())
-            ->with('label', $field->getLabel())
-            ->with('placeholder', $fieldType->get('placeholder') ?: $field->getLabel())
-            ->with('fieldType', $fieldType)
-            ->with($viewParams)
-            ->with($extraParams)
-            ->render();
+        return $this->template->render(
+            $viewName,
+            [
+                'field' => $field,
+                'name' => $field->getName(),
+                'label' => $field->getLabel(),
+                'placeholder' => $fieldType->get('placeholder') ?: $field->getLabel(),
+                'fieldType' => $fieldType
+            ] + $viewParams + $extraParams
+        );
     }
 
 
@@ -70,15 +71,16 @@ abstract class BladeFieldRenderer extends FieldRenderer
         array $extraParams = []
     ) : string {
         if ($value === null) {
-            return view('dms::components.field.null.value')
-                ->render();
+            return $this->template->render('dms::components.field.null.value');
         }
 
-        return view($viewName)
-            ->with('name', $field->getName())
-            ->with('label', $field->getLabel())
-            ->with('value', $value)
-            ->with($extraParams)
-            ->render();
+        return $this->template->render(
+            $viewName,
+            [
+                'name' => $field->getName(),
+                'label' => $field->getLabel(),
+                'value' => $value,
+            ] + $extraParams
+        );
     }
 }

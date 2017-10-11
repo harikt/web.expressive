@@ -9,6 +9,7 @@ use Dms\Core\Form\IFieldType;
 use Dms\Web\Expressive\Renderer\Form\FieldRendererCollection;
 use Dms\Web\Expressive\Renderer\Form\FormRenderingContext;
 use Dms\Web\Expressive\Renderer\Form\IFieldRenderer;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
  * The base field renderer
@@ -28,11 +29,17 @@ abstract class FieldRenderer implements IFieldRenderer
     protected $fieldTypeClasses;
 
     /**
+     * @var TemplateRendererInterface
+     */
+    protected $template;
+
+    /**
      * FieldRenderer constructor.
      */
-    public function __construct()
+    public function __construct(TemplateRendererInterface $template)
     {
         $this->fieldTypeClasses = $this->getFieldTypeClasses();
+        $this->template = $template;
     }
 
     /**

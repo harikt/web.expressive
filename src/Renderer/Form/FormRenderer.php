@@ -4,6 +4,7 @@ namespace Dms\Web\Expressive\Renderer\Form;
 
 use Dms\Core\Exception\InvalidArgumentException;
 use Dms\Core\Form\IForm;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
  * The form renderer base class.
@@ -18,13 +19,19 @@ abstract class FormRenderer implements IFormRenderer
     protected $fieldRenderers;
 
     /**
+     * @var TemplateRendererInterface
+     */
+    protected $template;
+
+    /**
      * FormRenderer constructor.
      *
      * @param FieldRendererCollection $fieldRenderers
      */
-    public function __construct(FieldRendererCollection $fieldRenderers)
+    public function __construct(FieldRendererCollection $fieldRenderers, TemplateRendererInterface $template)
     {
         $this->fieldRenderers = $fieldRenderers;
+        $this->template = $template;
     }
 
     /**

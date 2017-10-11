@@ -22,7 +22,6 @@ use Dms\Core\Persistence\IRepository;
 use Dms\Web\Expressive\Action\ActionExceptionHandlerCollection;
 use Dms\Web\Expressive\Action\ActionInputTransformerCollection;
 use Dms\Web\Expressive\Action\ActionResultHandlerCollection;
-use Dms\Web\Expressive\Error\DmsError;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Dms\Web\Expressive\Http\Controllers\Package\Module\ModuleContextTrait;
 use Dms\Web\Expressive\Http\ModuleContext;
@@ -142,7 +141,7 @@ class FieldRendererController extends DmsController implements ServerMiddlewareI
         $field = $this->findFieldFromBracketSyntaxName($form, $fieldName);
 
         if (!$field) {
-            return DmsError::abort($request, 404);
+            return $this->abort($request, 404);
         }
 
         $renderingContext = new FormRenderingContext($moduleContext, $action, $stageNumber, $object);
@@ -151,7 +150,7 @@ class FieldRendererController extends DmsController implements ServerMiddlewareI
             ->findRendererFor($renderingContext, $field);
 
         if (!($renderer instanceof IFieldRendererWithActions)) {
-            return DmsError::abort($request, 404);
+            return $this->abort($request, 404);
         }
 
         $this->loadSharedViewVariables($request);
@@ -250,7 +249,7 @@ class FieldRendererController extends DmsController implements ServerMiddlewareI
             $action = $module->getAction($actionName);
 
             if (!$action->isAuthorized()) {
-                return DmsError::abort($request, 401);
+                return $this->abort($request, 401);
             }
 
             return $action;
@@ -277,7 +276,7 @@ class FieldRendererController extends DmsController implements ServerMiddlewareI
 
             return $this->loadObjectFromDataSource($objectId, $objectFieldType->getObjects());
         } catch (InvalidInputException $e) {
-            return DmsError::abort($request, 404);
+            return $this->abort($request, 404);
         }
     }
 

@@ -31,6 +31,9 @@ class TableRenderer
      */
     private $actionButtonBuilder;
 
+    /**
+     * @var TemplateRendererInterface
+     */
     protected $template;
 
     /**
@@ -38,6 +41,7 @@ class TableRenderer
      *
      * @param ColumnRendererFactoryCollection $columnRendererFactories
      * @param ObjectActionButtonBuilder       $actionButtonBuilder
+     * @param TemplateRendererInterface       $template
      */
     public function __construct(
         ColumnRendererFactoryCollection $columnRendererFactories,
@@ -129,8 +133,9 @@ class TableRenderer
 
         $module = $moduleContext->getModule();
 
-        return view('dms::components.table.table-control')
-            ->with([
+        return $this->template->render(
+            'dms::components.table.table-control',
+            [
                 'columns'                      => $columns,
                 'tableDataSource'              => $table->getDataSource(),
                 'table'                        => $table->getView($viewName),
@@ -138,8 +143,8 @@ class TableRenderer
                 'reorderRowActionUrl'          => $reorderRowActionUrl,
                 'stringFilterableComponentIds' => $this->getStringFilterableColumnComponentIds($table->getDataSource()),
                 'defaultAmount'                => $moduleContext->getModule()->getMetadata('default-items-per-page'),
-            ])
-            ->render();
+            ]
+        );
     }
 
     protected function getStringFilterableColumnComponentIds(ITableDataSource $tableDataSource) : array

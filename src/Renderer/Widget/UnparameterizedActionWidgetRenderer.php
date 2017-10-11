@@ -7,6 +7,7 @@ use Dms\Core\Widget\ActionWidget;
 use Dms\Core\Widget\IWidget;
 use Dms\Web\Expressive\Http\ModuleContext;
 use Dms\Web\Expressive\Util\KeywordTypeIdentifier;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
  * The widget renderer for unparameterized actions.
@@ -21,13 +22,20 @@ class UnparameterizedActionWidgetRenderer extends WidgetRenderer
     protected $keywordTypeIdentifier;
 
     /**
+     * @var TemplateRendererInterface
+     */
+    protected $template;
+
+    /**
      * UnparameterizedActionWidgetRenderer constructor.
      *
-     * @param KeywordTypeIdentifier $keywordTypeIdentifier
+     * @param KeywordTypeIdentifier     $keywordTypeIdentifier
+     * @param TemplateRendererInterface $template
      */
-    public function __construct(KeywordTypeIdentifier $keywordTypeIdentifier)
+    public function __construct(KeywordTypeIdentifier $keywordTypeIdentifier, TemplateRendererInterface $template)
     {
         $this->keywordTypeIdentifier = $keywordTypeIdentifier;
+        $this->template = $template;
     }
 
     /**
@@ -69,12 +77,13 @@ class UnparameterizedActionWidgetRenderer extends WidgetRenderer
         /** @var ActionWidget $widget */
         $action = $widget->getAction();
 
-        return view('dms::components.widget.unparameterized-action')
-            ->with([
+        return $this->template->render(
+            'dms::components.widget.unparameterized-action',
+            [
                 'action'      => $action,
                 'actionUrl'   => $moduleContext->getUrl('action.run', [$action->getName()]),
                 'buttonClass' => $this->keywordTypeIdentifier->getTypeFromName($action->getName()),
-            ])
-            ->render();
+            ]
+        );
     }
 }

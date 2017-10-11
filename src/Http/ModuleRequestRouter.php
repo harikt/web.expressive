@@ -5,7 +5,6 @@ namespace Dms\Web\Expressive\Http;
 use Dms\Core\Exception\InvalidOperationException;
 use Dms\Core\ICms;
 use Dms\Core\Module\IModule;
-use Dms\Web\Expressive\Error\DmsError;
 use Illuminate\Routing\RouteGroup;
 use Psr\Http\Message\ServerRequestInterface;
 // use Illuminate\Routing\Router;
@@ -146,13 +145,13 @@ class ModuleRequestRouter
         //     $route->forgetParameter('package');
         //
         //     if (!$cms->hasPackage($packageName)) {
-        //         DmsError::abort($request, 404);
+        //         $this->abort($request, 404);
         //     }
         //
         //     $package = $cms->loadPackage($packageName);
         //
         //     if (!$package->hasModule($moduleName)) {
-        //         DmsError::abort($request, 404);
+        //         $this->abort($request, 404);
         //     }
         //
         //     return $this->getRootContext($packageName, $moduleName, function () use ($package, $moduleName) {

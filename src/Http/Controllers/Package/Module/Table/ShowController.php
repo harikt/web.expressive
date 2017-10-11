@@ -9,7 +9,6 @@ use Dms\Core\ICms;
 use Dms\Core\Module\IModule;
 use Dms\Core\Module\ITableDisplay;
 use Dms\Core\Module\ITableView;
-use Dms\Web\Expressive\Error\DmsError;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Dms\Web\Expressive\Http\Controllers\Package\Module\ModuleContextTrait;
 use Dms\Web\Expressive\Renderer\Table\TableRenderer;
@@ -112,7 +111,7 @@ class ShowController extends DmsController implements ServerMiddlewareInterface
         try {
             return $table->getView($viewName);
         } catch (InvalidArgumentException $e) {
-            return DmsError::abort($request, 404);
+            return $this->abort($request, 404);
         }
     }
 

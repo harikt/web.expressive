@@ -61,8 +61,9 @@ class GraphChartRenderer extends ChartRenderer
 
         $dateTimeClass = $chartStructure->getHorizontalAxis()->getType()->getPhpType()->nonNullable()->asTypeString();
 
-        return view('dms::components.chart.graph-chart')
-            ->with([
+        return $this->template->render(
+            'dms::components.chart.graph-chart',
+            [
                 'chartType'          => $this->getChartType($chartStructure),
                 'dateFormat'         => defined($dateTimeClass . '::DISPLAY_FORMAT')
                     ? constant($dateTimeClass . '::DISPLAY_FORMAT')
@@ -72,8 +73,8 @@ class GraphChartRenderer extends ChartRenderer
                 'verticalAxisKeys'   => $yAxisKeys,
                 'verticalAxisLabels' => $yAxisLabels,
                 'horizontalUnitType'          => $this->getHorizontalUnitType($dateTimeClass),
-            ])
-            ->render();
+            ]
+        );
     }
 
     private function transformChartDataToIndexedArrays(IChartDataTable $data, $xAxisName, $xComponentName, $yAxisName)

@@ -9,6 +9,7 @@ use Dms\Core\Form\IFieldOptions;
 use Dms\Core\Form\IFieldType;
 use Dms\Web\Expressive\Renderer\Form\FormRenderingContext;
 use Illuminate\Contracts\Config\Repository;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
  * The money field renderer
@@ -20,10 +21,10 @@ class MoneyFieldRenderer extends BladeFieldRenderer
     /**
      * @param Repository $configRepository
      */
-    public function __construct(Repository $configRepository)
+    public function __construct(Repository $configRepository, TemplateRendererInterface $template)
     {
         $this->configRepository = $configRepository;
-        parent::__construct();
+        parent::__construct($template);
     }
 
     /**

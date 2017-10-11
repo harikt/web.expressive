@@ -12,7 +12,6 @@ use Dms\Core\Module\IChartView;
 use Dms\Core\Module\IModule;
 use Dms\Core\Table\Chart\Criteria\ChartCriteria;
 use Dms\Core\Table\Chart\IChartStructure;
-use Dms\Web\Expressive\Error\DmsError;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Dms\Web\Expressive\Http\Controllers\Package\Module\ModuleContextTrait;
 use Dms\Web\Expressive\Renderer\Chart\ChartControlRenderer;
@@ -111,7 +110,7 @@ class LoadChartDataController extends DmsController implements ServerMiddlewareI
         try {
             return $chart->hasView($chartView) ? $chart->getView($chartView) : $chart->getDefaultView();
         } catch (InvalidArgumentException $e) {
-            return DmsError::abort($request, 404);
+            return $this->abort($request, 404);
         }
     }
 

@@ -19,7 +19,6 @@ use Dms\Core\Persistence\IRepository;
 use Dms\Web\Expressive\Action\ActionExceptionHandlerCollection;
 use Dms\Web\Expressive\Action\ActionInputTransformerCollection;
 use Dms\Web\Expressive\Action\ActionResultHandlerCollection;
-use Dms\Web\Expressive\Error\DmsError;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Dms\Web\Expressive\Http\Controllers\Package\Module\ModuleContextTrait;
 use Dms\Web\Expressive\Renderer\Action\ObjectActionButtonBuilder;
@@ -128,7 +127,7 @@ class ShowFormController extends DmsController implements ServerMiddlewareInterf
         }
 
         if (!($action instanceof IParameterizedAction)) {
-            return DmsError::abort($request, 404);
+            return $this->abort($request, 404);
         }
 
         $hiddenValues = [];
@@ -183,7 +182,7 @@ class ShowFormController extends DmsController implements ServerMiddlewareInterf
             $action = $module->getAction($actionName);
 
             if (!$action->isAuthorized()) {
-                return DmsError::abort($request, 401);
+                return $this->abort($request, 401);
             }
 
             return $action;
@@ -210,7 +209,7 @@ class ShowFormController extends DmsController implements ServerMiddlewareInterf
 
             return $this->loadObjectFromDataSource($objectId, $objectFieldType->getObjects());
         } catch (InvalidInputException $e) {
-            return DmsError::abort($request, 404);
+            return $this->abort($request, 404);
         }
     }
 

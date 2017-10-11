@@ -102,6 +102,9 @@ class SelectOptionsFieldRender extends OptionsFieldRender implements IFieldRende
             return new JsonResponse($data);
         }
 
-        abort(404);
+        $response = new Response('php://memory', 404);
+        // $response->getBody()->write($message);
+
+        return $response;
     }
 }

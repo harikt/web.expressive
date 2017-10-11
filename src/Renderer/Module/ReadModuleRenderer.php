@@ -9,6 +9,7 @@ use Dms\Core\Module\ITableView;
 use Dms\Web\Expressive\Http\ModuleContext;
 use Dms\Web\Expressive\Renderer\Table\TableRenderer;
 use Dms\Web\Expressive\Renderer\Widget\WidgetRendererCollection;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
  * The read module renderer.
@@ -25,12 +26,16 @@ class ReadModuleRenderer extends ModuleRenderer
     /**
      * ReadModuleRenderer constructor.
      *
-     * @param TableRenderer            $tableRenderer
-     * @param WidgetRendererCollection $widgetRenderers
+     * @param WidgetRendererCollection  $widgetRenderers
+     * @param TemplateRendererInterface $template
+     * @param TableRenderer             $tableRenderer
      */
-    public function __construct(TableRenderer $tableRenderer, WidgetRendererCollection $widgetRenderers)
-    {
-        parent::__construct($widgetRenderers);
+    public function __construct(
+        WidgetRendererCollection $widgetRenderers,
+        TemplateRendererInterface $template,
+        TableRenderer $tableRenderer
+    ) {
+        parent::__construct($widgetRenderers, $template);
         $this->tableRenderer = $tableRenderer;
     }
 
@@ -81,8 +86,9 @@ class ReadModuleRenderer extends ModuleRenderer
             ? session('initial-view-name')
             : $summaryTable->getDefaultView()->getName();
 
-        return view('dms::package.module.dashboard.summary-table')
-            ->with([
+        return $this->template->render(
+            'dms::package.module.dashboard.summary-table',
+            [
                 'moduleContext'     => $moduleContext,
                 'tableRenderer'     => $this->tableRenderer,
                 'module'            => $module,
@@ -91,7 +97,7 @@ class ReadModuleRenderer extends ModuleRenderer
                 'activeViewName'    => $activeViewName,
                 'generalActions'    => $generalActions,
                 'createActionName'  => $createActionName,
-            ])
-            ->render();
+            ]
+        );
     }
 }

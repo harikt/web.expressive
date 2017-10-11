@@ -3,8 +3,6 @@ use Aura\Session\Session;
 use Dms\Web\Expressive\Ioc\LaravelIocContainer;
 use Illuminate\Config\Repository;
 use Illuminate\Container\Container;
-use Illuminate\Contracts\Auth\Factory as AuthFactory;
-use Illuminate\Contracts\View\Factory as ViewFactory;
 use Zend\Expressive\Router\RouterInterface;
 
 if (! function_exists('abort')) {
@@ -45,37 +43,7 @@ if (! function_exists('app')) {
     }
 }
 
-if (! function_exists('app_path')) {
-    /**
-     * Get the path to the application folder.
-     *
-     * @param  string $path
-     * @return string
-     */
-    function app_path($path = '')
-    {
-        return app('path').($path ? DIRECTORY_SEPARATOR.$path : $path);
-    }
-}
-
-// if (! function_exists('auth')) {
-//     /**
-//      * Get the available auth instance.
-//      *
-//      * @param  string|null                                                                                                  $guard
-//      * @return \Illuminate\Contracts\Auth\Factory|\Illuminate\Contracts\Auth\Guard|\Illuminate\Contracts\Auth\StatefulGuard
-//      */
-//     function auth($guard = null)
-//     {
-//         if (is_null($guard)) {
-//             return app(AuthFactory::class);
-//         } else {
-//             return app(AuthFactory::class)->guard($guard);
-//         }
-//     }
-// }
-
-// modified
+// used in views
 if (! function_exists('config')) {
     /**
      * Get / set the specified configuration value.
@@ -100,19 +68,6 @@ if (! function_exists('config')) {
     }
 }
 
-if (! function_exists('config_path')) {
-    /**
-     * Get the configuration path.
-     *
-     * @param  string $path
-     * @return string
-     */
-    function config_path($path = '')
-    {
-        return app()->make('path.config').($path ? DIRECTORY_SEPARATOR.$path : $path);
-    }
-}
-
 if (! function_exists('csrf_token')) {
     /**
      * Get the CSRF token value.
@@ -129,46 +84,7 @@ if (! function_exists('csrf_token')) {
     }
 }
 
-// if (! function_exists('elixir')) {
-//     /**
-//      * Get the path to a versioned Elixir file.
-//      *
-//      * @param  string $file
-//      * @param  string $buildDirectory
-//      * @return string
-//      *
-//      * @throws \InvalidArgumentException
-//      */
-//     function elixir($file, $buildDirectory = 'build')
-//     {
-//         static $manifest = [];
-//         static $manifestPath;
-//
-//         if (empty($manifest) || $manifestPath !== $buildDirectory) {
-//             $path = public_path($buildDirectory.'/rev-manifest.json');
-//
-//             if (file_exists($path)) {
-//                 $manifest = json_decode(file_get_contents($path), true);
-//                 $manifestPath = $buildDirectory;
-//             }
-//         }
-//
-//         $file = ltrim($file, '/');
-//
-//         if (isset($manifest[$file])) {
-//             return '/'.trim($buildDirectory.'/'.$manifest[$file], '/');
-//         }
-//
-//         $unversioned = public_path($file);
-//
-//         if (file_exists($unversioned)) {
-//             return '/'.trim($file, '/');
-//         }
-//
-//         throw new InvalidArgumentException("File {$file} not defined in asset manifest.");
-//     }
-// }
-
+// used by asset_file_url
 if (! function_exists('public_path')) {
     /**
      * Get the path to the public folder.
@@ -241,40 +157,6 @@ if (! function_exists('session')) {
     }
 }
 
-// if (! function_exists('storage_path')) {
-//     /**
-//      * Get the path to the storage folder.
-//      *
-//      * @param  string $path
-//      * @return string
-//      */
-//     function storage_path($path = '')
-//     {
-//         return app('path.storage').($path ? DIRECTORY_SEPARATOR.$path : $path);
-//     }
-// }
-
-if (! function_exists('view')) {
-    /**
-     * Get the evaluated view contents for the given view.
-     *
-     * @param  string                                                   $view
-     * @param  array                                                    $data
-     * @param  array                                                    $mergeData
-     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
-     */
-    function view($view = null, $data = [], $mergeData = [])
-    {
-        $factory = app(ViewFactory::class);
-
-        if (func_num_args() === 0) {
-            return $factory;
-        }
-
-        return $factory->make($view, $data, $mergeData);
-    }
-}
-
 if (!function_exists('asset_file_url')) {
     /**
      * Generates an asset URL from a file stored within the public directory
@@ -315,3 +197,17 @@ if (!function_exists('asset_file_url')) {
         return str_replace(DIRECTORY_SEPARATOR, '/', $relativePath);
     }
 }
+
+// used in cli.expressive . Refactor needed.
+// if (! function_exists('app_path')) {
+//     /**
+//      * Get the path to the application folder.
+//      *
+//      * @param  string $path
+//      * @return string
+//      */
+//     function app_path($path = '')
+//     {
+//         return app('path').($path ? DIRECTORY_SEPARATOR.$path : $path);
+//     }
+// }

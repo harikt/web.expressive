@@ -7,6 +7,7 @@ use Dms\Core\Widget\IWidget;
 use Dms\Web\Expressive\Http\ModuleContext;
 use Dms\Web\Expressive\Renderer\Form\DefaultFormRenderer;
 use Dms\Web\Expressive\Renderer\Form\FormRenderingContext;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
  * The form data renderer for parameterized actions.
@@ -21,13 +22,20 @@ class FormDataWidgetRenderer extends WidgetRenderer
     protected $formRenderer;
 
     /**
+     * @var TemplateRendererInterface
+     */
+    protected $template;
+
+    /**
      * FormDataWidgetRenderer constructor.
      *
-     * @param DefaultFormRenderer $formRenderer
+     * @param DefaultFormRenderer       $formRenderer
+     * @param TemplateRendererInterface $template
      */
-    public function __construct(DefaultFormRenderer $formRenderer)
+    public function __construct(DefaultFormRenderer $formRenderer, TemplateRendererInterface $template)
     {
         $this->formRenderer = $formRenderer;
+        $this->template = $template;
     }
 
     /**
@@ -70,11 +78,12 @@ class FormDataWidgetRenderer extends WidgetRenderer
         $form             = $widget->getForm();
         $renderingContext = new FormRenderingContext($moduleContext);
 
-        return view('dms::components.widget.form-data')
-            ->with([
+        return $this->template->render(
+            'dms::components.widget.form-data',
+            [
                 'action'          => $form,
                 'formDataContent' => $this->formRenderer->renderFieldsAsValues($renderingContext, $form),
-            ])
-            ->render();
+            ]
+        );
     }
 }

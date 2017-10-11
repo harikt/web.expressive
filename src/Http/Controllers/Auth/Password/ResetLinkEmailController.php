@@ -127,7 +127,7 @@ class ResetLinkEmailController extends DmsController implements ServerMiddleware
             return $this->showResetLinkEmailForm();
         }
 
-        return view('dms::auth.password.reset')->with('token', $token);
+        return $this->template->render('dms::auth.password.reset', ['token' => $token]);
     }
 
     /**

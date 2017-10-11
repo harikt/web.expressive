@@ -40,12 +40,13 @@ class DefaultModuleRenderer extends ModuleRenderer
             }
         }
 
-        return view('dms::package.module.dashboard.default')
-            ->with([
+        return $this->template->render(
+            'dms::package.module.dashboard.default',
+            [
                 'moduleContext'   => $moduleContext,
                 'widgets'         => $authorizedWidgets,
                 'widgetRenderers' => $this->widgetRenderers,
-            ])
-            ->render();
+            ]
+        );
     }
 }

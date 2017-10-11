@@ -8,6 +8,7 @@ use Dms\Core\Widget\IWidget;
 use Dms\Web\Expressive\Http\ModuleContext;
 use Dms\Web\Expressive\Renderer\Form\ActionFormRenderer;
 use Dms\Web\Expressive\Util\KeywordTypeIdentifier;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
  * The widget renderer for parameterized actions.
@@ -27,15 +28,22 @@ class ParameterizedActionWidgetRenderer extends WidgetRenderer
     protected $actionFormRenderer;
 
     /**
+     * @var TemplateRendererInterface
+     */
+    protected $template;
+
+    /**
      * ParameterizedActionWidgetRenderer constructor.
      *
-     * @param KeywordTypeIdentifier $keywordTypeIdentifier
-     * @param ActionFormRenderer    $actionFormRenderer
+     * @param KeywordTypeIdentifier     $keywordTypeIdentifier
+     * @param ActionFormRenderer        $actionFormRenderer
+     * @param TemplateRendererInterface $template
      */
-    public function __construct(KeywordTypeIdentifier $keywordTypeIdentifier, ActionFormRenderer $actionFormRenderer)
+    public function __construct(KeywordTypeIdentifier $keywordTypeIdentifier, ActionFormRenderer $actionFormRenderer, TemplateRendererInterface $template)
     {
         $this->keywordTypeIdentifier = $keywordTypeIdentifier;
         $this->actionFormRenderer    = $actionFormRenderer;
+        $this->template = $template;
     }
 
     /**
@@ -78,11 +86,12 @@ class ParameterizedActionWidgetRenderer extends WidgetRenderer
         /** @var ActionWidget $widget */
         $action = $widget->getAction();
 
-        return view('dms::components.widget.parameterized-action')
-            ->with([
+        return $this->template->render(
+            'dms::components.widget.parameterized-action',
+            [
                 'action'            => $action,
                 'actionFormContent' => $this->actionFormRenderer->renderActionForm($moduleContext, $action),
-            ])
-            ->render();
+            ]
+        );
     }
 }

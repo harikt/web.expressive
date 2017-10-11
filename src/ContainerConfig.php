@@ -284,7 +284,6 @@ class ContainerConfig
                 if (is_readable($file)) {
                     // place into the locator for dms
                     $packages->set('dms', $fileInfo->getBasename('.php'), function () use ($file) {
-
                         $package = new Package;
                         $package->setMessages(require $file);
 

@@ -7,7 +7,6 @@ use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\Auth\IRoleRepository;
 use Dms\Core\ICms;
 use Dms\Web\Expressive\Auth\Oauth\OauthProviderCollection;
-use Dms\Web\Expressive\Error\DmsError;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
@@ -68,7 +67,7 @@ class RedirectToProviderController extends DmsController implements ServerMiddle
         $providerName = $request->getAttribute('provider');
 
         if (! $this->providerCollection->has($providerName)) {
-            return DmsError::abort($request, 401);
+            return $this->abort($request, 401);
         }
 
         $oauthProvider = $this->providerCollection->getAll()[$providerName];

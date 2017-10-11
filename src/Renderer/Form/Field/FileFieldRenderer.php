@@ -12,6 +12,7 @@ use Dms\Core\Form\IFieldType;
 use Dms\Web\Expressive\File\ITemporaryFileService;
 use Dms\Web\Expressive\Renderer\Form\FormRenderingContext;
 use Illuminate\Contracts\Config\Repository;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
  * The file field renderer
@@ -30,9 +31,12 @@ class FileFieldRenderer extends BladeFieldRenderer
      */
     private $config;
 
-    public function __construct(ITemporaryFileService $tempFileService, Repository $config)
-    {
-        parent::__construct();
+    public function __construct(
+        ITemporaryFileService $tempFileService,
+        Repository $config,
+        TemplateRendererInterface $template
+    ) {
+        parent::__construct($template);
         $this->tempFileService = $tempFileService;
         $this->config          = $config;
     }

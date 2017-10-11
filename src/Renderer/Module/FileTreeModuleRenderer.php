@@ -8,6 +8,7 @@ use Dms\Web\Expressive\Http\ModuleContext;
 use Dms\Web\Expressive\Renderer\Table\TableRenderer;
 use Dms\Web\Expressive\Renderer\Widget\WidgetRendererCollection;
 use Illuminate\Contracts\Config\Repository;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
  * The file tree module renderer.
@@ -26,16 +27,18 @@ class FileTreeModuleRenderer extends ModuleRenderer
     /**
      * ReadModuleRenderer constructor.
      *
-     * @param TableRenderer            $tableRenderer
-     * @param WidgetRendererCollection $widgetRenderers
-     * @param Repository               $configRepository
+     * @param WidgetRendererCollection  $widgetRenderers
+     * @param TemplateRendererInterface $template
+     * @param TableRenderer             $tableRenderer
+     * @param Repository                $configRepository
      */
     public function __construct(
-        TableRenderer $tableRenderer,
         WidgetRendererCollection $widgetRenderers,
+        TemplateRendererInterface $template,
+        TableRenderer $tableRenderer,
         Repository $configRepository
     ) {
-        parent::__construct($widgetRenderers);
+        parent::__construct($widgetRenderers, $template);
         $this->tableRenderer = $tableRenderer;
         $this->configRepository = $configRepository;
     }
@@ -65,8 +68,9 @@ class FileTreeModuleRenderer extends ModuleRenderer
         $module        = $moduleContext->getModule();
         $rootDirectory = $module->getRootDirectory();
 
-        return view('dms::package.module.dashboard.file-tree')
-            ->with([
+        return $this->template->render(
+            'dms::package.module.dashboard.file-tree',
+            [
                 'isPublic'           => starts_with($rootDirectory, [
                     rtrim(PathHelper::normalize($this->configRepository->get('dms.storage.public-files.dir')), '/\\'),
                     rtrim($this->configRepository->get('dms.public.path'), '/\\'),
@@ -76,7 +80,7 @@ class FileTreeModuleRenderer extends ModuleRenderer
                 'trashDirectoryTree' => $module->getTrashDirectoryTree(),
                 'trashDataSource'    => $module->getTrashDataSource(),
                 'rootDirectory'      => $rootDirectory,
-            ])
-            ->render();
+            ]
+        );
     }
 }

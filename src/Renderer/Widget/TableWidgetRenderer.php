@@ -6,6 +6,7 @@ use Dms\Core\Widget\IWidget;
 use Dms\Core\Widget\TableWidget;
 use Dms\Web\Expressive\Http\ModuleContext;
 use Dms\Web\Expressive\Renderer\Table\TableRenderer;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
  * The widget renderer for data tables
@@ -20,13 +21,20 @@ class TableWidgetRenderer extends WidgetRenderer
     protected $tableRenderer;
 
     /**
+     * @var TemplateRendererInterface
+     */
+    protected $template;
+
+    /**
      * TableWidgetRenderer constructor.
      *
-     * @param TableRenderer $tableRenderer
+     * @param TableRenderer             $tableRenderer
+     * @param TemplateRendererInterface $template
      */
-    public function __construct(TableRenderer $tableRenderer)
+    public function __construct(TableRenderer $tableRenderer, TemplateRendererInterface $template)
     {
         $this->tableRenderer = $tableRenderer;
+        $this->template = $template;
     }
 
     /**
@@ -85,10 +93,11 @@ class TableWidgetRenderer extends WidgetRenderer
         /** @var TableWidget $widget */
         $tableDisplay = $widget->getTableDisplay();
 
-        return view('dms::components.widget.data-table')
-            ->with([
+        return $this->template->render(
+            'dms::components.widget.data-table',
+            [
                 'dataTableContent' => $this->tableRenderer->renderTableData($moduleContext, $tableDisplay, $widget->loadData()),
-            ])
-            ->render();
+            ]
+        );
     }
 }
