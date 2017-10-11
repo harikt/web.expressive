@@ -9,6 +9,7 @@ use Dms\Core\Module\IChartDisplay;
 use Dms\Core\Table\Chart\IChartDataTable;
 use Dms\Core\Table\Chart\Structure\GraphChart;
 use Dms\Web\Expressive\Http\ModuleContext;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
  * The chart control renderer class
@@ -22,14 +23,18 @@ class ChartControlRenderer
      */
     protected $chartRenderers;
 
+    protected $template;
+
     /**
      * ChartControlRenderer constructor.
      *
-     * @param ChartRendererCollection $chartRenderers
+     * @param ChartRendererCollection   $chartRenderers
+     * @param TemplateRendererInterface $template
      */
-    public function __construct(ChartRendererCollection $chartRenderers)
+    public function __construct(ChartRendererCollection $chartRenderers, TemplateRendererInterface $template)
     {
         $this->chartRenderers = $chartRenderers;
+        $this->template = $template;
     }
 
     /**
@@ -56,14 +61,15 @@ class ChartControlRenderer
      */
     public function renderChartControl(ModuleContext $moduleContext, IChartDisplay $chart, string $viewName) : string
     {
-        return view('dms::components.chart.chart-control')
-            ->with([
-                    'structure'        => $chart->getDataSource()->getStructure(),
-                    'axes'             => $chart->getDataSource()->getStructure()->getAxes(),
-                    'table'            => $chart->hasView($viewName) ? $chart->getView($viewName) : $chart->getDefaultView(),
-                    'loadChartDataUrl' => $moduleContext->getUrl('chart.view.load', [$chart->getName(), $viewName]),
-                ] + $this->getDateSettings($chart))
-            ->render();
+        return $this->template->render(
+            'dms::components.chart.chart-control',
+            [
+                'structure'        => $chart->getDataSource()->getStructure(),
+                'axes'             => $chart->getDataSource()->getStructure()->getAxes(),
+                'table'            => $chart->hasView($viewName) ? $chart->getView($viewName) : $chart->getDefaultView(),
+                'loadChartDataUrl' => $moduleContext->getUrl('chart.view.load', [$chart->getName(), $viewName]),
+            ] + $this->getDateSettings($chart)
+        );
     }
 
     private function getDateSettings(IChartDisplay $chart) : array

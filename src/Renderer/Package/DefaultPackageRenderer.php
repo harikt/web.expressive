@@ -40,11 +40,12 @@ class DefaultPackageRenderer extends PackageRenderer
             }
         }
 
-        return view('dms::package.dashboard.default')
-            ->with([
+        return $this->template->render(
+            'dms::package.dashboard.default',
+            [
                 'widgets'         => $authorizedWidgets,
                 'widgetRenderers' => $this->widgetRenderers,
-            ])
-            ->render();
+            ]
+        );
     }
 }

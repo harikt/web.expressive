@@ -4,7 +4,6 @@ namespace Dms\Web\Expressive\Http\Controllers\File;
 
 use Dms\Core\ICms;
 use Dms\Core\Model\EntityNotFoundException;
-use Dms\Web\Expressive\Error\DmsError;
 use Dms\Web\Expressive\File\ITemporaryFileService;
 use Illuminate\Contracts\Config\Repository;
 use Interop\Http\ServerMiddleware\DelegateInterface;
@@ -66,6 +65,6 @@ class PreviewController implements ServerMiddlewareInterface
         } catch (EntityNotFoundException $e) {
         }
 
-        return DmsError::abort($request, 404);
+        return $this->abort($request, 404);
     }
 }

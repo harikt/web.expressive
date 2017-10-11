@@ -5,6 +5,7 @@ namespace Dms\Web\Expressive\Renderer\Module;
 use Dms\Core\Exception\InvalidArgumentException;
 use Dms\Web\Expressive\Http\ModuleContext;
 use Dms\Web\Expressive\Renderer\Widget\WidgetRendererCollection;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
  * The module dashboard renderer.
@@ -19,13 +20,22 @@ abstract class ModuleRenderer implements IModuleRenderer
     protected $widgetRenderers;
 
     /**
+     * @var TemplateRendererInterface
+     */
+    protected $template;
+
+    /**
      * ModuleRenderer constructor.
      *
-     * @param WidgetRendererCollection $widgetRenderers
+     * @param WidgetRendererCollection  $widgetRenderers
+     * @param TemplateRendererInterface $template
      */
-    public function __construct(WidgetRendererCollection $widgetRenderers)
-    {
+    public function __construct(
+        WidgetRendererCollection $widgetRenderers,
+        TemplateRendererInterface $template
+    ) {
         $this->widgetRenderers = $widgetRenderers;
+        $this->template = $template;
     }
 
     /**

@@ -5,6 +5,7 @@ namespace Dms\Web\Expressive\Renderer\Package;
 use Dms\Core\Exception\InvalidArgumentException;
 use Dms\Core\Package\IPackage;
 use Dms\Web\Expressive\Renderer\Widget\WidgetRendererCollection;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
  * The package dashboard renderer.
@@ -19,13 +20,20 @@ abstract class PackageRenderer implements IPackageRenderer
     protected $widgetRenderers;
 
     /**
+     * @var TemplateRendererInterface
+     */
+    protected $template;
+
+    /**
      * PackageRenderer constructor.
      *
-     * @param WidgetRendererCollection $widgetRenderers
+     * @param WidgetRendererCollection  $widgetRenderers
+     * @param TemplateRendererInterface $template
      */
-    public function __construct(WidgetRendererCollection $widgetRenderers)
+    public function __construct(WidgetRendererCollection $widgetRenderers, TemplateRendererInterface $template)
     {
         $this->widgetRenderers = $widgetRenderers;
+        $this->template = $template;
     }
 
     /**

@@ -5,7 +5,6 @@ namespace Dms\Web\Expressive\Http\Controllers\Package;
 use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\ICms;
 use Dms\Core\Package\IPackage;
-use Dms\Web\Expressive\Error\DmsError;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Dms\Web\Expressive\Renderer\Package\PackageRendererCollection;
 use Dms\Web\Expressive\Util\StringHumanizer;
@@ -104,7 +103,7 @@ class PackageController extends DmsController implements ServerMiddlewareInterfa
         $packageName = $request->getAttribute('package');
 
         if (!$this->cms->hasPackage($packageName)) {
-            return DmsError::abort($request, 404, 'Unrecognized package name');
+            return $this->abort($request, 404, 'Unrecognized package name');
         }
 
         $this->package = $this->cms->loadPackage($packageName);

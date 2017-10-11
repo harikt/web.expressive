@@ -4,6 +4,7 @@ namespace Dms\Web\Expressive\Renderer\Chart;
 
 use Dms\Core\Exception\InvalidArgumentException;
 use Dms\Core\Table\Chart\IChartDataTable;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
  * The chart renderer base class.
@@ -12,6 +13,20 @@ use Dms\Core\Table\Chart\IChartDataTable;
  */
 abstract class ChartRenderer implements IChartRenderer
 {
+
+    /**
+     * @var TemplateRendererInterface
+     */
+    protected $template;
+
+    /**
+     * @param TemplateRendererInterface $template
+     */
+    public function __construct(TemplateRendererInterface $template)
+    {
+        $this->template = $template;
+    }
+
     /**
      * Renders the supplied chart input as a html string.
      *

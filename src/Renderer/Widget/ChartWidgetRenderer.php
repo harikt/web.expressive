@@ -6,6 +6,7 @@ use Dms\Core\Widget\ChartWidget;
 use Dms\Core\Widget\IWidget;
 use Dms\Web\Expressive\Http\ModuleContext;
 use Dms\Web\Expressive\Renderer\Chart\ChartRendererCollection;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
  * The widget renderer for charts
@@ -20,13 +21,20 @@ class ChartWidgetRenderer extends WidgetRenderer
     protected $chartRenderers;
 
     /**
+     * @var TemplateRendererInterface
+     */
+    protected $template;
+
+    /**
      * ChartWidgetRenderer constructor.
      *
-     * @param ChartRendererCollection $chartRenderers
+     * @param ChartRendererCollection   $chartRenderers
+     * @param TemplateRendererInterface $template
      */
-    public function __construct(ChartRendererCollection $chartRenderers)
+    public function __construct(ChartRendererCollection $chartRenderers, TemplateRendererInterface $template)
     {
         $this->chartRenderers = $chartRenderers;
+        $this->template = $template;
     }
 
     public function accepts(ModuleContext $moduleContext, IWidget $widget) : bool
@@ -75,10 +83,11 @@ class ChartWidgetRenderer extends WidgetRenderer
         /** @var ChartWidget $widget */
         $chartData = $widget->loadData();
 
-        return view('dms::components.widget.chart')
-            ->with([
+        return $this->template->render(
+            'dms::components.widget.chart',
+            [
                 'chartContent' => $this->chartRenderers->findRendererFor($chartData)->render($chartData),
-            ])
-            ->render();
+            ]
+        );
     }
 }

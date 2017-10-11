@@ -67,16 +67,17 @@ class GeoChartRenderer extends ChartRenderer
             $valueLabels[] = $component->getLabel();
         }
 
-        return view('dms::components.chart.geo-chart')
-            ->with([
+        return $this->template->render(
+            'dms::components.chart.geo-chart',
+            [
                 'cityChart'     => $chartStructure instanceof GeoCityChart,
                 'data'          => $chartDataArray,
                 'locationLabel' => $chartStructure->getLocationAxis()->getLabel(),
                 'valueLabels'   => $valueLabels,
                 'region'        => $region,
                 'hasLatLng'     => $latLngAxisName !== null,
-            ])
-            ->render();
+            ]
+        );
     }
 
 

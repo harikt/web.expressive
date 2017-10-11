@@ -12,7 +12,6 @@ use Dms\Core\Module\ITableDisplay;
 use Dms\Core\Module\ITableView;
 use Dms\Core\Table\Criteria\RowCriteria;
 use Dms\Core\Table\ITableStructure;
-use Dms\Web\Expressive\Error\DmsError;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Dms\Web\Expressive\Http\Controllers\Package\Module\ModuleContextTrait;
 use Dms\Web\Expressive\Http\CurrentModuleContext;
@@ -149,7 +148,7 @@ class LoadTableRowsController extends DmsController implements ServerMiddlewareI
         try {
             return $table->getView($viewName);
         } catch (InvalidArgumentException $e) {
-            return DmsError::abort($request, 404);
+            return $this->abort($request, 404);
         }
     }
 

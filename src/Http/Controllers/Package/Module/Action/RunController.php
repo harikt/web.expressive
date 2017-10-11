@@ -15,7 +15,6 @@ use Dms\Web\Expressive\Action\ActionInputTransformerCollection;
 use Dms\Web\Expressive\Action\ActionResultHandlerCollection;
 use Dms\Web\Expressive\Action\UnhandleableActionExceptionException;
 use Dms\Web\Expressive\Action\UnhandleableActionResultException;
-use Dms\Web\Expressive\Error\DmsError;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Dms\Web\Expressive\Http\Controllers\Package\Module\ModuleContextTrait;
 use Dms\Web\Expressive\Http\ModuleContext;
@@ -200,7 +199,7 @@ class RunController extends DmsController implements ServerMiddlewareInterface
             $action = $module->getAction($actionName);
 
             if (!$action->isAuthorized()) {
-                return DmsError::abort($request, 401);
+                return $this->abort($request, 401);
             }
 
             return $action;

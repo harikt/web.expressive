@@ -53,16 +53,17 @@ class DefaultFormRenderer extends FormRenderer
             }
         }
 
-        return view('dms::components.form.form-fields')
-            ->with([
+        return $this->template->render(
+            'dms::components.form.form-fields',
+            [
                 'groupedFields'            => $sections,
                 'equalFields'              => $this->findFieldsFromValidator($form, MatchingFieldsValidator::class),
                 'greaterThanFields'        => $this->findFieldsFromValidator($form, FieldGreaterThanAnotherValidator::class),
                 'greaterThanOrEqualFields' => $this->findFieldsFromValidator($form, FieldGreaterThanOrEqualAnotherValidator::class),
                 'lessThanFields'           => $this->findFieldsFromValidator($form, FieldLessThanAnotherValidator::class),
                 'lessThanOrEqualFields'    => $this->findFieldsFromValidator($form, FieldLessThanOrEqualAnotherValidator::class),
-            ])
-            ->render();
+            ]
+        );
     }
 
     /**
@@ -90,9 +91,10 @@ class DefaultFormRenderer extends FormRenderer
             }
         }
 
-        return view('dms::components.form.form-fields')
-            ->with(['groupedFields' => $sections])
-            ->render();
+        return $this->template->render(
+            'dms::components.form.form-fields',
+            ['groupedFields' => $sections]
+        );
     }
 
     private function findFieldsFromValidator(IForm $form, $validatorClass)

@@ -20,7 +20,6 @@ use Dms\Core\Persistence\IRepository;
 use Dms\Web\Expressive\Action\ActionExceptionHandlerCollection;
 use Dms\Web\Expressive\Action\ActionInputTransformerCollection;
 use Dms\Web\Expressive\Action\ActionResultHandlerCollection;
-use Dms\Web\Expressive\Error\DmsError;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Dms\Web\Expressive\Http\Controllers\Package\Module\ModuleContextTrait;
 use Dms\Web\Expressive\Http\ModuleContext;
@@ -141,7 +140,7 @@ class FormRendererController extends DmsController implements ServerMiddlewareIn
         $renderer         = $this->actionFormRenderer->getFormRenderer($renderingContext, $form);
 
         if (!($renderer instanceof IFormRendererWithActions)) {
-            return DmsError::abort($request, 404);
+            return $this->abort($request, 404);
         }
 
         $this->loadSharedViewVariables($request);
@@ -208,7 +207,7 @@ class FormRendererController extends DmsController implements ServerMiddlewareIn
             $action = $module->getAction($actionName);
 
             if (!$action->isAuthorized()) {
-                return DmsError::abort($request, 401);
+                return $this->abort($request, 401);
             }
 
             return $action;
@@ -235,7 +234,7 @@ class FormRendererController extends DmsController implements ServerMiddlewareIn
 
             return $this->loadObjectFromDataSource($objectId, $objectFieldType->getObjects());
         } catch (InvalidInputException $e) {
-            return DmsError::abort($request, 404);
+            return $this->abort($request, 404);
         }
     }
 

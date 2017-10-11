@@ -21,7 +21,6 @@ use Dms\Core\Persistence\IRepository;
 use Dms\Web\Expressive\Action\ActionExceptionHandlerCollection;
 use Dms\Web\Expressive\Action\ActionInputTransformerCollection;
 use Dms\Web\Expressive\Action\ActionResultHandlerCollection;
-use Dms\Web\Expressive\Error\DmsError;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Dms\Web\Expressive\Http\Controllers\Package\Module\ModuleContextTrait;
 use Dms\Web\Expressive\Http\ModuleContext;
@@ -131,13 +130,13 @@ class ShowResultController extends DmsController implements ServerMiddlewareInte
         }
 
         if (!$this->actionSafetyChecker->isSafeToShowActionResultViaGetRequest($action)) {
-            return DmsError::abort($request, 404);
+            return $this->abort($request, 404);
         }
 
         try {
             $result = $this->runActionWithDataFromRequest($request, $moduleContext, $action, [IObjectAction::OBJECT_FIELD_NAME => $objectId]);
         } catch (InvalidFormSubmissionException $e) {
-            return DmsError::abort($request, 404);
+            return $this->abort($request, 404);
         }
 
         $response = $this->resultHandlers->handle($moduleContext, $action, $result);
@@ -203,7 +202,7 @@ class ShowResultController extends DmsController implements ServerMiddlewareInte
             $action = $module->getAction($actionName);
 
             if (!$action->isAuthorized()) {
-                return DmsError::abort($request, 401);
+                return $this->abort($request, 401);
             }
 
             return $action;
@@ -230,7 +229,7 @@ class ShowResultController extends DmsController implements ServerMiddlewareInte
 
             return $this->loadObjectFromDataSource($objectId, $objectFieldType->getObjects());
         } catch (InvalidInputException $e) {
-            return DmsError::abort($request, 404);
+            return $this->abort($request, 404);
         }
     }
 
