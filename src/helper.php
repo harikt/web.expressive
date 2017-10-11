@@ -315,10 +315,3 @@ if (!function_exists('asset_file_url')) {
         return str_replace(DIRECTORY_SEPARATOR, '/', $relativePath);
     }
 }
-
-if (!function_exists('url')) {
-    function url($url)
-    {
-        return $url;
-    }
-}
