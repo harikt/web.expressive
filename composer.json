@@ -34,6 +34,7 @@
         "dms-org/common.structure": "^0.8",
         "dms-org/core": "^0.8",
         "harikt/blade-renderer": "^0.2",
+        "http-interop/http-middleware": "^0.5.0",
         "illuminate/config": "^5.4",
         "marcj/topsort": "^1.0",
         "zendframework/zend-expressive": "^2.0.2"
