@@ -34,7 +34,7 @@ class GoogleOauthProvider extends OauthProvider
             'clientId'     => $clientId,
             'clientSecret' => $clientSecret,
             // todo global route removal
-            'redirectUri'  => route('dms::auth.oauth.response', ['provider' => $this->name]),
+            'redirectUri'  => $this->router->generateUri('dms::auth.oauth.response', ['provider' => $this->name]),
         ]);
     }
 

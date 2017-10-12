@@ -1,3 +1,5 @@
+@inject('urlHelper', 'Zend\Expressive\Helper\UrlHelper')
+
 <section class="content-header">
     <h1>
         {{ $pageTitle }}
@@ -10,7 +12,7 @@
             @foreach ($breadcrumbs as $link => $label)
                 <li>
                     <a href="{{ $link }}">
-                        @if ($link === route('dms::index')) <i class="fa fa-dashboard"></i> @endif {{ $label }}
+                        @if ($link === $urlHelper->generate('dms::index')) <i class="fa fa-dashboard"></i> @endif {{ $label }}
                     </a>
                 </li>
             @endforeach

@@ -12,6 +12,7 @@ use Dms\Core\Form\IFieldType;
 use Dms\Web\Expressive\File\ITemporaryFileService;
 use Dms\Web\Expressive\Renderer\Form\FormRenderingContext;
 use Illuminate\Contracts\Config\Repository;
+use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
@@ -31,14 +32,21 @@ class FileFieldRenderer extends BladeFieldRenderer
      */
     private $config;
 
+    /**
+     * @var RouterInterface
+     */
+    protected $router;
+
     public function __construct(
         ITemporaryFileService $tempFileService,
         Repository $config,
-        TemplateRendererInterface $template
+        TemplateRendererInterface $template,
+        RouterInterface $router
     ) {
         parent::__construct($template);
         $this->tempFileService = $tempFileService;
         $this->config          = $config;
+        $this->router = $router;
     }
 
 
@@ -111,8 +119,8 @@ class FileFieldRenderer extends BladeFieldRenderer
             $data[] = [
                     'name'        => $file->getClientFileNameWithFallback(),
                     'size'        => $file->exists() ? $file->getSize() : 0,
-                    'previewUrl'  => $tempFile ? route('dms::file.preview', ['token' => $tempFile->getToken()]) : asset_file_url($file),
-                    'downloadUrl' => $tempFile ? route('dms::file.download', ['token' => $tempFile->getToken()]) : asset_file_url($file),
+                    'previewUrl'  => $tempFile ? $this->router->generateUri('dms::file.preview', ['token' => $tempFile->getToken()]) : asset_file_url($file),
+                    'downloadUrl' => $tempFile ? $this->router->generateUri('dms::file.download', ['token' => $tempFile->getToken()]) : asset_file_url($file),
                 ] + ($imageDimensions ? ['width' => $imageDimensions[0], 'height' => $imageDimensions[1]] : []);
         }
 

@@ -1,3 +1,5 @@
+@inject('urlHelper', 'Zend\Expressive\Helper\UrlHelper')
+
 @extends('dms::template.error')
 
 @section('content')
@@ -10,7 +12,7 @@
 
                 <p>
                     You are not authorized to view this page.
-                    Meanwhile, you may <a href="{{ route('dms::index') }}">return to the dashboard</a>.
+                    Meanwhile, you may <a href="{{ $urlHelper->generate('dms::index') }}">return to the dashboard</a>.
                 </p>
             </div>
             <!-- /.error-content -->

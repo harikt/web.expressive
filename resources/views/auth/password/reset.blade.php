@@ -1,3 +1,5 @@
+@inject('urlHelper', 'Zend\Expressive\Helper\UrlHelper')
+
 @extends('dms::template.auth')
 @section('content')
     <p class="login-box-msg">Reset your password</p>
@@ -6,7 +8,7 @@
         <p class="alert alert-success">{{ session('success') }}</p>
     @endif
 
-    <form action="{{ route('dms::auth.password.reset') }}" method="post">
+    <form action="{{ $urlHelper->generate('dms::auth.password.reset') }}" method="post">
         <input type="hidden" name="_token" value="{!! csrf_token() !!}">
 
         <input type="hidden" name="token" value="{{ $token }}">

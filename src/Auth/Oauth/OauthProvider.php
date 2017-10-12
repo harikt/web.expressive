@@ -4,6 +4,7 @@ namespace Dms\Web\Expressive\Auth\Oauth;
 
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
+use Zend\Expressive\Router\RouterInterface;
 
 /**
  * The oauth provider class
@@ -43,15 +44,21 @@ abstract class OauthProvider
     protected $allowedEmails;
 
     /**
+     * @var RouterInterface
+     */
+    protected $router;
+
+    /**
      * OauthProvider constructor.
      *
-     * @param string   $name
-     * @param string   $label
-     * @param string   $clientId
-     * @param string   $clientSecret
-     * @param bool     $isSuperUser
-     * @param string[] $roleNames
-     * @param string[] $allowedEmails
+     * @param string          $name
+     * @param string          $label
+     * @param string          $clientId
+     * @param string          $clientSecret
+     * @param bool            $isSuperUser
+     * @param string[]        $roleNames
+     * @param string[]        $allowedEmails
+     * @param RouterInterface $router
      *
      * @internal param AbstractProvider $provider
      */
@@ -62,13 +69,15 @@ abstract class OauthProvider
         string $clientSecret,
         bool $isSuperUser,
         array $roleNames,
-        array $allowedEmails
+        array $allowedEmails,
+        RouterInterface $router
     ) {
         $this->name          = $name;
         $this->label         = $label;
         $this->isSuperUser   = $isSuperUser;
         $this->roleNames     = $roleNames;
         $this->allowedEmails = $allowedEmails;
+        $this->router = $router;
         $this->provider      = $this->loadProvider($clientId, $clientSecret);
     }
 

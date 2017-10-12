@@ -25,31 +25,6 @@ if (! function_exists('app')) {
     }
 }
 
-// used in views
-if (! function_exists('config')) {
-    /**
-     * Get / set the specified configuration value.
-     *
-     * If an array is passed as the key, we will assume you want to set an array of values.
-     *
-     * @param  array|string $key
-     * @param  mixed        $default
-     * @return mixed
-     */
-    function config($key = null, $default = null)
-    {
-        if (is_null($key)) {
-            return app(Repository::class);
-        }
-
-        if (is_array($key)) {
-            return app(Repository::class)->set($key);
-        }
-
-        return app(Repository::class)->get($key, $default);
-    }
-}
-
 if (! function_exists('csrf_token')) {
     /**
      * Get the CSRF token value.
@@ -61,8 +36,10 @@ if (! function_exists('csrf_token')) {
     function csrf_token()
     {
         $session = app(Session::class);
+        $csrfToken = $session->getCsrfToken();
+        $csrfToken->regenerateValue();
 
-        return $session->getCsrfToken()->getValue();
+        return $csrfToken->getValue();
     }
 }
 
@@ -80,29 +57,20 @@ if (! function_exists('public_path')) {
     }
 }
 
+// Need to remove usage of 2 calls inside Dms\Web\Expressive\Renderer\Form\Field\RelatedEntityLinker
 if (! function_exists('route')) {
     /**
      * Generate the URL to a named route.
      *
      * @param  string $name
      * @param  array  $parameters
-     * @param  bool   $absolute
+     * @param  array   $absolute
      * @return string
      */
     function route($name, $parameters = [], $absolute = [])
     {
-        // if (in_array($name, ['dms::package.module.dashboard'])) {
-        // 	return "/" . $name;
-        // }
-        try {
-            return app()
-                ->get(RouterInterface::class)
-                ->generateUri($name, $parameters, []);
-        } catch (\Exception $e) {
-            // var_dump($name, $parameters);
-            // exit;
-            throw $e;
-        }
+        return app(RouterInterface::class)
+            ->generateUri($name, $parameters, []);
     }
 }
 
@@ -179,17 +147,3 @@ if (!function_exists('asset_file_url')) {
         return str_replace(DIRECTORY_SEPARATOR, '/', $relativePath);
     }
 }
-
-// used in cli.expressive . Refactor needed.
-// if (! function_exists('app_path')) {
-//     /**
-//      * Get the path to the application folder.
-//      *
-//      * @param  string $path
-//      * @return string
-//      */
-//     function app_path($path = '')
-//     {
-//         return app('path').($path ? DIRECTORY_SEPARATOR.$path : $path);
-//     }
-// }

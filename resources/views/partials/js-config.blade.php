@@ -1,19 +1,22 @@
+@inject('config', 'Illuminate\Config\Repository')
+@inject('urlHelper', 'Zend\Expressive\Helper\UrlHelper')
+
 <script>
     window.Dms.config = {
-        debug: {!! json_encode(config('app.debug', false)) !!},
+        debug: {!! json_encode($config->get('app.debug', false)) !!},
         csrf: {
             token: {!! json_encode(csrf_token()) !!}
         },
         routes: {
-            loginUrl: {!! json_encode(route('dms::auth.login')) !!},
+            loginUrl: {!! json_encode($urlHelper->generate('dms::auth.login')) !!},
             localUrls: {
-                root: {!! json_encode(route('dms::index')) !!},
+                root: {!! json_encode($urlHelper->generate('dms::index')) !!},
                 exclude: [
-                    {!! json_encode(route('dms::auth.logout')) !!}
+                    {!! json_encode($urlHelper->generate('dms::auth.logout')) !!}
                 ]
             },
             downloadFile: function (token) {
-                return {!! json_encode(route('dms::file.download', ['token' => '__token__'])) !!}.replace('__token__', token);
+                return {!! json_encode($urlHelper->generate('dms::file.download', ['token' => '__token__'])) !!}.replace('__token__', token);
             }
         }
     };
