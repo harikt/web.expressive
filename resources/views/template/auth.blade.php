@@ -1,10 +1,12 @@
+@inject('urlHelper', 'Zend\Expressive\Helper\UrlHelper')
+
 @extends('dms::template.template')
 @section('body-content')
     <body class="hold-transition login-page">
 
     <div class="login-box-logo">
         <div class="login-logo">
-            <a href="{{ route('dms::index') }}"><b>DMS</b> <br/> </a>
+            <a href="{{ $urlHelper->generate('dms::index') }}"><b>DMS</b> <br/> </a>
         </div>
     </div>
     <div class="login-box">

@@ -13,6 +13,7 @@ use Dms\Web\Expressive\Util\ModuleLabeler;
 use Dms\Web\Expressive\Util\PackageLabeler;
 use Illuminate\Cache\Repository as Cache;
 use Illuminate\View\View;
+use Zend\Expressive\Router\RouterInterface;
 
 /**
  * The dms navigation view composer.
@@ -34,15 +35,22 @@ class DmsNavigationViewComposer
     protected $cache;
 
     /**
+     * @var RouterInterface
+     */
+    protected $router;
+
+    /**
      * DmsNavigationViewComposer constructor.
      *
-     * @param ICms  $cms
-     * @param Cache $cache
+     * @param ICms            $cms
+     * @param Cache           $cache
+     * @param RouterInterface $router
      */
-    public function __construct(ICms $cms, Cache $cache)
+    public function __construct(ICms $cms, Cache $cache, RouterInterface $router)
     {
         $this->cms   = $cms;
         $this->cache = $cache;
+        $this->router = $router;
     }
 
     /**
@@ -100,7 +108,7 @@ class DmsNavigationViewComposer
     {
         $navigation = [];
 
-        $navigation[] = new NavigationElement('Dashboard', 'dms::index', [], 'tachometer');
+        $navigation[] = new NavigationElement('Dashboard', 'dms::index', [], 'tachometer', $this->router);
 
         foreach ($this->cms->loadPackages() as $package) {
             $packageNavigation = [];
@@ -111,6 +119,7 @@ class DmsNavigationViewComposer
                     'dms::package.dashboard',
                     ['package' => $package->getName()],
                     'tachometer',
+                    $this->router,
                     $this->getPermissionGroups($package->loadDashboard()),
                     true
                 );
@@ -128,6 +137,7 @@ class DmsNavigationViewComposer
                         'module' => $module->getName()
                     ],
                     $this->getModuleIcon($module),
+                    $this->router,
                     $this->getPermissionNames($module->getRequiredPermissions())
                 );
             }

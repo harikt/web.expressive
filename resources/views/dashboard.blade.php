@@ -1,3 +1,5 @@
+@inject('urlHelper', 'Zend\Expressive\Helper\UrlHelper')
+
 @extends('dms::template.default')
 
 @section('content')
@@ -39,7 +41,7 @@
                             </div>
                             <!-- /.box -->
                         </div>
-                    @elseif ($element instanceof \Dms\Web\Expressive\View\NavigationElement && $element->getUrl() !== route('dms::index'))
+                    @elseif ($element instanceof \Dms\Web\Expressive\View\NavigationElement && $element->getUrl() !== $urlHelper->generate('dms::index'))
                         <div class="col-sm-12">
                             <div class="box box-default">
                                 <div class="box-header with-border">

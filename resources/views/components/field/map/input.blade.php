@@ -1,8 +1,10 @@
+@inject('config', 'Illuminate\Config\Repository')
+
 <div class="dms-map-input"
      data-input-mode="{{ $inputMode }}"
      data-name="{{ $name }}"
-     data-default-latitude="{{ config('dms.localisation.form.defaults.map')[0] ?? null }}"
-     data-default-longitude="{{ config('dms.localisation.form.defaults.map')[1] ?? null }}"
+     data-default-latitude="{{ $config->get('dms.localisation.form.defaults.map')[0] ?? null }}"
+     data-default-longitude="{{ $config->get('dms.localisation.form.defaults.map')[1] ?? null }}"
 >
     <div>
         <div class="input-group">

@@ -2,6 +2,7 @@
 
 namespace Dms\Web\Expressive\Http\Controllers\File;
 
+use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\ICms;
 use Dms\Core\Model\EntityNotFoundException;
 use Dms\Web\Expressive\File\ITemporaryFileService;
@@ -11,6 +12,8 @@ use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
+use Zend\Expressive\Router\RouterInterface;
+use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
  * The file upload/download controller.

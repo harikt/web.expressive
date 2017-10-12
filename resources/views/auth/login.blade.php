@@ -1,3 +1,5 @@
+@inject('urlHelper', 'Zend\Expressive\Helper\UrlHelper')
+
 @extends('dms::template.auth')
 @section('content')
     <p class="login-box-msg">Log in to continue</p>
@@ -37,13 +39,13 @@
     </form>
 
     <br>
-    <a class="btn-block" href="{{ route('dms::auth.password.forgot') }}">I forgot my password</a>
+    <a class="btn-block" href="{{ $urlHelper->generate('dms::auth.password.forgot') }}">I forgot my password</a>
     <br>
 
     @foreach ($oauthProviders as $oauthProvider)
         <div class="row">
             <div class="col-sm-12">
-                <a class="btn btn-block btn-default" data-no-ajax="1" href="{{ route('dms::auth.oauth.redirect', ['provider' => $oauthProvider->getName()]) }}">
+                <a class="btn btn-block btn-default" data-no-ajax="1" href="{{ $urlHelper->generate('dms::auth.oauth.redirect', ['provider' => $oauthProvider->getName()]) }}">
                     {{ $oauthProvider->getLabel() }}
                 </a>
             </div>

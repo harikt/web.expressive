@@ -1,3 +1,6 @@
+@inject('config', 'Illuminate\Config\Repository')
+@inject('urlHelper', 'Zend\Expressive\Helper\UrlHelper')
+
 @if($__content_only)
     @yield('content')
     <?php return ?>
@@ -28,7 +31,7 @@
 
         <header class="main-header">
             <!-- Logo -->
-            <a href="{{ route('dms::index') }}" class="logo">
+            <a href="{{ $urlHelper->generate('dms::index') }}" class="logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
                 <span class="logo-mini"><strong>DMS</strong></span>
                 <!-- logo for regular state and mobile devices -->
@@ -52,17 +55,17 @@
                             <ul class="dropdown-menu">
                                 <!-- Menu Body-->
                                 <li class="user-body">
-                                    <a href="{{ route('dms::package.module.dashboard', ['package' => 'admin', 'module' => 'account']) }}">{{ $user->getUsername() }}</a>
+                                    <a href="{{ $urlHelper->generate('dms::package.module.dashboard', ['package' => 'admin', 'module' => 'account']) }}">{{ $user->getUsername() }}</a>
                                 </li>
                                 <!-- Menu Footer-->
                                 <li class="user-footer">
                                     <div class="pull-left">
-                                        <a href="{{ route('dms::package.module.dashboard', ['package' => 'admin', 'module' => 'account']) }}" class="btn btn-default btn-flat">
+                                        <a href="{{ $urlHelper->generate('dms::package.module.dashboard', ['package' => 'admin', 'module' => 'account']) }}" class="btn btn-default btn-flat">
                                             <i class="fa fa-cog"></i> Account
                                         </a>
                                     </div>
                                     <div class="pull-right">
-                                        <a href="{{ route('dms::auth.logout') }}" class="btn btn-default btn-flat">
+                                        <a href="{{ $urlHelper->generate('dms::auth.logout') }}" class="btn btn-default btn-flat">
                                             <i class="fa fa-sign-out"></i> Log out
                                         </a>
                                     </div>
@@ -83,7 +86,7 @@
                     </div>
                     <div class="pull-left info">
                         <p>{{ $user->getFullName() }}</p>
-                        <a href="{{ route('dms::package.module.dashboard', ['package' => 'admin', 'module' => 'account']) }}">
+                        <a href="{{ $urlHelper->generate('dms::package.module.dashboard', ['package' => 'admin', 'module' => 'account']) }}">
                             <i class="fa fa-circle text-success"></i> {{-- $user->getEmailAddress() --}}
                         </a>
                     </div>
@@ -124,7 +127,7 @@
                                 </ul>
                             </li>
                         @elseif ($element instanceof \Dms\Web\Expressive\View\NavigationElement)
-                            <li @if($element->getUrl() === route('dms::index') ? $element->getUrl() === $requestUri : starts_with($requestUri, $element->getUrl())) class="active" @endif>
+                            <li @if($element->getUrl() === $urlHelper->generate('dms::index') ? $element->getUrl() === $requestUri : starts_with($requestUri, $element->getUrl())) class="active" @endif>
                                 <a href="{{ $element->getUrl() }}">
                                     <i class="fa fa-{{ $element->getIcon() }}"></i>
                                     <span class="dms-nav-label">{{ $element->getLabel() }}</span>
@@ -159,7 +162,7 @@
             </div>
             <span>
                 For issues or enquiries please contact
-                <a href="{{ config('dms.contact.website') }}">{{ config('dms.contact.company') }}</a>.
+                <a href="{{ $config->get('dms.contact.website') }}">{{ $config->get('dms.contact.company') }}</a>.
             </span>
         </footer>
     </div>

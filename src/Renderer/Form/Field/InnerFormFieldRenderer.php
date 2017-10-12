@@ -67,7 +67,7 @@ class InnerFormFieldRenderer extends BladeFieldRenderer
         $fieldType = $field->withInitialValue($field->process($value))->getType();
 
         $formWithArrayFields = $fieldType->getInnerArrayForm($field->getName());
-        $formRenderer        = new DefaultFormRenderer($this->fieldRendererCollection, $this->templat);
+        $formRenderer        = new DefaultFormRenderer($this->fieldRendererCollection, $this->template);
 
         return $this->renderValueViewWithNullDefault(
             $field,

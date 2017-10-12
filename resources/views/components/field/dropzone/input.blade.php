@@ -1,9 +1,11 @@
+@inject('urlHelper', 'Zend\Expressive\Helper\UrlHelper')
+
 <div class="dropzone-container"
      data-name="{{ $name }}"
      data-field-validation-for="{{ $name }}[action], {{ $name }}[file]"
      @if ($required) data-required="1" @endif
-     data-upload-temp-file-url="{{ route('dms::file.upload') }}"
-     data-download-temp-file-url="{{ route('dms::file.download', ['token' => '__token__']) }}"
+     data-upload-temp-file-url="{{ $urlHelper->generate('dms::file.upload') }}"
+     data-download-temp-file-url="{{ $urlHelper->generate('dms::file.download', ['token' => '__token__']) }}"
      @if($maxFileSize ?? false) data-max-size="{{ $maxFileSize }}" @endif
 
      @if($multiUpload ?? false) data-multi-upload="1" @endif

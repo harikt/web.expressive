@@ -1,8 +1,10 @@
+@inject('urlHelper', 'Zend\Expressive\Helper\UrlHelper')
+
 @extends('dms::template.auth')
 @section('content')
     <p class="login-box-msg">Enter your email to reset your password</p>
 
-    <form action="{{ route('dms::auth.password.forgot') }}" method="post">
+    <form action="{{ $urlHelper->generate('dms::auth.password.forgot') }}" method="post">
         <input type="hidden" name="_token" value="{!! csrf_token() !!}">
 
         <div class="form-group has-feedback{{ $errors->has('email') ? ' has-error' : '' }}">

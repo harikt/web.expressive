@@ -14,6 +14,7 @@ use Dms\Web\Expressive\Action\ActionResultHandler;
 use Dms\Web\Expressive\Http\ModuleContext;
 use Dms\Web\Expressive\Util\EntityModuleMap;
 use Zend\Diactoros\Response\JsonResponse;
+use Zend\Expressive\Router\RouterInterface;
 
 /**
  * The generic entity action result handler.
@@ -32,10 +33,16 @@ class GenericEntityResultHandler extends ActionResultHandler
      */
     protected $translocator;
 
-    public function __construct(EntityModuleMap $entityModuleMap, TranslatorLocator $translocator)
+    /**
+     * @var RouterInterface
+     */
+    protected $router;
+
+    public function __construct(EntityModuleMap $entityModuleMap, TranslatorLocator $translocator, RouterInterface $router)
     {
         $this->entityModuleMap = $entityModuleMap;
         $this->translocator = $translocator;
+        $this->router = $router;
         parent::__construct();
     }
 
@@ -87,7 +94,7 @@ class GenericEntityResultHandler extends ActionResultHandler
         }
 
         /** @var Entity $result */
-        $url = route('dms::package.module.action.show', ['package' => $module->getPackageName(), 'module' => $module->getName(), 'action' => $module->getDetailsAction()->getName(), 'object_id' => $result->getId()]);
+        $url = $this->router->generateUri('dms::package.module.action.show', ['package' => $module->getPackageName(), 'module' => $module->getName(), 'action' => $module->getDetailsAction()->getName(), 'object_id' => $result->getId()]);
 
         $translator = $this->translocator->get('dms');
 

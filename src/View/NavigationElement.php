@@ -2,6 +2,8 @@
 
 namespace Dms\Web\Expressive\View;
 
+use Zend\Expressive\Router\RouterInterface;
+
 /**
  * The navigation element
  *
@@ -40,20 +42,27 @@ class NavigationElement
     protected $requiresAnyFromGroups;
 
     /**
+     * @var RouterInterface
+     */
+    protected $router;
+
+    /**
      * NavigationElement constructor.
      *
-     * @param string   $label
-     * @param string   $routeName
-     * @param array    $routeParams
-     * @param string   $icon
-     * @param string[] $requiredPermissionNames
-     * @param bool     $requiresAnyFromGroups
+     * @param string          $label
+     * @param string          $routeName
+     * @param array           $routeParams
+     * @param string          $icon
+     * @param string[]        $requiredPermissionNames
+     * @param bool            $requiresAnyFromGroups
+     * @param RouterInterface $router
      */
     public function __construct(
         string $label,
         string $routeName,
         array $routeParams,
         string $icon,
+        RouterInterface $router,
         array $requiredPermissionNames = [],
         bool $requiresAnyFromGroups = false
     ) {
@@ -63,6 +72,7 @@ class NavigationElement
         $this->icon                  = $icon;
         $this->requiredPermissions   = $requiredPermissionNames;
         $this->requiresAnyFromGroups = $requiresAnyFromGroups;
+        $this->router = $router;
     }
 
     /**
@@ -86,7 +96,7 @@ class NavigationElement
      */
     public function getUrl() : string
     {
-        return route($this->routeName, $this->routeParams);
+        return $this->router->generateUri($this->routeName, $this->routeParams);
     }
 
     /**

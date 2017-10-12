@@ -1,5 +1,7 @@
+@inject('urlHelper', 'Zend\Expressive\Helper\UrlHelper')
+
 <div class="dms-wysiwyg-container"
-     data-load-file-picker-url="{{ route('dms::package.module.dashboard', ['package' => 'documents', 'module' => 'files']) }}"
+     data-load-file-picker-url="{{ $urlHelper->generate('dms::package.module.dashboard', ['package' => 'documents', 'module' => 'files']) }}"
 >
 <textarea
         name="{{ $name }}"
