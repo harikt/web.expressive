@@ -67,7 +67,6 @@ use Illuminate\Events\Dispatcher;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 use Psr\Cache\CacheItemPoolInterface;
-use Zend\Expressive\Helper\UrlHelper;
 
 class ContainerConfig
 {

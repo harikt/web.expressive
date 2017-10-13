@@ -1,7 +1,6 @@
 <?php
 use Aura\Session\Session;
 use Dms\Web\Expressive\Ioc\LaravelIocContainer;
-use Illuminate\Config\Repository;
 use Illuminate\Container\Container;
 use Zend\Expressive\Router\RouterInterface;
 
@@ -64,7 +63,7 @@ if (! function_exists('route')) {
      *
      * @param  string $name
      * @param  array  $parameters
-     * @param  array   $absolute
+     * @param  array  $absolute
      * @return string
      */
     function route($name, $parameters = [], $absolute = [])
