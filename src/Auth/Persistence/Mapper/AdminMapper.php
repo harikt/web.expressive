@@ -5,6 +5,7 @@ namespace Dms\Web\Expressive\Auth\Persistence\Mapper;
 use Dms\Common\Structure\Web\Persistence\EmailAddressMapper;
 use Dms\Core\Persistence\Db\Mapping\Definition\MapperDefinition;
 use Dms\Core\Persistence\Db\Mapping\EntityMapper;
+use Dms\Library\Metadata\Infrastructure\Persistence\MetadataMapper;
 use Dms\Web\Expressive\Auth\Admin;
 use Dms\Web\Expressive\Auth\LocalAdmin;
 use Dms\Web\Expressive\Auth\OauthAdmin;
@@ -66,7 +67,7 @@ class AdminMapper extends EntityMapper
             ->throughJoinTable('user_roles')
             ->withParentIdAs('user_id')
             ->withRelatedIdAs('role_id');
-        
+
         $map->subclass()->withTypeInColumn('type', 'local')->define(function (MapperDefinition $map) {
             $map->type(LocalAdmin::class);
 
@@ -91,5 +92,7 @@ class AdminMapper extends EntityMapper
                 ->to('oauth_account_id')
                 ->asVarchar(255);
         });
+
+        MetadataMapper::mapMetadataToJsonColumn($map, 'metadata');
     }
 }

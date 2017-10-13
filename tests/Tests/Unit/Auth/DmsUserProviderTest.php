@@ -63,6 +63,7 @@ class DmsUserProviderTest extends DbIntegrationTest
                     'remember_token'       => 'some_token',
                     'oauth_account_id'     => null,
                     'oauth_provider_name'  => null,
+                    'metadata'             => '[]',
                 ],
                 [
                     'id'                   => 2,
@@ -78,6 +79,7 @@ class DmsUserProviderTest extends DbIntegrationTest
                     'remember_token'       => null,
                     'oauth_account_id'     => null,
                     'oauth_provider_name'  => null,
+                    'metadata'             => '[]',
                 ],
             ],
         ]);

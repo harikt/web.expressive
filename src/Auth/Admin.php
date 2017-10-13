@@ -9,6 +9,9 @@ use Dms\Core\Exception\InvalidOperationException;
 use Dms\Core\Model\EntityIdCollection;
 use Dms\Core\Model\Object\ClassDefinition;
 use Dms\Core\Model\Object\Entity;
+use Dms\Library\Metadata\Domain\IHasMetadata;
+use Dms\Library\Metadata\Domain\MetadataTrait;
+use Dms\Library\Metadata\Domain\ObjectMetadata;
 use Dms\Web\Expressive\Auth\Persistence\Mapper\AdminMapper;
 use Illuminate\Contracts\Auth\Authenticatable;
 
@@ -17,8 +20,10 @@ use Illuminate\Contracts\Auth\Authenticatable;
  *
  * @author Elliot Levin <elliotlevin@hotmail.com>
  */
-abstract class Admin extends Entity implements IAdmin, Authenticatable
+abstract class Admin extends Entity implements IAdmin, Authenticatable, IHasMetadata
 {
+    use MetadataTrait;
+
     const FULL_NAME = 'fullName';
     const EMAIL_ADDRESS = 'emailAddress';
     const USERNAME = 'username';
@@ -82,6 +87,7 @@ abstract class Admin extends Entity implements IAdmin, Authenticatable
         $this->isSuperUser  = $isSuperUser;
         $this->isBanned     = $isBanned;
         $this->roleIds      = $roleIds ?: new EntityIdCollection();
+        $this->metadata     = new ObjectMetadata();
 
         InvalidArgumentException::verify(strlen($this->username) > 0, 'Username cannot be empty');
     }
@@ -104,6 +110,8 @@ abstract class Admin extends Entity implements IAdmin, Authenticatable
         $class->property($this->isBanned)->asBool();
 
         $class->property($this->roleIds)->asType(EntityIdCollection::type());
+
+        $this->defineMetadata($class);
     }
 
     /**
