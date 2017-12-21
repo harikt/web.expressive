@@ -8,7 +8,7 @@ use Dms\Core\Package\IPackage;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Dms\Web\Expressive\Renderer\Package\PackageRendererCollection;
 use Dms\Web\Expressive\Util\StringHumanizer;
-use Interop\Http\ServerMiddleware\DelegateInterface;
+use Interop\Http\Server\RequestHandlerInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -52,7 +52,7 @@ class PackageController extends DmsController implements ServerMiddlewareInterfa
         $this->packageRenderers = $packageRenderers;
     }
 
-    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $delegate)
     {
         $result = $this->loadPackage($request);
 

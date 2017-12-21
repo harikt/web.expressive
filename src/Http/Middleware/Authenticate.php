@@ -3,7 +3,7 @@
 namespace Dms\Web\Expressive\Http\Middleware;
 
 use Dms\Core\Auth\IAuthSystem;
-use Interop\Http\ServerMiddleware\DelegateInterface;
+use Interop\Http\Server\RequestHandlerInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
@@ -35,7 +35,7 @@ class Authenticate implements ServerMiddlewareInterface
     /**
      * {@inheritDoc}
      */
-    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $delegate)
     {
         $path = '/dms'. $request->getUri()->getPath();
         $routeResult = $request->getAttribute(RouteResult::class);

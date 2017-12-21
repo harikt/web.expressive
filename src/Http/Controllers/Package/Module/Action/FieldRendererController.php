@@ -31,7 +31,7 @@ use Dms\Web\Expressive\Renderer\Form\FormRenderingContext;
 use Dms\Web\Expressive\Renderer\Form\IFieldRendererWithActions;
 use Dms\Web\Expressive\Util\ActionSafetyChecker;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Interop\Http\ServerMiddleware\DelegateInterface;
+use Interop\Http\Server\RequestHandlerInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -117,7 +117,7 @@ class FieldRendererController extends DmsController implements ServerMiddlewareI
         $this->actionButtonBuilder = $actionButtonBuilder;
     }
 
-    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $delegate)
     {
         $moduleContext = $this->getModuleContext($request, $this->router, $this->cms);
         $module = $moduleContext->getModule();

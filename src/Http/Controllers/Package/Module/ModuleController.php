@@ -7,7 +7,7 @@ use Dms\Core\ICms;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Dms\Web\Expressive\Renderer\Module\ModuleRendererCollection;
 use Dms\Web\Expressive\Util\StringHumanizer;
-use Interop\Http\ServerMiddleware\DelegateInterface;
+use Interop\Http\Server\RequestHandlerInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
@@ -49,11 +49,11 @@ class ModuleController extends DmsController implements ServerMiddlewareInterfac
 
     /**
      * @param ServerRequestInterface $request
-     * @param DelegateInterface      $delegate
+     * @param RequestHandlerInterface      $delegate
      *
      * @return \Zend\Diactoros\Response
      */
-    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $delegate)
     {
         $moduleContext = $this->getModuleContext($request, $this->router, $this->cms);
 

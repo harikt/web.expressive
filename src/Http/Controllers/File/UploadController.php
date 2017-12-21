@@ -6,7 +6,7 @@ use Dms\Common\Structure\FileSystem\UploadedFileFactory;
 use Dms\Core\ICms;
 use Dms\Web\Expressive\File\ITemporaryFileService;
 use Illuminate\Contracts\Config\Repository;
-use Interop\Http\ServerMiddleware\DelegateInterface;
+use Interop\Http\Server\RequestHandlerInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -48,7 +48,7 @@ class UploadController implements ServerMiddlewareInterface
         $this->config          = $config;
     }
 
-    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $delegate)
     {
         $tokens = [];
 

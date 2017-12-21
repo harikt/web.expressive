@@ -8,7 +8,7 @@ use Dms\Core\Model\EntityNotFoundException;
 use Dms\Web\Expressive\File\ITemporaryFileService;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Illuminate\Contracts\Config\Repository;
-use Interop\Http\ServerMiddleware\DelegateInterface;
+use Interop\Http\Server\RequestHandlerInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
@@ -55,7 +55,7 @@ class PreviewController extends DmsController implements ServerMiddlewareInterfa
         $this->config          = $config;
     }
 
-    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $delegate)
     {
         $token = $request->getAttribute('token');
         $response = new Response();

@@ -13,7 +13,7 @@ use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Dms\Web\Expressive\Http\Controllers\Package\Module\ModuleContextTrait;
 use Dms\Web\Expressive\Renderer\Table\TableRenderer;
 use Dms\Web\Expressive\Util\StringHumanizer;
-use Interop\Http\ServerMiddleware\DelegateInterface;
+use Interop\Http\Server\RequestHandlerInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
@@ -55,7 +55,7 @@ class ShowController extends DmsController implements ServerMiddlewareInterface
         ;
     }
 
-    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $delegate)
     {
         $urlHelper = new UrlHelper($this->router);
         $tableName = $request->getAttribute('table');

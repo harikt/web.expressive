@@ -9,7 +9,7 @@ use Dms\Web\Expressive\Auth\Password\IPasswordResetService;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Illuminate\Auth\Passwords\PasswordBrokerManager;
 use Illuminate\Contracts\Auth\PasswordBroker;
-use Interop\Http\ServerMiddleware\DelegateInterface;
+use Interop\Http\Server\RequestHandlerInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
@@ -64,7 +64,7 @@ class ResetController extends DmsController implements ServerMiddlewareInterface
      *
      * @return \Zend\Diactoros\Response
      */
-    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $delegate)
     {
         $this->loadSharedViewVariables($request);
         $token = $request->getAttribute('token');

@@ -26,7 +26,7 @@ use Dms\Web\Expressive\Renderer\Form\ActionFormRenderer;
 use Dms\Web\Expressive\Util\ActionLabeler;
 use Dms\Web\Expressive\Util\ActionSafetyChecker;
 use Dms\Web\Expressive\Util\StringHumanizer;
-use Interop\Http\ServerMiddleware\DelegateInterface;
+use Interop\Http\Server\RequestHandlerInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -113,7 +113,7 @@ class ShowFormController extends DmsController implements ServerMiddlewareInterf
         $this->actionButtonBuilder = $actionButtonBuilder;
     }
 
-    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $delegate)
     {
         $objectId = $request->getAttribute('object_id');
         $actionName = $request->getAttribute('action');

@@ -10,7 +10,7 @@ use Dms\Web\Expressive\File\ITemporaryFileService;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Cookie\CookieJar;
-use Interop\Http\ServerMiddleware\DelegateInterface;
+use Interop\Http\Server\RequestHandlerInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
@@ -58,7 +58,7 @@ class DownloadController extends DmsController implements ServerMiddlewareInterf
     }
 
     // public function download($token, CookieJar $cookieJar)
-    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $delegate)
     {
         $token = $request->getAttribute('token');
         try {
