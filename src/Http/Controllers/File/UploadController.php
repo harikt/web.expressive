@@ -7,7 +7,7 @@ use Dms\Core\ICms;
 use Dms\Web\Expressive\File\ITemporaryFileService;
 use Illuminate\Contracts\Config\Repository;
 use Interop\Http\Server\RequestHandlerInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
+use Interop\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Zend\Diactoros\Response\JsonResponse;

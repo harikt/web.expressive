@@ -9,7 +9,7 @@ use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Dms\Web\Expressive\Renderer\Package\PackageRendererCollection;
 use Dms\Web\Expressive\Util\StringHumanizer;
 use Interop\Http\Server\RequestHandlerInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
+use Interop\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;

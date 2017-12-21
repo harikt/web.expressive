@@ -4,7 +4,7 @@ namespace Dms\Web\Expressive\Http\Middleware;
 
 use Dms\Core\Auth\IAuthSystem;
 use Interop\Http\Server\RequestHandlerInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
+use Interop\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
 use Zend\Expressive\Router\RouterInterface;

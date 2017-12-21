@@ -10,7 +10,7 @@ use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Illuminate\Auth\Passwords\PasswordBrokerManager;
 use Illuminate\Contracts\Auth\PasswordBroker;
 use Interop\Http\Server\RequestHandlerInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
+use Interop\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\HtmlResponse;

@@ -3,7 +3,7 @@
 namespace Dms\Web\Expressive\Http\Controllers;
 
 use Interop\Http\Server\RequestHandlerInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
+use Interop\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**

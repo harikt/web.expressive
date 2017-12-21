@@ -29,7 +29,7 @@ use Dms\Web\Expressive\Renderer\Form\FormRenderingContext;
 use Dms\Web\Expressive\Renderer\Form\IFormRendererWithActions;
 use Dms\Web\Expressive\Util\ActionSafetyChecker;
 use Interop\Http\Server\RequestHandlerInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
+use Interop\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\JsonResponse;

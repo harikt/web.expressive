@@ -8,7 +8,7 @@ use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Dms\Web\Expressive\Renderer\Module\ModuleRendererCollection;
 use Dms\Web\Expressive\Util\StringHumanizer;
 use Interop\Http\Server\RequestHandlerInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
+use Interop\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Router\RouterInterface;

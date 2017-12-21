@@ -9,7 +9,7 @@ use Dms\Core\ICms;
 use Dms\Web\Expressive\Auth\Oauth\OauthProviderCollection;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Interop\Http\Server\RequestHandlerInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
+use Interop\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
 use Zend\Expressive\Router\RouterInterface;

@@ -13,7 +13,7 @@ use Dms\Web\Expressive\Http\Controllers\Package\Module\ModuleContextTrait;
 use Dms\Web\Expressive\Renderer\Chart\ChartControlRenderer;
 use Dms\Web\Expressive\Util\StringHumanizer;
 use Interop\Http\Server\RequestHandlerInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
+use Interop\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\JsonResponse;

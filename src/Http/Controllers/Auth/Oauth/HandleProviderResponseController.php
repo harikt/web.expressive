@@ -15,7 +15,7 @@ use Dms\Web\Expressive\Auth\OauthAdmin;
 use Dms\Web\Expressive\Auth\Role;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Interop\Http\Server\RequestHandlerInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
+use Interop\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;

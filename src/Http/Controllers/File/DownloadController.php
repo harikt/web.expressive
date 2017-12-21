@@ -11,7 +11,7 @@ use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Cookie\CookieJar;
 use Interop\Http\Server\RequestHandlerInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
+use Interop\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
 use Zend\Expressive\Router\RouterInterface;

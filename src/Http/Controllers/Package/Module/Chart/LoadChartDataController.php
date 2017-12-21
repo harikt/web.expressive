@@ -16,7 +16,7 @@ use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Dms\Web\Expressive\Http\Controllers\Package\Module\ModuleContextTrait;
 use Dms\Web\Expressive\Renderer\Chart\ChartControlRenderer;
 use Interop\Http\Server\RequestHandlerInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
+use Interop\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\JsonResponse;
 use Zend\Expressive\Router\RouterInterface;
