@@ -56,6 +56,7 @@ class AuthOrmTest extends DbIntegrationTest
 
     public function setUp()
     {
+        date_default_timezone_set('UTC');
         parent::setUp();
 
         $this->userRepo               = new AdminRepository($this->connection, $this->orm);
