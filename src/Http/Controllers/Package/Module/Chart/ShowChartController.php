@@ -14,6 +14,7 @@ use Dms\Web\Expressive\Renderer\Chart\ChartControlRenderer;
 use Dms\Web\Expressive\Util\StringHumanizer;
 use Interop\Http\Server\RequestHandlerInterface;
 use Interop\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
+use Psr\Http\Message\ResponseInterface; 
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\JsonResponse;
@@ -45,7 +46,7 @@ class ShowChartController extends DmsController implements ServerMiddlewareInter
         $this->chartRenderer = $chartRenderer;
     }
 
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $delegate)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $chartName = $request->getAttribute('chart');
         $viewName = $request->getAttribute('view');

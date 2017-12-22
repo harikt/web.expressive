@@ -12,6 +12,7 @@ use Illuminate\Contracts\Config\Repository;
 use Illuminate\Cookie\CookieJar;
 use Interop\Http\Server\RequestHandlerInterface;
 use Interop\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
+use Psr\Http\Message\ResponseInterface; 
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
 use Zend\Expressive\Router\RouterInterface;
@@ -58,7 +59,7 @@ class DownloadController extends DmsController implements ServerMiddlewareInterf
     }
 
     // public function download($token, CookieJar $cookieJar)
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $delegate)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $token = $request->getAttribute('token');
         try {

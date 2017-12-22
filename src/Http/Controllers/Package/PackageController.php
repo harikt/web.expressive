@@ -52,7 +52,7 @@ class PackageController extends DmsController implements ServerMiddlewareInterfa
         $this->packageRenderers = $packageRenderers;
     }
 
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $delegate)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $result = $this->loadPackage($request);
 

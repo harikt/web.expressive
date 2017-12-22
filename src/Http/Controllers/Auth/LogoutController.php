@@ -7,6 +7,7 @@ use Dms\Core\Auth\NotAuthenticatedException;
 use Dms\Core\ICms;
 use Interop\Http\Server\RequestHandlerInterface;
 use Interop\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
+use Psr\Http\Message\ResponseInterface; 
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
 
@@ -45,7 +46,7 @@ class LogoutController implements ServerMiddlewareInterface
      *
      * @return \Zend\Diactoros\Response
      */
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $delegate)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         try {
             $this->auth->logout();

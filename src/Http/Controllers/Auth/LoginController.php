@@ -11,6 +11,7 @@ use Dms\Web\Expressive\Auth\Oauth\OauthProviderCollection;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Interop\Http\Server\RequestHandlerInterface;
 use Interop\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
+use Psr\Http\Message\ResponseInterface; 
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\HtmlResponse;
@@ -54,7 +55,7 @@ class LoginController extends DmsController implements ServerMiddlewareInterface
     }
 
 
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $delegate)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $this->loadSharedViewVariables($request);
 

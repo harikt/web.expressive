@@ -4,6 +4,7 @@ namespace Dms\Web\Expressive\Http\Controllers\Package\Module;
 
 use Dms\Core\ICms;
 use Dms\Web\Expressive\Http\ModuleContext;
+use Psr\Http\Message\ResponseInterface; 
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Expressive\Router\RouterInterface;
 

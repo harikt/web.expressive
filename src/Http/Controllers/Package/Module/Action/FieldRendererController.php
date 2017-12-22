@@ -117,7 +117,7 @@ class FieldRendererController extends DmsController implements ServerMiddlewareI
         $this->actionButtonBuilder = $actionButtonBuilder;
     }
 
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $delegate)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $moduleContext = $this->getModuleContext($request, $this->router, $this->cms);
         $module = $moduleContext->getModule();

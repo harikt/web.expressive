@@ -10,6 +10,7 @@ use Dms\Web\Expressive\Auth\Oauth\OauthProviderCollection;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Interop\Http\Server\RequestHandlerInterface;
 use Interop\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
+use Psr\Http\Message\ResponseInterface; 
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
 use Zend\Expressive\Router\RouterInterface;
@@ -62,7 +63,7 @@ class RedirectToProviderController extends DmsController implements ServerMiddle
         $this->roleRepository     = $roleRepository;
     }
 
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $delegate)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $providerName = $request->getAttribute('provider');
 
