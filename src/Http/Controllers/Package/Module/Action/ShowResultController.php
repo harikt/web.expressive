@@ -29,9 +29,9 @@ use Dms\Web\Expressive\Renderer\Form\ActionFormRenderer;
 use Dms\Web\Expressive\Util\ActionLabeler;
 use Dms\Web\Expressive\Util\ActionSafetyChecker;
 use Dms\Web\Expressive\Util\StringHumanizer;
-use Interop\Http\ServerMiddleware\DelegateInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
-use Psr\Http\Message\ResponseInterface;
+use Interop\Http\Server\RequestHandlerInterface;
+use Interop\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
+use Psr\Http\Message\ResponseInterface; 
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\JsonResponse;
@@ -116,7 +116,7 @@ class ShowResultController extends DmsController implements ServerMiddlewareInte
         $this->actionButtonBuilder = $actionButtonBuilder;
     }
 
-    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $actionName = $request->getAttribute('action');
         $objectId = $request->getAttribute('object_id');

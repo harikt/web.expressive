@@ -5,6 +5,7 @@ namespace Dms\Web\Expressive\Http\Controllers;
 use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\ICms;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Psr\Http\Message\ResponseInterface; 
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
 use Zend\Expressive\Router\RouterInterface;

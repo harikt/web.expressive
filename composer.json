@@ -15,7 +15,6 @@
             "email": "kthari85@gmail.com"
         }
     ],
-    "minimum-stability": "stable",
     "autoload": {
         "psr-4": {
             "Dms\\Web\\Expressive\\": "./src/"
@@ -34,12 +33,10 @@
         "dms-org/common.structure": "^0.8",
         "dms-org/core": "^0.8",
         "dms-org/library.metadata": "^0.8.0",
-        "harikt/blade-renderer": "^0.2",
-        "http-interop/http-middleware": "^0.5.0",
+        "harikt/blade-renderer": "dev-psr-15",
+        "http-interop/http-server-middleware": "^1.0",
         "illuminate/config": "^5.4",
-        "marcj/topsort": "^1.0",
-        "zendframework/zend-expressive": "^2.0.2",
-        "zendframework/zend-expressive-helpers": "^4.2"
+        "zendframework/zend-expressive": "^3.0.0-dev"
     },
     "autoload-dev": {
         "psr-4": {
@@ -51,5 +48,6 @@
         "dms-org/package.content": "^0.8",
         "dms-org/library.testing": "dev-master",
         "dms-org/common.testing": "dev-master"
-    }
+    },
+    "minimum-stability": "dev"
 }

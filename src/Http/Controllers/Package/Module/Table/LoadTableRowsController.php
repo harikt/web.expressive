@@ -16,8 +16,9 @@ use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Dms\Web\Expressive\Http\Controllers\Package\Module\ModuleContextTrait;
 use Dms\Web\Expressive\Http\CurrentModuleContext;
 use Dms\Web\Expressive\Renderer\Table\TableRenderer;
-use Interop\Http\ServerMiddleware\DelegateInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
+use Interop\Http\Server\RequestHandlerInterface;
+use Interop\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
+use Psr\Http\Message\ResponseInterface; 
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\JsonResponse;
@@ -56,7 +57,7 @@ class LoadTableRowsController extends DmsController implements ServerMiddlewareI
         $this->tableRenderer = $tableRenderer;
     }
 
-    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $tableName = $request->getAttribute('table');
         $viewName = $request->getAttribute('view');

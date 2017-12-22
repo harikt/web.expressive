@@ -15,8 +15,9 @@ use Dms\Core\Table\Chart\IChartStructure;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Dms\Web\Expressive\Http\Controllers\Package\Module\ModuleContextTrait;
 use Dms\Web\Expressive\Renderer\Chart\ChartControlRenderer;
-use Interop\Http\ServerMiddleware\DelegateInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
+use Interop\Http\Server\RequestHandlerInterface;
+use Interop\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\JsonResponse;
 use Zend\Expressive\Router\RouterInterface;
@@ -47,7 +48,7 @@ class LoadChartDataController extends DmsController implements ServerMiddlewareI
         $this->chartRenderer = $chartRenderer;
     }
 
-    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $chartName = $request->getAttribute('chart');
         $viewName = $request->getAttribute('view');

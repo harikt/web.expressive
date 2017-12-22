@@ -28,9 +28,9 @@ use Dms\Web\Expressive\Renderer\Form\ActionFormRenderer;
 use Dms\Web\Expressive\Renderer\Form\FormRenderingContext;
 use Dms\Web\Expressive\Util\ActionSafetyChecker;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Interop\Http\ServerMiddleware\DelegateInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
-use Psr\Http\Message\ResponseInterface;
+use Interop\Http\Server\RequestHandlerInterface;
+use Interop\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
+use Psr\Http\Message\ResponseInterface; 
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\JsonResponse;
@@ -165,7 +165,7 @@ class FormStageController extends DmsController implements ServerMiddlewareInter
         return $form->getFormForStage($stageNumber, $input);
     }
 
-    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $moduleContext = $this->getModuleContext($request, $this->router, $this->cms);
 

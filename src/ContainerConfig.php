@@ -316,6 +316,5 @@ class ContainerConfig
             return $flap;
         });
 
-        $container->alias(ConnectionResolverInterface::class, 'db');
     }
 }

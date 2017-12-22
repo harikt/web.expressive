@@ -2,8 +2,9 @@
 
 namespace Dms\Web\Expressive\Http\Controllers;
 
-use Interop\Http\ServerMiddleware\DelegateInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
+use Interop\Http\Server\RequestHandlerInterface;
+use Interop\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -13,7 +14,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class ErrorController extends DmsController implements ServerMiddlewareInterface
 {
-    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         return $this->abort($request, 404);
     }

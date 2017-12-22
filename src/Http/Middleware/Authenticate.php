@@ -3,8 +3,9 @@
 namespace Dms\Web\Expressive\Http\Middleware;
 
 use Dms\Core\Auth\IAuthSystem;
-use Interop\Http\ServerMiddleware\DelegateInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterface;
+use Interop\Http\Server\RequestHandlerInterface;
+use Interop\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
+use Psr\Http\Message\ResponseInterface; 
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
 use Zend\Expressive\Router\RouteResult;
@@ -35,7 +36,7 @@ class Authenticate implements ServerMiddlewareInterface
     /**
      * {@inheritDoc}
      */
-    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $path = '/dms'. $request->getUri()->getPath();
         $routeResult = $request->getAttribute(RouteResult::class);
@@ -48,7 +49,7 @@ class Authenticate implements ServerMiddlewareInterface
                 'dms::auth.oauth.response',
             ])
         ) {
-            return $delegate->process($request);
+            return $handler->handle($request);
         }
 
         $response = new Response();
