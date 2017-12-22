@@ -33,7 +33,7 @@
         "dms-org/common.structure": "^0.8",
         "dms-org/core": "^0.8",
         "dms-org/library.metadata": "^0.8.0",
-        "harikt/blade-renderer": "dev-psr-15",
+        "harikt/blade-renderer": "0.3.0",
         "http-interop/http-server-middleware": "^1.0",
         "illuminate/config": "^5.4",
         "zendframework/zend-expressive": "^3.0.0-dev"
