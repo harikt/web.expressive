@@ -58,7 +58,8 @@ class Authenticate implements ServerMiddlewareInterface
             $response->getBody()->write($message);
             return $response->withStatus(401, 'Unauthenticated');
         } else {
-            return $response->withHeader('Location', $this->router->generateUri('dms::auth.login'));
+            $response = $response->withHeader('location', $this->router->generateUri('dms::auth.login'));
+            return $response->withStatus(302);
         }
     }
 }
