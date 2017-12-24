@@ -53,6 +53,6 @@ class LogoutController implements ServerMiddlewareInterface
         } catch (NotAuthenticatedException $e) {
         }
         $response = new Response();
-        return $response->withHeader('Location', '/');
+        return $response->withHeader('Location', '/dms')->withStatus(302);
     }
 }
