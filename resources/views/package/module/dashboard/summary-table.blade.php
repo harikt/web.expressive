@@ -18,7 +18,7 @@
                 @endforeach
                 @if($createActionName ?? false)
                     <li class="pull-right dms-general-action-container">
-                        <button class="btn btn-success" data-a-href="{{ $moduleContext->getUrl('action.form', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName(), 'action' => $createActionName, 'object_id' => null]) }}">
+                        <button class="btn btn-success" data-a-href="{{ $serverUrlHelper->generate($moduleContext->getUrl('action.form', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName(), 'action' => $createActionName, 'object_id' => null])) }}">
                             Add <i class="fa fa-plus-circle"></i>
                         </button>
                     </li>
