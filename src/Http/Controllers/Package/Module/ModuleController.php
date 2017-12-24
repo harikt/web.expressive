@@ -58,9 +58,7 @@ class ModuleController extends DmsController implements ServerMiddlewareInterfac
     {
         $moduleContext = $this->getModuleContext($request, $this->router, $this->cms);
 
-        $module = $moduleContext->getModule();
-
-        $this->loadSharedViewVariables($request);
+        $module = $moduleContext->getModule();       
 
         return new HtmlResponse(
             $this->template->render(

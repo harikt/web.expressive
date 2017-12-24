@@ -60,8 +60,6 @@ class ResetLinkEmailController extends DmsController implements ServerMiddleware
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $this->loadSharedViewVariables($request);
-
         if ($request->getMethod() == "POST") {
             return $this->sendResetLinkEmail($request);
         }

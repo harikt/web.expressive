@@ -151,8 +151,6 @@ class ShowResultController extends DmsController implements ServerMiddlewareInte
             $actionButtons = [];
         }
 
-        $this->loadSharedViewVariables($request);
-
         return new HtmlResponse($this->template->render('dms::package.module.details', [
                 'assetGroups'     => ['forms'],
                 'pageTitle'       => implode(' :: ', array_merge($moduleContext->getTitles(), [ActionLabeler::getActionButtonLabel($action)])),

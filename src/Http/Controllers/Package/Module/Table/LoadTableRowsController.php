@@ -74,8 +74,6 @@ class LoadTableRowsController extends DmsController implements ServerMiddlewareI
 
         $isFiltered = $this->filterCriteriaFromRequest($request, $table->getDataSource()->getStructure(), $criteria);
 
-        $this->loadSharedViewVariables($request);
-
         return new HtmlResponse($this->tableRenderer->renderTableData(
             $moduleContext,
             $table,

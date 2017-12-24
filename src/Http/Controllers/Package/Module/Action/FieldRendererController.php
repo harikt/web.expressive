@@ -153,8 +153,6 @@ class FieldRendererController extends DmsController implements ServerMiddlewareI
             return $this->abort($request, 404);
         }
 
-        $this->loadSharedViewVariables($request);
-
         return $renderer->handleAction($renderingContext, $field, $request, $fieldRendererAction, $request->get('__field_action_data') ?? []);
     }
 

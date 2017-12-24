@@ -43,8 +43,6 @@ class IndexController extends DmsController implements ServerMiddlewareInterface
             $analyticsWidgets = null;
         }
 
-        $this->loadSharedViewVariables($request);
-
         return new HtmlResponse($this->template->render('dms::dashboard', [
             'assetGroups'      => ['tables', 'charts'],
             'pageTitle'        => 'Dashboard',

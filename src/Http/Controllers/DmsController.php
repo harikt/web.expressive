@@ -43,10 +43,10 @@ class DmsController
     /**
      * DmsController constructor.
      *
-     * @param ICms        $cms
-     * @param IAuthSystem $auth
-     * @param ICms        $cms
-     * @param IAuthSystem $auth
+     * @param ICms                      $cms
+     * @param IAuthSystem               $auth
+     * @param TemplateRendererInterface $template
+     * @param RouterInterface           $router
      *
      */
     public function __construct(
@@ -59,30 +59,7 @@ class DmsController
         $this->auth = $auth;
         $this->template  = $template;
         $this->router = $router;
-    }
-
-    /**
-     * @param ServerRequestInterface $request
-     */
-    protected function loadSharedViewVariables(ServerRequestInterface $request)
-    {
-        $params = [
-            'cms'   => $this->cms,
-            'user'  => $this->auth->isAuthenticated() ? $this->auth->getAuthenticatedUser() : null,
-            'title' => 'DMS {' . $request->getServerParams()['SERVER_NAME'] . '}',
-            'requestUri' => $request->getUri()->__toString(),
-            '__content_only' => isset($request->getQueryParams()['__content_only']) ? $request->getQueryParams()['__content_only'] : null,
-            '__template_only' => isset($request->getQueryParams()['__template_only']) ? $request->getQueryParams()['__template_only'] : null,
-            '__no_template' => isset($request->getQueryParams()['__no_template']) ? $request->getQueryParams()['__no_template'] : null,
-        ];
-        foreach ($params as $param => $value) {
-            $this->template->addDefaultParam(
-                TemplateRendererInterface::TEMPLATE_ALL,
-                $param,
-                $value
-            );
-        }
-    }
+    }   
 
     protected function abort(ServerRequestInterface $request, int $statusCode, string $message = '')
     {

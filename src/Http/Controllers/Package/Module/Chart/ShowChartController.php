@@ -57,8 +57,6 @@ class ShowChartController extends DmsController implements ServerMiddlewareInter
 
         $this->loadChartView($chart, $viewName);
 
-        $this->loadSharedViewVariables($request);
-
         return new HtmlResponse(
             $this->template->render(
                 'dms::package.module.chart',

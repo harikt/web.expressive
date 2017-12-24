@@ -64,8 +64,6 @@ class LoadChartDataController extends DmsController implements ServerMiddlewareI
 
         $this->filterCriteriaFromRequest($request, $chart->getDataSource()->getStructure(), $criteria);
 
-        $this->loadSharedViewVariables($request);
-
         return $this->chartRenderer->renderChart(
             $chart->getDataSource()->load($criteria)
         );

@@ -151,8 +151,6 @@ class ShowFormController extends DmsController implements ServerMiddlewareInterf
             $initialStageNumber = 1;
         }
 
-        $this->loadSharedViewVariables($request);
-
         return new HtmlResponse(
             $this->template->render(
                 'dms::package.module.action',

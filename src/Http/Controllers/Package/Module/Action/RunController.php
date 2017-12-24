@@ -118,8 +118,6 @@ class RunController extends DmsController implements ServerMiddlewareInterface
             return $action;
         }
 
-        $this->loadSharedViewVariables($request);
-
         try {
             $result = $this->runActionWithDataFromRequest($request, $moduleContext, $action);
         } catch (\Exception $e) {

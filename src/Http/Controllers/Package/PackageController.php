@@ -79,8 +79,6 @@ class PackageController extends DmsController implements ServerMiddlewareInterfa
 
         $packageName = $this->package->getName();
 
-        $this->loadSharedViewVariables($request);
-
         return new HtmlResponse(
             $this->template->render(
                 'dms::package.dashboard',

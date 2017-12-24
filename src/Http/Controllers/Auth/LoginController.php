@@ -57,8 +57,6 @@ class LoginController extends DmsController implements ServerMiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $this->loadSharedViewVariables($request);
-
         if ($request->getMethod() == "POST") {
             return $this->login($request);
         }

@@ -1,5 +1,4 @@
 @inject('config', 'Illuminate\Config\Repository')
-@inject('urlHelper', 'Zend\Expressive\Helper\UrlHelper')
 
 <script>
     window.Dms.config = {
@@ -8,11 +7,11 @@
             token: {!! json_encode(csrf_token()) !!}
         },
         routes: {
-            loginUrl: {!! json_encode($urlHelper->generate('dms::auth.login')) !!},
+            loginUrl: {!! json_encode($serverUrlHelper->generate($urlHelper->generate('dms::auth.login'))) !!},
             localUrls: {
-                root: {!! json_encode($urlHelper->generate('dms::index')) !!},
+                root: {!! json_encode($serverUrlHelper->generate($urlHelper->generate('dms::index'))) !!},
                 exclude: [
-                    {!! json_encode($urlHelper->generate('dms::auth.logout')) !!}
+                    {!! json_encode($serverUrlHelper->generate($urlHelper->generate('dms::auth.logout'))) !!}
                 ]
             },
             downloadFile: function (token) {

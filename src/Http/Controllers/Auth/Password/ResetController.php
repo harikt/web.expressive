@@ -67,7 +67,7 @@ class ResetController extends DmsController implements ServerMiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $this->loadSharedViewVariables($request);
+        
         $token = $request->getAttribute('token');
 
         if (!$token) {

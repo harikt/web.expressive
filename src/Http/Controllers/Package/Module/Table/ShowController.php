@@ -87,8 +87,6 @@ class ShowController extends DmsController implements ServerMiddlewareInterface
 
         $this->loadTableView($table, $viewName);
 
-        $this->loadSharedViewVariables($request);
-
         return new HtmlResponse(
             $this->template->render('dms::package.module.table', [
                 'assetGroups'     => ['tables'],

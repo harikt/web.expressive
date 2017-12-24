@@ -189,8 +189,6 @@ class FormStageController extends DmsController implements ServerMiddlewareInter
 
         $renderingContext = new FormRenderingContext($moduleContext, $action, $stageNumber, $object);
 
-        $this->loadSharedViewVariables($request);
-
         return new HtmlResponse($this->actionFormRenderer->renderFormFields($renderingContext, $form));
     }
 

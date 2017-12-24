@@ -5,9 +5,13 @@
 <?php /** @var \Dms\Web\Expressive\Renderer\Form\FormRendererCollection $formRendererCollection */ ?>
 <?php /** @var array $hiddenValues */ ?>
 <div class="dms-staged-form-container">
-    <div
-		<?php /* 'object_id' => $renderingContext->getObject() ? [ 'object_id' => $renderingContext->getObjectId()] : */ ?>
-            data-reload-form-url="{{ $moduleContext->getUrl('action.form', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName(), 'action' => $actionName]) }}"
+    <div 
+            data-reload-form-url="{{ $serverUrlHelper->generate($moduleContext->getUrl('action.form', array_merge([
+                    'package' => $moduleContext->getModule()->getPackageName(), 
+                    'module' => $moduleContext->getModule()->getName(), 
+                    'action' => $actionName,
+                ], $renderingContext->getObject() ? ['object_id' => $renderingContext->getObjectId()] : [])
+            )) }}"
             data-reload-page-after-submit="1"
             data-action="{{ $moduleContext->getUrl('action.run', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName(), 'action' => $actionName]) }}"
             data-method="post"
