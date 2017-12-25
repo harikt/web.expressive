@@ -2,7 +2,7 @@
 
 namespace Dms\Web\Expressive\Action\ResultHandler;
 
-use Aura\Intl\TranslatorLocator;
+use Symfony\Component\Translation\Translator;
 use Dms\Core\Module\IAction;
 use Dms\Web\Expressive\Action\ActionResultHandler;
 use Dms\Web\Expressive\Http\ModuleContext;
@@ -17,13 +17,13 @@ class NullResultHandler extends ActionResultHandler
 {
 
     /**
-     * @var TranslatorLocator
+     * @var Translator
      */
-    protected $translocator;
+    protected $translator;
 
-    public function __construct(TranslatorLocator $translocator)
+    public function __construct(Translator $translator)
     {
-        $this->translocator = $translocator;
+        $this->translator = $translator;
         parent::__construct();
     }
 
@@ -56,10 +56,8 @@ class NullResultHandler extends ActionResultHandler
      */
     protected function handleResult(ModuleContext $moduleContext, IAction $action, $result)
     {
-        $translator = $this->translocator->get('dms');
-
         return new JsonResponse([
-            'message' => $translator->translate('action.generic-response'),
+            'message' => $translator->trans('action.generic-response', [], 'dms'),
         ]);
     }
 }

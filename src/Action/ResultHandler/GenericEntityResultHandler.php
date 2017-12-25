@@ -2,7 +2,7 @@
 
 namespace Dms\Web\Expressive\Action\ResultHandler;
 
-use Aura\Intl\TranslatorLocator;
+use Symfony\Component\Translation\Translator;
 use Dms\Core\Common\Crud\Action\Crud\CreateAction;
 use Dms\Core\Common\Crud\Action\Crud\EditAction;
 use Dms\Core\Common\Crud\Action\Crud\ViewDetailsAction;
@@ -29,19 +29,19 @@ class GenericEntityResultHandler extends ActionResultHandler
     protected $entityModuleMap;
 
     /**
-     * @var TranslatorLocator
+     * @var Translator
      */
-    protected $translocator;
+    protected $translator;
 
     /**
      * @var RouterInterface
      */
     protected $router;
 
-    public function __construct(EntityModuleMap $entityModuleMap, TranslatorLocator $translocator, RouterInterface $router)
+    public function __construct(EntityModuleMap $entityModuleMap, Translator $translator, RouterInterface $router)
     {
         $this->entityModuleMap = $entityModuleMap;
-        $this->translocator = $translocator;
+        $this->translator = $translator;
         $this->router = $router;
         parent::__construct();
     }
@@ -96,10 +96,8 @@ class GenericEntityResultHandler extends ActionResultHandler
         /** @var Entity $result */
         $url = $this->router->generateUri('dms::package.module.action.show', ['package' => $module->getPackageName(), 'module' => $module->getName(), 'action' => $module->getDetailsAction()->getName(), 'object_id' => $result->getId()]);
 
-        $translator = $this->translocator->get('dms');
-
         return new JsonResponse([
-            'message'  => $translator->translate('action.generic-response'),
+            'message'  => $translator->trans('action.generic-response', [], 'dms'),
             'redirect' => $url,
         ]);
     }

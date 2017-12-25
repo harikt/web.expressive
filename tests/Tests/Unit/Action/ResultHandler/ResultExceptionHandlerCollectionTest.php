@@ -2,7 +2,6 @@
 
 namespace Dms\Web\Expressive\Tests\Unit\Action\ResultHandler;
 
-use Aura\Intl\TranslatorLocatorFactory;
 use Dms\Core\Language\Message;
 use Dms\Core\Module\IAction;
 use Dms\Web\Expressive\Action\ActionResultHandlerCollection;
@@ -12,6 +11,8 @@ use Dms\Web\Expressive\Action\UnhandleableActionResultException;
 use Dms\Web\Expressive\Http\ModuleContext;
 use Dms\Web\Expressive\Tests\Mock\Language\MockLanguageProvider;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Translation\MessageSelector;
+use Symfony\Component\Translation\Translator;
 
 /**
  * @author Elliot Levin <elliotlevin@hotmail.com>
@@ -25,10 +26,9 @@ class ActionResultHandlerCollectionTest extends TestCase
 
     public function setUp()
     {
-        $factory = new TranslatorLocatorFactory();
-        $translators = $factory->newInstance();
+        $translator = new Translator('en_US', new MessageSelector());
         $this->collection = new ActionResultHandlerCollection([
-            new NullResultHandler($translators),
+            new NullResultHandler($translator),
             new MessageResultHandler(new MockLanguageProvider()),
         ]);
     }

@@ -2,9 +2,6 @@
 
 namespace Dms\Web\Expressive;
 
-use Aura\Intl\Package;
-use Aura\Intl\TranslatorLocator;
-use Aura\Intl\TranslatorLocatorFactory;
 use Aura\Session\Session;
 use Aura\Session\SessionFactory;
 use BehEh\Flaps\Flap;
@@ -47,6 +44,7 @@ use Dms\Web\Expressive\File\Persistence\TemporaryFileRepository;
 use Dms\Web\Expressive\File\TemporaryFileService;
 use Dms\Web\Expressive\Ioc\LaravelIocContainer;
 use Dms\Web\Expressive\Language\LanguageProvider;
+use Dms\Web\Expressive\Language\SymfonyLanguageProvider;
 use Dms\Web\Expressive\Middleware\AuthenticationMiddleware;
 use Dms\Web\Expressive\Renderer\Chart\ChartRendererCollection;
 use Dms\Web\Expressive\Renderer\Form\FieldRendererCollection;
@@ -67,6 +65,9 @@ use Illuminate\Events\Dispatcher;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 use Psr\Cache\CacheItemPoolInterface;
+use Symfony\Component\Translation\Loader\ArrayLoader;
+use Symfony\Component\Translation\MessageSelector;
+use Symfony\Component\Translation\Translator;
 
 class ContainerConfig
 {
@@ -164,7 +165,34 @@ class ContainerConfig
             ));
         });
 
-        $container->bind(IIocContainer::SCOPE_SINGLETON, ILanguageProvider::class, LanguageProvider::class);
+        $container->bindCallback(IIocContainer::SCOPE_SINGLETON, Translator::class, function () use ($container) {
+            $translator = new Translator('en_US', new MessageSelector());
+            $translator->addLoader('array', new ArrayLoader());
+
+            return $translator;
+        });
+
+        $container->bindCallback(IIocContainer::SCOPE_SINGLETON, SymfonyLanguageProvider::class, function () use ($container) {
+            $translator = $container->get(Translator::class);
+
+            $directory = dirname(__DIR__) . '/resources/lang/';
+            foreach (new \DirectoryIterator($directory) as $fileInfo) {
+                if ($fileInfo->isDot()) {
+                    continue;
+                }
+
+                $file = $fileInfo->getPathname();
+
+                if (is_readable($file)) {
+                    // place into the locator for dms
+                    $translator->addResource('array', require $file , $fileInfo->getBasename('.php'), 'dms');
+                }
+            }
+
+            return new SymfonyLanguageProvider($translator);
+        });
+
+        $container->bind(IIocContainer::SCOPE_SINGLETON, ILanguageProvider::class, SymfonyLanguageProvider::class);
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, CacheItemPoolInterface::class, function () use ($container) {
             $repository = $container->get(Repository::class);
@@ -265,35 +293,6 @@ class ContainerConfig
         });
 
         $container->bind(IIocContainer::SCOPE_SINGLETON, AuthenticationMiddleware::class, AuthenticationMiddleware::class);
-
-        $container->bindCallback(IIocContainer::SCOPE_SINGLETON, TranslatorLocator::class, function () {
-            $factory = new TranslatorLocatorFactory();
-            $translators = $factory->newInstance();
-
-            // get the package locator
-            $packages = $translators->getPackages();
-
-            $directory = dirname(__DIR__) . '/resources/lang/';
-            foreach (new \DirectoryIterator($directory) as $fileInfo) {
-                if ($fileInfo->isDot()) {
-                    continue;
-                }
-
-                $file = $fileInfo->getPathname();
-
-                if (is_readable($file)) {
-                    // place into the locator for dms
-                    $packages->set('dms', $fileInfo->getBasename('.php'), function () use ($file) {
-                        $package = new Package;
-                        $package->setMessages(require $file);
-
-                        return $package;
-                    });
-                }
-            }
-
-            return $translators;
-        });
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, PublicFileModule::class, function () use ($container) {
             return new PublicFileModule(

@@ -2,31 +2,31 @@
 
 namespace Dms\Web\Expressive\Language;
 
-use Aura\Intl\TranslatorLocator;
 use Dms\Core\Exception\InvalidArgumentException;
 use Dms\Core\Language\ILanguageProvider;
 use Dms\Core\Language\Message;
 use Dms\Core\Language\MessageNotFoundException;
+use Symfony\Component\Translation\Translator;
 
 /**
  * The laravel language provider.
  *
  * @author Elliot Levin <elliotlevin@hotmail.com>
  */
-class LanguageProvider implements ILanguageProvider
+class SymfonyLanguageProvider implements ILanguageProvider
 {
     /**
-     * @var TranslatorLocator
+     * @var Translator
      */
-    protected $translators;
+    protected $translator;
 
     /**
      * LaravelLanguageProvider constructor.
      *
      */
-    public function __construct(TranslatorLocator $translators)
+    public function __construct(Translator $translator)
     {
-        $this->translators = $translators;
+        $this->translator = $translator;
     }
 
     /**
@@ -40,17 +40,16 @@ class LanguageProvider implements ILanguageProvider
      */
     public function format(Message $message) : string
     {
-        $namespace = 'dms';
+        $domain = null;
 
         if ($message->hasNamespace()) {
-            $namespace .= '.' . $message->getNamespace();
+            $domain = $message->getNamespace();
         }
 
-        $translator = $this->translators->get($namespace);
-
-        $response = $translator->translate(
+        $response = $this->translator->trans(
             $message->getId(),
-            $params = $this->processParameters($message->getParameters())
+            $params = $this->processParameters($message->getParameters()),
+            $domain
         );
 
         return $response;
