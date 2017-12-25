@@ -82,12 +82,12 @@
                 <!-- Sidebar user panel -->
                 <div class="user-panel">
                     <div class="pull-left image">
-                        <img src="https://www.gravatar.com/avatar/{{-- md5($user->getEmailAddress()) --}}" class="img-circle" alt="User Image">
+                        <img src="https://www.gravatar.com/avatar/{{ md5($user->getEmailAddress()) }}" class="img-circle" alt="User Image">
                     </div>
                     <div class="pull-left info">
                         <p>{{ $user->getFullName() }}</p>
                         <a href="{{ $urlHelper->generate('dms::package.module.dashboard', ['package' => 'admin', 'module' => 'account']) }}">
-                            <i class="fa fa-circle text-success"></i> {{-- $user->getEmailAddress() --}}
+                            <i class="fa fa-circle text-success"></i> {{ $user->getEmailAddress() }}
                         </a>
                     </div>
                 </div>

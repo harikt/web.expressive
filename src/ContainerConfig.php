@@ -2,9 +2,6 @@
 
 namespace Dms\Web\Expressive;
 
-use Aura\Intl\Package;
-use Aura\Intl\TranslatorLocator;
-use Aura\Intl\TranslatorLocatorFactory;
 use Aura\Session\Session;
 use Aura\Session\SessionFactory;
 use BehEh\Flaps\Flap;
@@ -177,11 +174,24 @@ class ContainerConfig
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, SymfonyLanguageProvider::class, function () use ($container) {
             $translator = $container->get(Translator::class);
-            $translator->addResource('array', require dirname(__DIR__) . '/resources/lang/en_US.php' , 'en_US', 'dms');
+
+            $directory = dirname(__DIR__) . '/resources/lang/';
+            foreach (new \DirectoryIterator($directory) as $fileInfo) {
+                if ($fileInfo->isDot()) {
+                    continue;
+                }
+
+                $file = $fileInfo->getPathname();
+
+                if (is_readable($file)) {
+                    // place into the locator for dms
+                    $translator->addResource('array', require $file , $fileInfo->getBasename('.php'), 'dms');
+                }
+            }
+
             return new SymfonyLanguageProvider($translator);
         });
 
-        // $container->bind(IIocContainer::SCOPE_SINGLETON, ILanguageProvider::class, LanguageProvider::class);
         $container->bind(IIocContainer::SCOPE_SINGLETON, ILanguageProvider::class, SymfonyLanguageProvider::class);
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, CacheItemPoolInterface::class, function () use ($container) {
@@ -283,35 +293,6 @@ class ContainerConfig
         });
 
         $container->bind(IIocContainer::SCOPE_SINGLETON, AuthenticationMiddleware::class, AuthenticationMiddleware::class);
-
-        $container->bindCallback(IIocContainer::SCOPE_SINGLETON, TranslatorLocator::class, function () {
-            $factory = new TranslatorLocatorFactory();
-            $translators = $factory->newInstance();
-
-            // get the package locator
-            $packages = $translators->getPackages();
-
-            $directory = dirname(__DIR__) . '/resources/lang/';
-            foreach (new \DirectoryIterator($directory) as $fileInfo) {
-                if ($fileInfo->isDot()) {
-                    continue;
-                }
-
-                $file = $fileInfo->getPathname();
-
-                if (is_readable($file)) {
-                    // place into the locator for dms
-                    $packages->set('dms', $fileInfo->getBasename('.php'), function () use ($file) {
-                        $package = new Package;
-                        $package->setMessages(require $file);
-
-                        return $package;
-                    });
-                }
-            }
-
-            return $translators;
-        });
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, PublicFileModule::class, function () use ($container) {
             return new PublicFileModule(

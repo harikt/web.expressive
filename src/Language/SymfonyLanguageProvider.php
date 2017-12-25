@@ -6,9 +6,7 @@ use Dms\Core\Exception\InvalidArgumentException;
 use Dms\Core\Language\ILanguageProvider;
 use Dms\Core\Language\Message;
 use Dms\Core\Language\MessageNotFoundException;
-use Symfony\Component\Translation\MessageSelector;
 use Symfony\Component\Translation\Translator;
-use Symfony\Component\Translation\Loader\ArrayLoader;
 
 /**
  * The laravel language provider.
