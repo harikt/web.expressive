@@ -56,6 +56,13 @@ class HktAuthSystem extends AuthSystem
     protected $iocContainer;
 
     /**
+     * Authenticated user object in memory
+     *
+     * @var IAdmin
+     */
+    protected $authenticatedUser;
+
+    /**
      * constructor.
      *
      * @param Session                $session
@@ -126,7 +133,7 @@ class HktAuthSystem extends AuthSystem
     {
         $user = $this->loadByCredentials($username, $password);
         $segment = $this->session->getSegment(__CLASS__);
-        $segment->set('auth', $user);
+        $segment->set('auth', $user->getUsername());
     }
 
     /**
@@ -184,13 +191,26 @@ class HktAuthSystem extends AuthSystem
     public function getAuthenticatedUser() : IAdmin
     {
         $segment = $this->session->getSegment(__CLASS__);
-        $user = $segment->get('auth');
+        $username = $segment->get('auth');
 
-        if (!$user) {
+        if (!$username) {
             throw NotAuthenticatedException::format('No user is authenticated');
         }
 
-        return $user;
+        if (! $this->authenticatedUser) {
+            $users = $this->userRepository->matching(
+                $this->userRepository->criteria()
+                    ->where(Admin::USERNAME, '=', $username)
+            );
+
+            if (count($users) > 1) {
+                throw NotAuthenticatedException::format('No user is authenticated');
+            }
+
+            $this->authenticatedUser = $users[0];
+        }
+
+        return $this->authenticatedUser;
     }
 
     /**
