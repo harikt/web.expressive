@@ -118,7 +118,7 @@
                                 <ul class="treeview-menu">
                                     @foreach($element->getElements() as $innerElement)
                                         <li @if(starts_with($requestUri, $innerElement->getUrl())) class="active" @endif>
-                                            <a href="{{ $innerElement->getUrl() }}">
+                                            <a href="{{ $serverUrlHelper->generate($innerElement->getUrl()) }}">
                                                 <i class="fa fa-{{ $innerElement->getIcon() }}"></i>
                                                 <span class="dms-nav-label">{{ $innerElement->getLabel() }}</span>
                                             </a>
@@ -128,7 +128,7 @@
                             </li>
                         @elseif ($element instanceof \Dms\Web\Expressive\View\NavigationElement)
                             <li @if($element->getUrl() === $urlHelper->generate('dms::index') ? $element->getUrl() === $requestUri : starts_with($requestUri, $element->getUrl())) class="active" @endif>
-                                <a href="{{ $element->getUrl() }}">
+                                <a href="{{ $serverUrlHelper->generate($element->getUrl()) }}">
                                     <i class="fa fa-{{ $element->getIcon() }}"></i>
                                     <span class="dms-nav-label">{{ $element->getLabel() }}</span>
                                     <i class="fa fa-angle-left pull-right"></i>
