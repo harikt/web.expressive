@@ -47,6 +47,7 @@ use Dms\Web\Expressive\File\Persistence\TemporaryFileRepository;
 use Dms\Web\Expressive\File\TemporaryFileService;
 use Dms\Web\Expressive\Ioc\LaravelIocContainer;
 use Dms\Web\Expressive\Language\LanguageProvider;
+use Dms\Web\Expressive\Language\SymfonyLanguageProvider;
 use Dms\Web\Expressive\Middleware\AuthenticationMiddleware;
 use Dms\Web\Expressive\Renderer\Chart\ChartRendererCollection;
 use Dms\Web\Expressive\Renderer\Form\FieldRendererCollection;
@@ -67,6 +68,9 @@ use Illuminate\Events\Dispatcher;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 use Psr\Cache\CacheItemPoolInterface;
+use Symfony\Component\Translation\Loader\ArrayLoader;
+use Symfony\Component\Translation\MessageSelector;
+use Symfony\Component\Translation\Translator;
 
 class ContainerConfig
 {
@@ -164,7 +168,21 @@ class ContainerConfig
             ));
         });
 
-        $container->bind(IIocContainer::SCOPE_SINGLETON, ILanguageProvider::class, LanguageProvider::class);
+        $container->bindCallback(IIocContainer::SCOPE_SINGLETON, Translator::class, function () use ($container) {
+            $translator = new Translator('en_US', new MessageSelector());
+            $translator->addLoader('array', new ArrayLoader());
+
+            return $translator;
+        });
+
+        $container->bindCallback(IIocContainer::SCOPE_SINGLETON, SymfonyLanguageProvider::class, function () use ($container) {
+            $translator = $container->get(Translator::class);
+            $translator->addResource('array', require dirname(__DIR__) . '/resources/lang/en_US.php' , 'en_US', 'dms');
+            return new SymfonyLanguageProvider($translator);
+        });
+
+        // $container->bind(IIocContainer::SCOPE_SINGLETON, ILanguageProvider::class, LanguageProvider::class);
+        $container->bind(IIocContainer::SCOPE_SINGLETON, ILanguageProvider::class, SymfonyLanguageProvider::class);
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, CacheItemPoolInterface::class, function () use ($container) {
             $repository = $container->get(Repository::class);

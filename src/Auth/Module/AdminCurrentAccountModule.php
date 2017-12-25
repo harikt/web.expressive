@@ -88,7 +88,7 @@ class AdminCurrentAccountModule extends Module
 
                 $this->dataSource->save($user);
 
-                return new Message('auth.user.profile-updated');
+                return new Message('dms::auth.user.profile-updated');
             });
 
         $module->action('change-password')
@@ -99,7 +99,7 @@ class AdminCurrentAccountModule extends Module
 
                 $this->passwordResetService->resetUserPassword($user, $input->newPassword);
 
-                return new Message('auth.user.password-reset');
+                return new Message('dms::auth.user.password-reset');
             });
 
         $module->widget('update-profile')

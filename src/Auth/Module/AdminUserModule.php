@@ -157,7 +157,7 @@ class AdminUserModule extends CrudModule
             ->handler(function (LocalAdmin $admin, AdminPasswordResetForm $input) {
                 $this->passwordResetService->resetUserPassword($admin, $input->newPassword);
 
-                return new Message('auth.user.password-reset');
+                return new Message('dms::auth.user.password-reset');
             });
 
         $module->removeAction()->deleteFromDataSource();
