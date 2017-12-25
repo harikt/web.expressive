@@ -4,7 +4,7 @@
      data-name="{{ $name }}"
      data-field-validation-for="{{ $name }}[action], {{ $name }}[file]"
      @if ($required) data-required="1" @endif
-     data-upload-temp-file-url="{{ $urlHelper->generate('dms::file.upload') }}"
+     data-upload-temp-file-url="{{ $serverUrlHelper->generate($urlHelper->generate('dms::file.upload')) }}"
      data-download-temp-file-url="{{ $urlHelper->generate('dms::file.download', ['token' => '__token__']) }}"
      @if($maxFileSize ?? false) data-max-size="{{ $maxFileSize }}" @endif
 

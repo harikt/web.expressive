@@ -12,7 +12,7 @@
             @foreach ($breadcrumbs as $link => $label)
                 <li>
                     <a href="{{ $link }}">
-                        @if ($link === $urlHelper->generate('dms::index')) <i class="fa fa-dashboard"></i> @endif {{ $label }}
+                        @if ($link === $serverUrlHelper->generate($urlHelper->generate('dms::index'))) <i class="fa fa-dashboard"></i> @endif {{ $label }}
                     </a>
                 </li>
             @endforeach

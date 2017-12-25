@@ -27,14 +27,14 @@
                     <li class="pull-right dms-general-action-container">
                         @if($action instanceof \Dms\Core\Module\IUnparameterizedAction)
                             <button class="dms-run-action-form inline btn btn-{{ \Dms\Web\Expressive\Util\KeywordTypeIdentifier::getClass($action->getName()) }}"
-                                 data-action="{{ $moduleContext->getUrl('action.run', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName(), 'action' => $action->getName()]) }}"
+                                 data-action="{{ $serverUrlHelper->generate($moduleContext->getUrl('action.run', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName(), 'action' => $action->getName()])) }}"
                                  data-method="post"
                             >
                                 {{ \Dms\Web\Expressive\Util\ActionLabeler::getActionButtonLabel($action)  }}
                             </button>
                         @else
                             <a  class="btn btn-{{ \Dms\Web\Expressive\Util\KeywordTypeIdentifier::getClass($action->getName()) }}"
-                                href="{{ $moduleContext->getUrl('action.form', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName(), 'action' => $action->getName()]) }}"
+                                href="{{ $serverUrlHelper->generate($moduleContext->getUrl('action.form', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName(), 'action' => $action->getName()])) }}"
                             >{{ \Dms\Web\Expressive\Util\ActionLabeler::getActionButtonLabel($action) }}</a>
                         @endif
                     </li>

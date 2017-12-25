@@ -12,7 +12,7 @@
 
                 <p>
                     You are not authorized to view this page.
-                    Meanwhile, you may <a href="{{ $urlHelper->generate('dms::index') }}">return to the dashboard</a>.
+                    Meanwhile, you may <a href="{{ $serverUrlHelper->generate($urlHelper->generate('dms::index')) }}">return to the dashboard</a>.
                 </p>
             </div>
             <!-- /.error-content -->

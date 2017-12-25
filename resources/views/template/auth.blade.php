@@ -6,7 +6,7 @@
 
     <div class="login-box-logo">
         <div class="login-logo">
-            <a href="{{ $urlHelper->generate('dms::index') }}"><b>DMS</b> <br/> </a>
+            <a href="{{ $serverUrlHelper->generate($urlHelper->generate('dms::index')) }}"><b>DMS</b> <br/> </a>
         </div>
     </div>
     <div class="login-box">

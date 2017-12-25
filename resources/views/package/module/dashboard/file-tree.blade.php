@@ -6,7 +6,7 @@
 <div class="row">
     <div class="col-xs-12">
         <div class="panel panel-default dms-file-tree"
-             data-reload-file-tree-url="{{ $moduleContext->getUrl('dashboard', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName()]) }}"
+             data-reload-file-tree-url="{{ $serverUrlHelper->generate($moduleContext->getUrl('dashboard', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName()])) }}"
         >
             <div class="panel-body dms-upload-form">
                 {!! app(\Dms\Web\Expressive\Renderer\Form\ActionFormRenderer::class)->renderActionForm($moduleContext, $moduleContext->getModule()->getAction('upload-files')) !!}
@@ -65,7 +65,7 @@
 
                     <div class="col-xs-12 text-center dms-file-tree-empty">
                         <span class="dms-run-action-form inline"
-                              data-action="{{ $moduleContext->getUrl('action.run', ['action' => 'empty-trash', 'package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName()]) }}"
+                              data-action="{{ $serverUrlHelper->generate($moduleContext->getUrl('action.run', ['action' => 'empty-trash', 'package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName()])) }}"
                               data-reload-page-after-submit="1"
                               data-method="post">
                             <input type="hidden" name="_token" value="{!! csrf_token() !!}">

@@ -12,7 +12,7 @@
 
                 <p>
                     We could not find the page you were looking for.
-                    Meanwhile, you may <a href="{{ $urlHelper->generate('dms::index') }}">return to the dashboard</a>.
+                    Meanwhile, you may <a href="{{ $serverUrlHelper->generate($urlHelper->generate('dms::index')) }}">return to the dashboard</a>.
                 </p>
             </div>
             <!-- /.error-content -->

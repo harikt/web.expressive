@@ -39,7 +39,7 @@
     </form>
 
     <br>
-    <a class="btn-block" href="{{ $urlHelper->generate('dms::auth.password.forgot') }}">I forgot my password</a>
+    <a class="btn-block" href="{{ $serverUrlHelper->generate($urlHelper->generate('dms::auth.password.forgot')) }}">I forgot my password</a>
     <br>
 
     @foreach ($oauthProviders as $oauthProvider)

@@ -7,7 +7,7 @@
             {{ $actionButton->getLabel() }}
         </a>
     @elseif($actionButton->isPost())
-        <div class="dms-run-action-form inline" data-action="{{ $actionButton->getUrl($objectId) }}" data-method="post" data-reload-page-after-submit="1">
+        <div class="dms-run-action-form inline" data-action="{{ $serverUrlHelper->generate($actionButton->getUrl($objectId)) }}" data-method="post" data-reload-page-after-submit="1">
             <input type="hidden" name="_token" value="{!! csrf_token() !!}">
             <button type="submit"
                     class="btn btn-{{ \Dms\Web\Expressive\Util\KeywordTypeIdentifier::getClass($actionButton->getName()) ?? 'default' }}">
@@ -16,7 +16,7 @@
         </div>
     @else
         <a class="btn btn-{{ \Dms\Web\Expressive\Util\KeywordTypeIdentifier::getClass($actionButton->getName()) ?? 'default' }}"
-           href="{{ $actionButton->getUrl($objectId) }}">
+           href="{{ $serverUrlHelper->generate($actionButton->getUrl($objectId)) }}">
             {{ $actionButton->getLabel() }}
         </a>
     @endif

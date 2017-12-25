@@ -41,7 +41,7 @@
                             </div>
                             <!-- /.box -->
                         </div>
-                    @elseif ($element instanceof \Dms\Web\Expressive\View\NavigationElement && $element->getUrl() !== $urlHelper->generate('dms::index'))
+                    @elseif ($element instanceof \Dms\Web\Expressive\View\NavigationElement && $element->getUrl() !== $serverUrlHelper->generate($urlHelper->generate('dms::index')))
                         <div class="col-sm-12">
                             <div class="box box-default">
                                 <div class="box-header with-border">
@@ -53,7 +53,7 @@
                                 <!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="list-group">
-                                        <a href="{{ $element->getUrl() }}" class="list-group-item">
+                                        <a href="{{ $serverUrlHelper->generate($element->getUrl()) }}" class="list-group-item">
                                             <i class="fa fa-{{ $element->getIcon() }}"></i>
                                             {{ $element->getLabel() }}
                                         </a>

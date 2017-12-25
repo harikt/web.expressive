@@ -13,7 +13,7 @@
                 ], $renderingContext->getObject() ? ['object_id' => $renderingContext->getObjectId()] : [])
             )) }}"
             data-reload-page-after-submit="1"
-            data-action="{{ $moduleContext->getUrl('action.run', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName(), 'action' => $actionName]) }}"
+            data-action="{{ $serverUrlHelper->generate($moduleContext->getUrl('action.run', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName(), 'action' => $actionName])) }}"
             data-method="post"
             data-enctype="multipart/form-data"
             class="dms-staged-form form-horizontal"
@@ -49,7 +49,7 @@
                     <div
                             class="dms-form-stage dms-dependent-form-stage"
                             data-stage-number="{{ $stageNumber }}"
-                            data-load-stage-url="{{ $moduleContext->getUrl('action.form.stage', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName(), 'action' => $actionName, 'stage' => $absoluteStageNumber]) }}"
+                            data-load-stage-url="{{ $serverUrlHelper->generate($moduleContext->getUrl('action.form.stage', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName(), 'action' => $actionName, 'stage' => $absoluteStageNumber])) }}"
                             @if($stage->getRequiredFieldNames() !== null)
                             data-stage-dependent-fields="{{ json_encode($stage->getRequiredFieldNames()) }}"
                             @endif

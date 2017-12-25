@@ -79,20 +79,20 @@
                     <td class="dms-row-action-column" data-object-id="{{ $objectId }}">
                         <div class="dms-row-button-control pull-right">
                             @if(isset($rowActionButtons['details']))
-                                <a href="{{ $rowActionButtons['details']->getUrl($objectId) }}" title="View Details"
+                                <a href="{{ $serverUrlHelper->generate($rowActionButtons['details']->getUrl($objectId)) }}" title="View Details"
                                    class="btn btn-xs btn-info">
                                     <i class="fa fa-bars"></i>
                                 </a>
                             @endif
                             @if(isset($rowActionButtons['edit']))
-                                <a href="{{ $rowActionButtons['edit']->getUrl($objectId) }}" title="Edit"
+                                <a href="{{ $serverUrlHelper->generate($rowActionButtons['edit']->getUrl($objectId)) }}" title="Edit"
                                    class="btn btn-xs btn-primary">
                                     <i class="fa fa-pencil-square-o"></i>
                                 </a>
                             @endif
                             @if(isset($rowActionButtons['remove']))
                                 <div class="dms-run-action-form inline"
-                                     data-action="{{ $rowActionButtons['remove']->getUrl($objectId) }}"
+                                     data-action="{{ $serverUrlHelper->generate($rowActionButtons['remove']->getUrl($objectId)) }}"
                                      data-after-run-remove-closest="tr"
                                      data-method="post">
                                     <input type="hidden" name="_token" value="{!! csrf_token() !!}">
@@ -123,12 +123,12 @@
                                                 <li>
                                                     @if($action->isPost())
                                                         <a class="dms-run-action-form inline"
-                                                           data-action="{{ $action->getUrl($objectId) }}"
+                                                           data-action="{{ $serverUrlHelper->generate($action->getUrl($objectId)) }}"
                                                            data-method="post">
                                                             {{ $action->getLabel() }}
                                                         </a>
                                                     @else
-                                                        <a href="{{ $action->getUrl($objectId) }}">{{ $action->getLabel() }}</a>
+                                                        <a href="{{ $serverUrlHelper->generate($action->getUrl($objectId)) }}">{{ $action->getLabel() }}</a>
                                                     @endif
                                                 </li>
                                             @endif
