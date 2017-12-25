@@ -1,28 +1,17 @@
 <?php
-// Need to get rid of this
-// if (! defined("PUBLIC_PATH")) {
-//     define('PUBLIC_PATH', dirname(dirname(__DIR__)) . '/public');
-// }
-// if (! defined("BASE_PATH")) {
-//     define('BASE_PATH', dirname(dirname(__DIR__)));
-// }
-// if (! defined("STORAGE_PATH")) {
-//     define('STORAGE_PATH', dirname(dirname(__DIR__)) . '/data');
-// }
-
 return [
     'dms' => [
 
         'public' => [
-            'path' => PUBLIC_PATH
+            'path' => dirname(dirname(__DIR__)) . '/public'
         ],
 
         'base' => [
-            'path' => BASE_PATH
+            'path' => dirname(dirname(__DIR__))
         ],
 
         'datastorage' => [
-            'path' => STORAGE_PATH
+            'path' => dirname(dirname(__DIR__)) . '/data'
         ],
 
         /*
@@ -330,7 +319,7 @@ return [
         ],
 
         "path" => [
-            "storage" => STORAGE_PATH . "/cache"
+            "storage" => dirname(dirname(__DIR__)) . "/cache"
         ]
     ]
 ];
