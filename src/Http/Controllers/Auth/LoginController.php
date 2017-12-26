@@ -8,12 +8,12 @@ use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\Auth\InvalidCredentialsException;
 use Dms\Core\ICms;
 use Dms\Web\Expressive\Auth\Oauth\OauthProviderCollection;
-use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Dms\Web\Expressive\Exception\TooManyFailedAttemptsException;
 use Dms\Web\Expressive\Exception\ValidationFailedException;
-use Interop\Http\Server\RequestHandlerInterface;
+use Dms\Web\Expressive\Http\Controllers\DmsController;
 use Interop\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
-use Psr\Http\Message\ResponseInterface; 
+use Interop\Http\Server\RequestHandlerInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -66,7 +66,6 @@ class LoginController extends DmsController implements ServerMiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if ($request->getMethod() == "POST") {
-
             $constraint = new Assert\Collection([
                 'username' => [
                     new Assert\NotBlank(),
@@ -81,7 +80,7 @@ class LoginController extends DmsController implements ServerMiddlewareInterface
                 $this->validate($request->getParsedBody(), $constraint);
 
                 if (! $this->flap->limit($this->getThrottleKey($request))) {
-                    // too many login attempts                    
+                    // too many login attempts
                     throw TooManyFailedAttemptsException::defaultMessage();
                 }
                 
@@ -118,7 +117,7 @@ class LoginController extends DmsController implements ServerMiddlewareInterface
 
         return new HtmlResponse(
             $this->template->render(
-                'dms::auth/login', 
+                'dms::auth/login',
                 [
                     'oauthProviders' => $this->oauthProviderCollection->getAll(),
                     'errors' => $this->errors,

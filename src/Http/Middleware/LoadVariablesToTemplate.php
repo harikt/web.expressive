@@ -4,9 +4,9 @@ namespace Dms\Web\Expressive\Http\Middleware;
 
 use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\ICms;
-use Interop\Http\Server\RequestHandlerInterface;
 use Interop\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
-use Psr\Http\Message\ResponseInterface; 
+use Interop\Http\Server\RequestHandlerInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
@@ -28,7 +28,7 @@ class LoadVariablesToTemplate implements ServerMiddlewareInterface
     protected $template;
 
     /**
-     * 
+     *
      * @param ICms                      $cms
      * @param IAuthSystem               $auth
      * @param TemplateRendererInterface $template

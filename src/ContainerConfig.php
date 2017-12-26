@@ -43,7 +43,6 @@ use Dms\Web\Expressive\File\Persistence\ITemporaryFileRepository;
 use Dms\Web\Expressive\File\Persistence\TemporaryFileRepository;
 use Dms\Web\Expressive\File\TemporaryFileService;
 use Dms\Web\Expressive\Ioc\LaravelIocContainer;
-use Dms\Web\Expressive\Language\LanguageProvider;
 use Dms\Web\Expressive\Language\SymfonyLanguageProvider;
 use Dms\Web\Expressive\Middleware\AuthenticationMiddleware;
 use Dms\Web\Expressive\Renderer\Chart\ChartRendererCollection;
@@ -185,7 +184,7 @@ class ContainerConfig
 
                 if (is_readable($file)) {
                     // place into the locator for dms
-                    $translator->addResource('array', require $file , $fileInfo->getBasename('.php'), 'dms');
+                    $translator->addResource('array', require $file, $fileInfo->getBasename('.php'), 'dms');
                 }
             }
 
@@ -314,6 +313,5 @@ class ContainerConfig
 
             return $flap;
         });
-
     }
 }

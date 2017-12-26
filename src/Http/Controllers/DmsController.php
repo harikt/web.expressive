@@ -4,14 +4,13 @@ namespace Dms\Web\Expressive\Http\Controllers;
 
 use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\ICms;
+use Dms\Web\Expressive\Exception\ValidationFailedException;
 use Illuminate\Support\MessageBag;
-use Psr\Http\Message\ResponseInterface; 
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Validator\Validation;
 use Zend\Diactoros\Response;
 use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
-use Dms\Web\Expressive\Exception\ValidationFailedException;
 
 /**
  * The base dms controller.
@@ -66,7 +65,7 @@ class DmsController
         $this->template  = $template;
         $this->router = $router;
         $this->errors = new MessageBag();
-    }   
+    }
 
     protected function abort(ServerRequestInterface $request, int $statusCode, string $message = '')
     {
@@ -108,7 +107,7 @@ class DmsController
         $violations = $validator->validate($data, $constraint);
         if (count($violations) != 0) {
             // Add violation to message bag
-            foreach($violations as $violation) {
+            foreach ($violations as $violation) {
                 $this->errors->add(str_replace(['[', ']'], [''], $violation->getPropertyPath()), $violation->getMessage());
             }
 

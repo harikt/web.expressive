@@ -2,7 +2,6 @@
 
 namespace Dms\Web\Expressive\Action\ResultHandler;
 
-use Symfony\Component\Translation\Translator;
 use Dms\Core\Common\Crud\Action\Crud\CreateAction;
 use Dms\Core\Common\Crud\Action\Crud\EditAction;
 use Dms\Core\Common\Crud\Action\Crud\ViewDetailsAction;
@@ -13,6 +12,7 @@ use Dms\Core\Module\IAction;
 use Dms\Web\Expressive\Action\ActionResultHandler;
 use Dms\Web\Expressive\Http\ModuleContext;
 use Dms\Web\Expressive\Util\EntityModuleMap;
+use Symfony\Component\Translation\Translator;
 use Zend\Diactoros\Response\JsonResponse;
 use Zend\Expressive\Router\RouterInterface;
 
