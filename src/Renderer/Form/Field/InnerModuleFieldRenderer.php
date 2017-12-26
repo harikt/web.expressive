@@ -15,7 +15,6 @@ use Dms\Web\Expressive\Renderer\Form\IFieldRendererWithActions;
 use Dms\Web\Expressive\Renderer\Module\ReadModuleRenderer;
 use Dms\Web\Expressive\Renderer\Table\TableRenderer;
 use Dms\Web\Expressive\Util\StringHumanizer;
-use Psr\Http\Message\ResponseInterface; 
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\JsonResponse;
 

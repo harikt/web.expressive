@@ -8,26 +8,28 @@
             {{ session('error') }}
         </div>
     @endif
-    <form action="" method="post">
+    <form action="{{ $serverUrlHelper->generate($urlHelper->generate('dms::auth.login')) }}" method="post">
         <input type="hidden" name="_token" value="{!! csrf_token() !!}">
 
-        <div class="form-group has-feedback}}">
+        <div class="form-group has-feedback{{ $errors->has('username') ? ' has-error' : '' }}">
             <input type="text" name="username" class="form-control" placeholder="Username" value="">
             <span class="fa fa-user form-control-feedback"></span>
 
+            @if ($errors->has('username'))
                 <span class="help-block">
-                    <strong></strong>
+                    <strong>{{ $errors->first('username') }}</strong>
                 </span>
+            @endif
         </div>
-        <div class="form-group has-feedback }}">
+        <div class="form-group has-feedback{{ $errors->has('password') ? ' has-error' : '' }}">
             <input type="password" name="password" class="form-control" placeholder="Password">
             <span class="fa fa-lock form-control-feedback"></span>
 
-
+            @if ($errors->has('password'))
                 <span class="help-block">
-                    <strong></strong>
+                    <strong>{{ $errors->first('password') }}</strong>
                 </span>
-
+            @endif
         </div>
         <div class="row">
             <!-- /.col -->

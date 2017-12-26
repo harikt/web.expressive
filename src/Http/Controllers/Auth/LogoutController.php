@@ -5,9 +5,9 @@ namespace Dms\Web\Expressive\Http\Controllers\Auth;
 use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\Auth\NotAuthenticatedException;
 use Dms\Core\ICms;
-use Interop\Http\Server\RequestHandlerInterface;
 use Interop\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
-use Psr\Http\Message\ResponseInterface; 
+use Interop\Http\Server\RequestHandlerInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
 

@@ -40,10 +40,10 @@ class SymfonyLanguageProvider implements ILanguageProvider
      */
     public function format(Message $message) : string
     {
-        $domain = null;
+        $domain = 'dms';
 
         if ($message->hasNamespace()) {
-            $domain = $message->getNamespace();
+            $domain .= '.' . $message->getNamespace();
         }
 
         $response = $this->translator->trans(
@@ -77,14 +77,15 @@ class SymfonyLanguageProvider implements ILanguageProvider
         $processedParams = [];
 
         foreach ($parameters as $key => $value) {
+            $symbol = '%' . $key . '%';
             if (is_array($value)) {
-                $processedParams[$key] = implode(', ', $this->processParameters($value));
+                $processedParams[$symbol] = implode(', ', $this->processParameters($value));
             } elseif (is_object($value) && method_exists($value, '__toString')) {
-                $processedParams[$key] = (string)$value;
+                $processedParams[$symbol] = (string)$value;
             } elseif (is_object($value)) {
-                $processedParams[$key] = get_class($value);
+                $processedParams[$symbol] = get_class($value);
             } else {
-                $processedParams[$key] = (string)$value;
+                $processedParams[$symbol] = (string)$value;
             }
         }
 
