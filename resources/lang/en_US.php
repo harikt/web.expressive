@@ -40,7 +40,7 @@ return [
     'validation.between.string'  => 'The %field% must be between %min% and %max% characters.',
     'validation.between.array'   => 'The %field% must have between %min% and %max% items.',
     'validation.boolean'                   => 'The %field% field must be true or false.',
-    'validation.characters'                => 'The %field% can only contain the %valid%_chars characters',
+    'validation.characters'                => 'The %field% can only contain the %valid_chars% characters',
     'validation.colour.rgb'  => 'The %field% must be a valid RGB colour.',
     'validation.colour.rgba' => 'The %field% must be a valid RGBA colour.',
     'validation.confirmed'                 => 'The %field% confirmation does not match.',
