@@ -9,10 +9,14 @@ use Dms\Core\Auth\InvalidCredentialsException;
 use Dms\Core\ICms;
 use Dms\Web\Expressive\Auth\Oauth\OauthProviderCollection;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
+use Dms\Web\Expressive\Exception\TooManyFailedAttemptsException;
+use Dms\Web\Expressive\Exception\ValidationFailedException;
 use Interop\Http\Server\RequestHandlerInterface;
 use Interop\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
 use Psr\Http\Message\ResponseInterface; 
 use Psr\Http\Message\ServerRequestInterface;
+use Symfony\Component\Translation\Translator;
+use Symfony\Component\Validator\Constraints as Assert;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\JsonResponse;
@@ -33,6 +37,8 @@ class LoginController extends DmsController implements ServerMiddlewareInterface
 
     protected $flap;
 
+    protected $translator;
+
     /**
      * Create a new authentication controller instance.
      *
@@ -47,75 +53,78 @@ class LoginController extends DmsController implements ServerMiddlewareInterface
         TemplateRendererInterface $template,
         RouterInterface $router,
         OauthProviderCollection $oauthProviderCollection,
-        Flap $flap
+        Flap $flap,
+        Translator $translator
     ) {
         parent::__construct($cms, $auth, $template, $router);
         $this->oauthProviderCollection = $oauthProviderCollection;
         $this->flap = $flap;
+        $this->translator = $translator;
     }
 
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if ($request->getMethod() == "POST") {
-            return $this->login($request);
-        }
 
-        return new HtmlResponse($this->template->render('dms::auth/login', ['oauthProviders' => $this->oauthProviderCollection->getAll()]));
-    }
+            $constraint = new Assert\Collection([
+                'username' => [
+                    new Assert\NotBlank(),
+                ],
+                'password' => [
+                    new Assert\NotBlank(),
+                ],
+                '_token' => []
+            ]);
 
-    /**
-     * Handle a login request to the application.
-     *
-     * @param \Psr\Http\Message\ServerRequestInterface $request
-     *
-     * @return Response
-     */
-    public function login(ServerRequestInterface $request)
-    {
-        // $this->validate($request, [
-        //     'username' => 'required',
-        //     'password' => 'required',
-        // ]);
+            try {
+                $this->validate($request->getParsedBody(), $constraint);
 
-        if (! $this->flap->limit($this->getThrottleKey($request))) {
-            // too many login attempts
-            $response = new Response('php://memory', 302);
-            return $response->withHeader('Location', $this->router->generateUri('dms::auth.login'));
-        }
+                if (! $this->flap->limit($this->getThrottleKey($request))) {
+                    // too many login attempts                    
+                    throw TooManyFailedAttemptsException::defaultMessage();
+                }
+                
+                $username = $request->getParsedBody()['username'];
+                $password = $request->getParsedBody()['password'];
+                $this->auth->login($username, $password);
 
-        try {
-            $username = $request->getParsedBody()['username'];
-            $password = $request->getParsedBody()['password'];
-            $this->auth->login($username, $password);
+                if ('XMLHttpRequest' == $request->getHeaderLine('X-Requested-With')) {
+                    return new JsonResponse([
+                        'response'   => 'Authenticated',
+                        'csrf_token' => csrf_token(),
+                    ]);
+                } else {
+                    $to = $this->router->generateUri('dms::index');
+                    $response = new Response('php://memory', 302);
+                    return $response->withHeader('Location', $to);
+                }
+            } catch (InvalidCredentialsException $e) {
+                $this->errors->add('username', $this->translator->trans('auth.failed', [], 'dms'));
+            } catch (AdminBannedException $e) {
+                $this->errors->add('username', $this->translator->trans('auth.banned', [], 'dms'));
+            } catch (TooManyFailedAttemptsException $e) {
+                $this->errors->add('username', $this->translator->trans('auth.throttle', ['%seconds%' => $seconds], 'dms'));
+            } catch (ValidationFailedException $e) {
+            }
 
             if ('XMLHttpRequest' == $request->getHeaderLine('X-Requested-With')) {
-                return new JsonResponse([
-                    'response'   => 'Authenticated',
-                    'csrf_token' => csrf_token(),
-                ]);
-            } else {
-                $to = $this->router->generateUri('dms::index');
-                $response = new Response('php://memory', 302);
-                return $response->withHeader('Location', $to);
+                $response = new Response('php://memory', 400);
+                $response->getBody()->write('Failed');
+
+                return $response;
             }
-        } catch (InvalidCredentialsException $e) {
-            $errorMessage = 'dms::auth.failed';
-        } catch (AdminBannedException $e) {
-            $errorMessage = 'dms::auth.banned';
         }
 
-        if ('XMLHttpRequest' == $request->getHeaderLine('X-Requested-With')) {
-            $response = new Response('php://memory', 400);
-            $response->getBody()->write('Failed');
-
-            return $response;
-        } else {
-            $to = $this->router->generateUri('dms::auth.login');
-            $response = new Response('php://memory', 302);
-
-            return $response->withHeader('Location', $to);
-        }
+        return new HtmlResponse(
+            $this->template->render(
+                'dms::auth/login', 
+                [
+                    'oauthProviders' => $this->oauthProviderCollection->getAll(),
+                    'errors' => $this->errors,
+                ]
+            )
+        );
     }
 
     /**

@@ -40,10 +40,10 @@ class SymfonyLanguageProvider implements ILanguageProvider
      */
     public function format(Message $message) : string
     {
-        $domain = null;
+        $domain = 'dms';
 
         if ($message->hasNamespace()) {
-            $domain = $message->getNamespace();
+            $domain .= '.' . $message->getNamespace();
         }
 
         $response = $this->translator->trans(
