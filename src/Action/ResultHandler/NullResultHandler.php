@@ -57,7 +57,7 @@ class NullResultHandler extends ActionResultHandler
     protected function handleResult(ModuleContext $moduleContext, IAction $action, $result)
     {
         return new JsonResponse([
-            'message' => $translator->trans('action.generic-response', [], 'dms'),
+            'message' => $this->translator->trans('action.generic-response', [], 'dms'),
         ]);
     }
 }
