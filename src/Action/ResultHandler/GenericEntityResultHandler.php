@@ -90,14 +90,14 @@ class GenericEntityResultHandler extends ActionResultHandler
         $module = $this->getEntityModuleMap()->loadModuleFor(get_class($result));
 
         if (!$module->getDetailsAction()->isAuthorized()) {
-            return (new NullResultHandler())->handle($moduleContext, $action, null);
+            return (new NullResultHandler($this->translator))->handle($moduleContext, $action, null);
         }
 
         /** @var Entity $result */
         $url = $this->router->generateUri('dms::package.module.action.show', ['package' => $module->getPackageName(), 'module' => $module->getName(), 'action' => $module->getDetailsAction()->getName(), 'object_id' => $result->getId()]);
 
         return new JsonResponse([
-            'message'  => $translator->trans('action.generic-response', [], 'dms'),
+            'message'  => $this->translator->trans('action.generic-response', [], 'dms'),
             'redirect' => $url,
         ]);
     }
