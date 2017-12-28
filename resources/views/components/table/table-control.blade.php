@@ -3,9 +3,9 @@
 <?php /** @var \Dms\Core\Module\ITableView $table */ ?>
 <div
         class="dms-table-control clearfix"
-        data-load-rows-url="{{ $loadRowsUrl }}"
+        data-load-rows-url="{{ $serverUrlHelper->generate($loadRowsUrl) }}"
         @if ($reorderRowActionUrl)
-        data-reorder-row-action-url="{{ $reorderRowActionUrl }}"
+        data-reorder-row-action-url="{{ $serverUrlHelper->generate($reorderRowActionUrl) }}"
         @endif
         data-string-filterable-component-ids="{{ json_encode($stringFilterableComponentIds) }}"
 >

@@ -53601,7 +53601,7 @@ Dms.global.initializeCallbacks.push(function (element) {
 
         // Ignore hash of current page, not a link just scrolling
         var hashPos = linkUrl.indexOf('#');
-        if (hashPos === 0 || (hashPos !== -1 && linkUrl.split('#')[0] === window.location.split('#')[0])) {
+        if (hashPos === 0 || (hashPos !== -1 && linkUrl.split('#')[0] === window.location.href.split('#')[0])) {
             return;
         }
 
@@ -54390,20 +54390,6 @@ Dms.chart.initializeCallbacks.push(function (element) {
     });
 });
 Dms.form.initializeCallbacks.push(function (element) {
-    element.find('input[type=checkbox].single-checkbox').iCheck({
-        checkboxClass: 'icheckbox_square-blue',
-        increaseArea: '20%'
-    });
-
-    element.find('input[type=checkbox]').each(function () {
-        var formGroup = $(this).closest('.form-group');
-
-        $(this).on('ifToggled', function(event){
-            formGroup.trigger('dms-change');
-        });
-    });
-});
-Dms.form.initializeCallbacks.push(function (element) {
 
     element.find('.list-of-checkboxes').each(function () {
         var listOfCheckboxes = $(this);
@@ -54612,6 +54598,214 @@ Dms.form.initializeCallbacks.push(function (element) {
 
         startDisplay.text(convertFromServerToLocalTimezone(dateFormat, startDisplay.text()));
         endDisplay.text(convertFromServerToLocalTimezone(dateFormat, endDisplay.text()));
+    });
+});
+Dms.form.initializeCallbacks.push(function (element) {
+    element.find('input[type=checkbox].single-checkbox').iCheck({
+        checkboxClass: 'icheckbox_square-blue',
+        increaseArea: '20%'
+    });
+
+    element.find('input[type=checkbox]').each(function () {
+        var formGroup = $(this).closest('.form-group');
+
+        $(this).on('ifToggled', function(event){
+            formGroup.trigger('dms-change');
+        });
+    });
+});
+Dms.form.initializeCallbacks.push(function (element) {
+    element.find('.dms-inner-module, .dms-display-inner-module').each(function () {
+        var innerModule = $(this);
+
+        if (innerModule.data('dms-has-initialized-form')) {
+            return;
+        } else {
+            innerModule.data('dms-has-initialized-form', true);
+        }
+
+        var fieldName = innerModule.attr('data-name');
+        var formGroup = innerModule.closest('.form-group');
+        var rootUrl = innerModule.attr('data-root-url');
+        var isDisplayOnly = innerModule.attr('data-display-only');
+        var reloadStateUrl = rootUrl + '/state';
+        var innerModuleFormContainer = innerModule.find('.dms-inner-module-form-container');
+        var innerModuleForm = innerModuleFormContainer.find('.dms-inner-module-form');
+        var formStage = innerModule.closest('.dms-form-stage');
+        var stagedForm = innerModule.closest('.dms-staged-form');
+        var currentValue = JSON.parse(innerModule.attr('data-value') || '[]');
+
+        if (innerModule.attr('data-readonly')) {
+            innerModule.find(':input').attr('readonly', 'readonly');
+        }
+
+        var fieldDataPrefix = '__field_action_data';
+        var interceptor;
+
+        Dms.ajax.interceptors.push(interceptor = {
+            accepts: function (options) {
+                return options.url.indexOf(rootUrl) === 0 && options.url !== reloadStateUrl;
+            },
+            before: function (options) {
+                var formData;
+
+                if (isDisplayOnly) {
+                    formData = Dms.ajax.createFormData();
+                    formData.append('__initial_dependent_data', '1')
+                } else {
+                    formData = Dms.form.stages.getDependentDataForStage(formStage);
+                }
+
+
+                formData.append(fieldDataPrefix + '[current_state]', JSON.stringify(currentValue));
+                formData.append(fieldDataPrefix + '[request][url]', options.url.substring(rootUrl.length));
+                formData.append(fieldDataPrefix + '[request][method]', options.__emulatedType || options.type || 'get');
+
+                var parametersPrefix = fieldDataPrefix + '[request][parameters]';
+                $.each(Dms.ajax.parseData(options.data), function (name, entries) {
+                    $.each(entries, function (index, entry) {
+                        formData.append(Dms.utilities.combineFieldNames(parametersPrefix, name), entry.value, entry.filename);
+                    });
+                });
+
+                options.__originalDataType = options.dataType;
+                options.dataType = 'json';
+                if ((options.type || 'get').toLowerCase() === 'get') {
+                    options.data = formData.toQueryString();
+                } else {
+                    options.processData = false;
+                    options.contentType = false;
+                    options.data = formData;
+                }
+            },
+            after: function (options, response, data) {
+                if (response.statusText === 'abort') {
+                    return;
+                }
+
+                if (data) {
+                    currentValue = data['new_state'];
+
+                    return Dms.ajax.convertResponse(options.__originalDataType, data.response);
+                } else {
+                    data = JSON.parse(response.responseText);
+                    currentValue = data['new_state'];
+
+                    response.responseText = data.response;
+                    console.log(response.responseText);
+                }
+            }
+        });
+
+        var originalResponseHandler = Dms.action.responseHandler;
+        Dms.action.responseHandler = function (httpStatusCode, actionUrl, response) {
+            if (actionUrl.indexOf(rootUrl) !== 0 || httpStatusCode >= 400) {
+                originalResponseHandler(httpStatusCode, actionUrl, response);
+                return;
+            }
+
+            if (response.redirect) {
+                var redirectUrl = response.redirect;
+                delete response.redirect;
+
+                if (!Dms.utilities.areUrlsEqual(redirectUrl, rootUrl)) {
+                    loadModulePage(redirectUrl);
+                }
+            }
+
+            originalResponseHandler(httpStatusCode, actionUrl, response);
+
+            innerModule.find('.dms-table-control .dms-table').triggerHandler('dms-load-table-data');
+            innerModuleForm.empty();
+            formGroup.trigger('dms-change');
+        };
+
+        var rootActionUrl = rootUrl + '/action/';
+        var currentAjaxRequest;
+
+        var loadModulePage = function (url) {
+            innerModuleFormContainer.addClass('loading');
+            Dms.utilities.scrollToView(innerModuleFormContainer);
+
+            if (currentAjaxRequest) {
+                currentAjaxRequest.abort();
+            }
+
+            currentAjaxRequest = Dms.ajax.createRequest({
+                url: url,
+                type: 'post',
+                __emulatedType: 'get',
+                dataType: 'html',
+                data: {'__content_only': 1}
+            });
+
+            currentAjaxRequest.done(function (html) {
+                innerModuleForm.html(html);
+                innerModuleForm.find('[data-reload-page-after-submit]').removeAttr('data-reload-page-after-submit');
+                Dms.form.initialize(innerModuleForm);
+            });
+
+            currentAjaxRequest.fail(function (response) {
+                if (currentAjaxRequest.statusText === 'abort') {
+                    return;
+                }
+
+                Dms.controls.showErrorDialog({
+                    title: "Could not load form",
+                    text: "An unexpected error occurred",
+                    type: "error",
+                    debugInfo: response.responseText
+                });
+            });
+
+            currentAjaxRequest.always(function () {
+                innerModuleFormContainer.removeClass('loading');
+                currentAjaxRequest = null;
+            });
+        };
+
+        innerModule.on('click', 'a[href^="' + rootActionUrl + '"]', function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            var link = $(this);
+
+            loadModulePage(link.attr('href'));
+        });
+
+        innerModule.closest('.form-group').on('dms-get-input-data', function () {
+            var fieldData = {};
+            fieldData[fieldName] = currentValue;
+            return fieldData;
+        });
+
+        innerModule.closest('.form-group').on('dms-set-input-data', function (event, fieldData) {
+            var newValue = fieldData[fieldName] || [];
+
+            if (currentValue != newValue) {
+                currentValue = newValue;
+                innerModule.find('.dms-table').triggerHandler('dms-load-table-data');
+            }
+        });
+
+        stagedForm.on('dms-before-submit', function () {
+            innerModuleForm.empty();
+        });
+
+        var hasReset = false;
+        var resetAjaxInterception = function () {
+            if (hasReset) {
+                return;
+            } else {
+                hasReset = true;
+            }
+
+            Dms.ajax.interceptors.splice(Dms.ajax.interceptors.indexOf(interceptor), 1);
+            Dms.action.responseHandler = originalResponseHandler;
+        };
+
+        formStage.on('dms-stage-reload', resetAjaxInterception);
+        stagedForm.on('dms-post-submit-success', resetAjaxInterception);
+        innerModule.closest('.dms-page-content').on('dms-page-unloading', resetAjaxInterception);
     });
 });
 Dms.form.initializeCallbacks.push(function (element) {
@@ -54958,209 +55152,6 @@ Dms.form.initializeCallbacks.push(function (element) {
     });
 });
 Dms.form.initializeCallbacks.push(function (element) {
-    element.find('.dms-inner-form').each(function () {
-        var innerForm = $(this);
-
-        if (innerForm.attr('data-readonly')) {
-            innerForm.find(':input').attr('readonly', 'readonly');
-        }
-    });
-});
-Dms.form.initializeCallbacks.push(function (element) {
-    element.find('.dms-inner-module, .dms-display-inner-module').each(function () {
-        var innerModule = $(this);
-
-        if (innerModule.data('dms-has-initialized-form')) {
-            return;
-        } else {
-            innerModule.data('dms-has-initialized-form', true);
-        }
-
-        var fieldName = innerModule.attr('data-name');
-        var formGroup = innerModule.closest('.form-group');
-        var rootUrl = innerModule.attr('data-root-url');
-        var isDisplayOnly = innerModule.attr('data-display-only');
-        var reloadStateUrl = rootUrl + '/state';
-        var innerModuleFormContainer = innerModule.find('.dms-inner-module-form-container');
-        var innerModuleForm = innerModuleFormContainer.find('.dms-inner-module-form');
-        var formStage = innerModule.closest('.dms-form-stage');
-        var stagedForm = innerModule.closest('.dms-staged-form');
-        var currentValue = JSON.parse(innerModule.attr('data-value') || '[]');
-
-        if (innerModule.attr('data-readonly')) {
-            innerModule.find(':input').attr('readonly', 'readonly');
-        }
-
-        var fieldDataPrefix = '__field_action_data';
-        var interceptor;
-
-        Dms.ajax.interceptors.push(interceptor = {
-            accepts: function (options) {
-                return options.url.indexOf(rootUrl) === 0 && options.url !== reloadStateUrl;
-            },
-            before: function (options) {
-                var formData;
-
-                if (isDisplayOnly) {
-                    formData = Dms.ajax.createFormData();
-                    formData.append('__initial_dependent_data', '1')
-                } else {
-                    formData = Dms.form.stages.getDependentDataForStage(formStage);
-                }
-
-
-                formData.append(fieldDataPrefix + '[current_state]', JSON.stringify(currentValue));
-                formData.append(fieldDataPrefix + '[request][url]', options.url.substring(rootUrl.length));
-                formData.append(fieldDataPrefix + '[request][method]', options.__emulatedType || options.type || 'get');
-
-                var parametersPrefix = fieldDataPrefix + '[request][parameters]';
-                $.each(Dms.ajax.parseData(options.data), function (name, entries) {
-                    $.each(entries, function (index, entry) {
-                        formData.append(Dms.utilities.combineFieldNames(parametersPrefix, name), entry.value, entry.filename);
-                    });
-                });
-
-                options.__originalDataType = options.dataType;
-                options.dataType = 'json';
-                if ((options.type || 'get').toLowerCase() === 'get') {
-                    options.data = formData.toQueryString();
-                } else {
-                    options.processData = false;
-                    options.contentType = false;
-                    options.data = formData;
-                }
-            },
-            after: function (options, response, data) {
-                if (response.statusText === 'abort') {
-                    return;
-                }
-
-                if (data) {
-                    currentValue = data['new_state'];
-
-                    return Dms.ajax.convertResponse(options.__originalDataType, data.response);
-                } else {
-                    data = JSON.parse(response.responseText);
-                    currentValue = data['new_state'];
-
-                    response.responseText = data.response;
-                    console.log(response.responseText);
-                }
-            }
-        });
-
-        var originalResponseHandler = Dms.action.responseHandler;
-        Dms.action.responseHandler = function (httpStatusCode, actionUrl, response) {
-            if (actionUrl.indexOf(rootUrl) !== 0 || httpStatusCode >= 400) {
-                originalResponseHandler(httpStatusCode, actionUrl, response);
-                return;
-            }
-
-            if (response.redirect) {
-                var redirectUrl = response.redirect;
-                delete response.redirect;
-
-                if (!Dms.utilities.areUrlsEqual(redirectUrl, rootUrl)) {
-                    loadModulePage(redirectUrl);
-                }
-            }
-
-            originalResponseHandler(httpStatusCode, actionUrl, response);
-
-            innerModule.find('.dms-table-control .dms-table').triggerHandler('dms-load-table-data');
-            innerModuleForm.empty();
-            formGroup.trigger('dms-change');
-        };
-
-        var rootActionUrl = rootUrl + '/action/';
-        var currentAjaxRequest;
-
-        var loadModulePage = function (url) {
-            innerModuleFormContainer.addClass('loading');
-            Dms.utilities.scrollToView(innerModuleFormContainer);
-
-            if (currentAjaxRequest) {
-                currentAjaxRequest.abort();
-            }
-
-            currentAjaxRequest = Dms.ajax.createRequest({
-                url: url,
-                type: 'post',
-                __emulatedType: 'get',
-                dataType: 'html',
-                data: {'__content_only': 1}
-            });
-
-            currentAjaxRequest.done(function (html) {
-                innerModuleForm.html(html);
-                innerModuleForm.find('[data-reload-page-after-submit]').removeAttr('data-reload-page-after-submit');
-                Dms.form.initialize(innerModuleForm);
-            });
-
-            currentAjaxRequest.fail(function (response) {
-                if (currentAjaxRequest.statusText === 'abort') {
-                    return;
-                }
-
-                Dms.controls.showErrorDialog({
-                    title: "Could not load form",
-                    text: "An unexpected error occurred",
-                    type: "error",
-                    debugInfo: response.responseText
-                });
-            });
-
-            currentAjaxRequest.always(function () {
-                innerModuleFormContainer.removeClass('loading');
-                currentAjaxRequest = null;
-            });
-        };
-
-        innerModule.on('click', 'a[href^="' + rootActionUrl + '"]', function (e) {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            var link = $(this);
-
-            loadModulePage(link.attr('href'));
-        });
-
-        innerModule.closest('.form-group').on('dms-get-input-data', function () {
-            var fieldData = {};
-            fieldData[fieldName] = currentValue;
-            return fieldData;
-        });
-
-        innerModule.closest('.form-group').on('dms-set-input-data', function (event, fieldData) {
-            var newValue = fieldData[fieldName] || [];
-
-            if (currentValue != newValue) {
-                currentValue = newValue;
-                innerModule.find('.dms-table').triggerHandler('dms-load-table-data');
-            }
-        });
-
-        stagedForm.on('dms-before-submit', function () {
-            innerModuleForm.empty();
-        });
-
-        var hasReset = false;
-        var resetAjaxInterception = function () {
-            if (hasReset) {
-                return;
-            } else {
-                hasReset = true;
-            }
-
-            Dms.ajax.interceptors.splice(Dms.ajax.interceptors.indexOf(interceptor), 1);
-            Dms.action.responseHandler = originalResponseHandler;
-        };
-
-        formStage.on('dms-stage-reload', resetAjaxInterception);
-        stagedForm.on('dms-post-submit-success', resetAjaxInterception);
-        innerModule.closest('.dms-page-content').on('dms-page-unloading', resetAjaxInterception);
-    });
-});
-Dms.form.initializeCallbacks.push(function (element) {
 
     element.find('ul.dms-field-list').each(function () {
         var listOfFields = $(this);
@@ -55265,6 +55256,15 @@ Dms.form.initializeCallbacks.push(function (element) {
             }
         });
 
+    });
+});
+Dms.form.initializeCallbacks.push(function (element) {
+    element.find('.dms-inner-form').each(function () {
+        var innerForm = $(this);
+
+        if (innerForm.attr('data-readonly')) {
+            innerForm.find(':input').attr('readonly', 'readonly');
+        }
     });
 });
 Dms.form.initializeCallbacks.push(function (element) {
@@ -55437,41 +55437,6 @@ Dms.form.initializeCallbacks.push(function (element) {
     });
 });
 Dms.form.initializeCallbacks.push(function (element) {
-    element.find('.dms-money-input-group').each(function () {
-        var inputGroup = $(this);
-        var moneyInput = inputGroup.find('.dms-money-input');
-        var currencyInput = inputGroup.find('.dms-currency-input');
-
-        moneyInput.attr({
-            'type': 'number',
-            'data-parsley-type': 'number'
-        });
-
-        var updateDecimalDigits = function () {
-            var selectedOption = currencyInput.children('option:selected');
-
-            var decimalDigits = selectedOption.attr('data-fractional-digits');
-            moneyInput.attr('step', Math.pow(0.1, decimalDigits).toFixed(decimalDigits));
-        };
-
-        currencyInput.on('change', updateDecimalDigits);
-        updateDecimalDigits();
-
-        var updateShouldSubmitData = function () {
-            inputGroup.toggleClass('dms-form-no-submit', moneyInput.val() === '');
-        };
-
-        moneyInput.on('change input', updateShouldSubmitData);
-        updateShouldSubmitData();
-    });
-});
-Dms.form.initializeCallbacks.push(function (element) {
-    element.find('select[multiple]').multiselect({
-        enableFiltering: true,
-        includeSelectAllOption: true
-    });
-});
-Dms.form.initializeCallbacks.push(function (element) {
     element.find('input[type="number"][data-max-decimal-places]').each(function () {
         $(this).attr('data-parsley-max-decimal-places', $(this).attr('data-max-decimal-places'));
     });
@@ -55498,9 +55463,38 @@ Dms.form.initializeCallbacks.push(function (element) {
     });
 });
 Dms.form.initializeCallbacks.push(function (element) {
-    element.find('input[type=radio]').iCheck({
-        radioClass: 'iradio_square-blue',
-        increaseArea: '20%'
+    element.find('select[multiple]').multiselect({
+        enableFiltering: true,
+        includeSelectAllOption: true
+    });
+});
+Dms.form.initializeCallbacks.push(function (element) {
+    element.find('.dms-money-input-group').each(function () {
+        var inputGroup = $(this);
+        var moneyInput = inputGroup.find('.dms-money-input');
+        var currencyInput = inputGroup.find('.dms-currency-input');
+
+        moneyInput.attr({
+            'type': 'number',
+            'data-parsley-type': 'number'
+        });
+
+        var updateDecimalDigits = function () {
+            var selectedOption = currencyInput.children('option:selected');
+
+            var decimalDigits = selectedOption.attr('data-fractional-digits');
+            moneyInput.attr('step', Math.pow(0.1, decimalDigits).toFixed(decimalDigits));
+        };
+
+        currencyInput.on('change', updateDecimalDigits);
+        updateDecimalDigits();
+
+        var updateShouldSubmitData = function () {
+            inputGroup.toggleClass('dms-form-no-submit', moneyInput.val() === '');
+        };
+
+        moneyInput.on('change input', updateShouldSubmitData);
+        updateShouldSubmitData();
     });
 });
 Dms.form.initializeCallbacks.push(function (element) {
@@ -55581,6 +55575,184 @@ Dms.form.initializeCallbacks.push(function (element) {
         }, {
             source: engine.ttAdapter(),
             displayKey: 'val'
+        });
+    });
+});
+Dms.form.initializeCallbacks.push(function (element) {
+    element.find('input[type=radio]').iCheck({
+        radioClass: 'iradio_square-blue',
+        increaseArea: '20%'
+    });
+});
+Dms.form.initializeCallbacks.push(function (element) {
+
+});
+Dms.form.initializeCallbacks.push(function (element) {
+    if (typeof tinymce === 'undefined') {
+        return;
+    }
+
+    var wysiwygElements = element.find('textarea.dms-wysiwyg, textarea.dms-wysiwyg-light');
+
+    wysiwygElements.each(function () {
+        if (!$(this).attr('id')) {
+            $(this).attr('id', Dms.utilities.idGenerator());
+        }
+    });
+
+    tinymce.baseURL = '/vendor/dms/wysiwyg/';
+
+    var setupTinyMce = function (editor) {
+        editor.on('change', function () {
+            editor.save();
+        });
+
+        editor.on('keyup cut paste change', function (e) {
+            $(tinymce.activeEditor.getElement()).closest('.form-group').trigger('dms-change');
+        });
+    };
+
+    var filePickerCallback = function (callback, value, meta) {
+        var wysiwygElement = $(tinymce.activeEditor.getElement()).closest('.dms-wysiwyg-container');
+        showFilePickerDialog(meta.filetype, wysiwygElement, function (fileUrl) {
+            callback(fileUrl);
+        });
+    };
+
+    tinymce.init({
+        selector: 'textarea.dms-wysiwyg',
+        tooltip: '',
+        plugins: [
+            "advlist",
+            "autolink",
+            "lists",
+            "link",
+            "image",
+            "charmap",
+            "textcolor",
+            "print",
+            "preview",
+            "anchor",
+            "searchreplace",
+            "visualblocks",
+            "code",
+            "insertdatetime",
+            "media",
+            "table",
+            "contextmenu",
+            "paste",
+            "imagetools"
+        ],
+        toolbar: "undo redo | styleselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | link image",
+        setup: setupTinyMce,
+        relative_urls: false,
+        remove_script_host: true,
+        file_picker_callback: filePickerCallback
+    });
+
+    tinymce.init({
+        selector: 'textarea.dms-wysiwyg-light',
+        tooltip: '',
+        toolbar: 'undo redo | bold italic | link',
+        menubar: false,
+        statusbar: false,
+        plugins: [
+            "autolink",
+            "link",
+            "textcolor"
+        ],
+        setup: setupTinyMce,
+        relative_urls: false,
+        remove_script_host: true,
+        file_picker_callback: filePickerCallback
+    });
+
+    wysiwygElements.filter(function () {
+        return $(this).closest('.mce-tinymce').length === 0;
+    }).each(function () {
+        tinymce.EditorManager.execCommand('mceAddEditor', true, $(this).attr('id'));
+    });
+
+    wysiwygElements.closest('.dms-staged-form').on('dms-post-submit-success', function () {
+        $(this).find('textarea.dms-wysiwyg').each(function () {
+            tinymce.remove('#' + $(this).attr('id'));
+        });
+    });
+
+    var showFilePickerDialog = function (mode, wysiwygElement, callback) {
+        var loadFilePickerUrl = wysiwygElement.attr('data-load-file-picker-url');
+        var filePickerDialog = wysiwygElement.find('.dms-file-picker-dialog');
+        var filePickerContainer = filePickerDialog.find('.dms-file-picker-container');
+        var filePicker = filePickerContainer.find('.dms-file-picker');
+
+        filePickerDialog.appendTo('body').modal('show');
+        filePickerDialog.on('hidden.bs.modal', function () {
+            filePickerDialog.appendTo(wysiwygElement);
+        });
+
+        var request = Dms.ajax.createRequest({
+            url: loadFilePickerUrl,
+            type: 'get',
+            dataType: 'html',
+            data: {'__content_only': '1'}
+        });
+
+        filePickerContainer.addClass('loading');
+
+        request.done(function (html) {
+            filePicker.html(html);
+            Dms.table.initialize(filePicker);
+            Dms.form.initialize(filePicker);
+
+            var updateFilePickerButtons = function () {
+                filePicker.find('.dms-trashed-files-btn-container').hide();
+                var selectFileButton = $('<button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button>');
+
+                filePicker.find('.dms-file-action-buttons').each(function () {
+                    var fileItemButtons = $(this);
+
+                    var specificFileSelectButton = selectFileButton.clone();
+                    fileItemButtons.empty();
+                    fileItemButtons.append(specificFileSelectButton);
+
+                    specificFileSelectButton.on('click', function () {
+                        callback(fileItemButtons.closest('.dms-file-item').attr('data-public-url'));
+                        filePickerDialog.modal('hide');
+                    });
+                });
+
+                if (mode === 'image') {
+                    filePicker.find('.btn-images-only').click().focus();
+                }
+            };
+
+            filePicker.find('.dms-file-tree').on('dms-file-tree-updated', updateFilePickerButtons);
+            updateFilePickerButtons();
+        });
+
+        request.always(function () {
+            filePickerContainer.removeClass('loading');
+        });
+
+        filePickerDialog.on('hide.bs.modal', function () {
+            filePicker.empty();
+        });
+    };
+
+
+    element.find('.dms-display-html').each(function () {
+        var control = $(this);
+        var viewMoreButton = control.find('.dms-view-more-button');
+        var iframe = control.find('iframe');
+        var htmlDocument = control.attr('data-value');
+
+        var document = iframe.contents().get(0);
+        document.open();
+        document.write(htmlDocument);
+        document.close();
+
+        viewMoreButton.on('click', function () {
+            Dms.controls.showContentDialog('Preview', htmlDocument, true);
         });
     });
 });
@@ -55784,178 +55956,6 @@ Dms.form.initializeCallbacks.push(function (element) {
             tableOfFields.find('.btn-remove-row').remove();
             tableOfFields.find('.btn-add-row').remove();
         }
-    });
-});
-Dms.form.initializeCallbacks.push(function (element) {
-
-});
-Dms.form.initializeCallbacks.push(function (element) {
-    if (typeof tinymce === 'undefined') {
-        return;
-    }
-
-    var wysiwygElements = element.find('textarea.dms-wysiwyg, textarea.dms-wysiwyg-light');
-
-    wysiwygElements.each(function () {
-        if (!$(this).attr('id')) {
-            $(this).attr('id', Dms.utilities.idGenerator());
-        }
-    });
-
-    tinymce.baseURL = '/vendor/dms/wysiwyg/';
-
-    var setupTinyMce = function (editor) {
-        editor.on('change', function () {
-            editor.save();
-        });
-
-        editor.on('keyup cut paste change', function (e) {
-            $(tinymce.activeEditor.getElement()).closest('.form-group').trigger('dms-change');
-        });
-    };
-
-    var filePickerCallback = function (callback, value, meta) {
-        var wysiwygElement = $(tinymce.activeEditor.getElement()).closest('.dms-wysiwyg-container');
-        showFilePickerDialog(meta.filetype, wysiwygElement, function (fileUrl) {
-            callback(fileUrl);
-        });
-    };
-
-    tinymce.init({
-        selector: 'textarea.dms-wysiwyg',
-        tooltip: '',
-        plugins: [
-            "advlist",
-            "autolink",
-            "lists",
-            "link",
-            "image",
-            "charmap",
-            "textcolor",
-            "print",
-            "preview",
-            "anchor",
-            "searchreplace",
-            "visualblocks",
-            "code",
-            "insertdatetime",
-            "media",
-            "table",
-            "contextmenu",
-            "paste",
-            "imagetools"
-        ],
-        toolbar: "undo redo | styleselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | link image",
-        setup: setupTinyMce,
-        relative_urls: false,
-        remove_script_host: true,
-        file_picker_callback: filePickerCallback
-    });
-
-    tinymce.init({
-        selector: 'textarea.dms-wysiwyg-light',
-        tooltip: '',
-        toolbar: 'undo redo | bold italic | link',
-        menubar: false,
-        statusbar: false,
-        plugins: [
-            "autolink",
-            "link",
-            "textcolor"
-        ],
-        setup: setupTinyMce,
-        relative_urls: false,
-        remove_script_host: true,
-        file_picker_callback: filePickerCallback
-    });
-
-    wysiwygElements.filter(function () {
-        return $(this).closest('.mce-tinymce').length === 0;
-    }).each(function () {
-        tinymce.EditorManager.execCommand('mceAddEditor', true, $(this).attr('id'));
-    });
-
-    wysiwygElements.closest('.dms-staged-form').on('dms-post-submit-success', function () {
-        $(this).find('textarea.dms-wysiwyg').each(function () {
-            tinymce.remove('#' + $(this).attr('id'));
-        });
-    });
-
-    var showFilePickerDialog = function (mode, wysiwygElement, callback) {
-        var loadFilePickerUrl = wysiwygElement.attr('data-load-file-picker-url');
-        var filePickerDialog = wysiwygElement.find('.dms-file-picker-dialog');
-        var filePickerContainer = filePickerDialog.find('.dms-file-picker-container');
-        var filePicker = filePickerContainer.find('.dms-file-picker');
-
-        filePickerDialog.appendTo('body').modal('show');
-        filePickerDialog.on('hidden.bs.modal', function () {
-            filePickerDialog.appendTo(wysiwygElement);
-        });
-
-        var request = Dms.ajax.createRequest({
-            url: loadFilePickerUrl,
-            type: 'get',
-            dataType: 'html',
-            data: {'__content_only': '1'}
-        });
-
-        filePickerContainer.addClass('loading');
-
-        request.done(function (html) {
-            filePicker.html(html);
-            Dms.table.initialize(filePicker);
-            Dms.form.initialize(filePicker);
-
-            var updateFilePickerButtons = function () {
-                filePicker.find('.dms-trashed-files-btn-container').hide();
-                var selectFileButton = $('<button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button>');
-
-                filePicker.find('.dms-file-action-buttons').each(function () {
-                    var fileItemButtons = $(this);
-
-                    var specificFileSelectButton = selectFileButton.clone();
-                    fileItemButtons.empty();
-                    fileItemButtons.append(specificFileSelectButton);
-
-                    specificFileSelectButton.on('click', function () {
-                        callback(fileItemButtons.closest('.dms-file-item').attr('data-public-url'));
-                        filePickerDialog.modal('hide');
-                    });
-                });
-
-                if (mode === 'image') {
-                    filePicker.find('.btn-images-only').click().focus();
-                }
-            };
-
-            filePicker.find('.dms-file-tree').on('dms-file-tree-updated', updateFilePickerButtons);
-            updateFilePickerButtons();
-        });
-
-        request.always(function () {
-            filePickerContainer.removeClass('loading');
-        });
-
-        filePickerDialog.on('hide.bs.modal', function () {
-            filePicker.empty();
-        });
-    };
-
-
-    element.find('.dms-display-html').each(function () {
-        var control = $(this);
-        var viewMoreButton = control.find('.dms-view-more-button');
-        var iframe = control.find('iframe');
-        var htmlDocument = control.attr('data-value');
-
-        var document = iframe.contents().get(0);
-        document.open();
-        document.write(htmlDocument);
-        document.close();
-
-        viewMoreButton.on('click', function () {
-            Dms.controls.showContentDialog('Preview', htmlDocument, true);
-        });
     });
 });
 Dms.form.initializeCallbacks.push(function (element) {

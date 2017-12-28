@@ -121,7 +121,7 @@ Dms.global.initializeCallbacks.push(function (element) {
 
         // Ignore hash of current page, not a link just scrolling
         var hashPos = linkUrl.indexOf('#');
-        if (hashPos === 0 || (hashPos !== -1 && linkUrl.split('#')[0] === window.location.split('#')[0])) {
+        if (hashPos === 0 || (hashPos !== -1 && linkUrl.split('#')[0] === window.location.href.split('#')[0])) {
             return;
         }
 

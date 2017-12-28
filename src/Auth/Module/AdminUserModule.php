@@ -12,6 +12,7 @@ use Dms\Core\Common\Crud\Definition\Form\CrudFormDefinition;
 use Dms\Core\Common\Crud\Definition\Table\SummaryTableDefinition;
 use Dms\Core\Language\Message;
 use Dms\Core\Model\EntityIdCollection;
+use Dms\Library\Metadata\Domain\ObjectMetadata;
 use Dms\Web\Expressive\Auth\Admin;
 use Dms\Web\Expressive\Auth\LocalAdmin;
 use Dms\Web\Expressive\Auth\OauthAdmin;
@@ -145,6 +146,12 @@ class AdminUserModule extends CrudModule
                         ->labelledBy(Role::NAME)
                 )->bindToProperty(Admin::ROLE_IDS),
             ]);
+
+            if ($form->isCreateForm()) {
+                $form->onSubmit(function (Admin $admin) {
+                    $admin->metadata = new ObjectMetadata();
+                });
+            }
         });
 
         $module->objectAction('reset-password')

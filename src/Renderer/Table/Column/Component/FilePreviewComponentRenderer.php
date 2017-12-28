@@ -42,12 +42,12 @@ class FilePreviewComponentRenderer implements IColumnComponentRenderer
      *
      * @return bool
      */
-    public function accepts(IColumnComponent $component) : bool
+    public function accepts(IColumnComponent $component): bool
     {
         $fieldType = $component->getType()->getOperator(ConditionOperator::EQUALS)->getField()->getType();
 
         return $fieldType instanceof FileUploadType || $fieldType instanceof ImageUploadType
-        || $fieldType instanceof FileType || $fieldType instanceof ImageType;
+            || $fieldType instanceof FileType || $fieldType instanceof ImageType;
     }
 
     /**
@@ -59,7 +59,7 @@ class FilePreviewComponentRenderer implements IColumnComponentRenderer
      * @return string
      * @throws InvalidArgumentException
      */
-    public function render(IColumnComponent $component, $value) : string
+    public function render(IColumnComponent $component, $value): string
     {
         /** @var IFile $value */
         $isImage = $value instanceof Image;
@@ -69,6 +69,8 @@ class FilePreviewComponentRenderer implements IColumnComponentRenderer
             $url = asset_file_url($value);
 
             return '<img src="' . e($url) . '" alt="' . e($name) . '" />';
+        } elseif (filter_var($value->getFullPath(), FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)) {
+            return '<img src="' . e($value->getFullPath()) . '" alt="' . e($name) . '" />';
         } else {
             $url = '/vendor/dms/img/file/icon/' . strtolower(array_last(explode('.', $name))) . '.png';
 
