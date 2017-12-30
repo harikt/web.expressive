@@ -124,9 +124,8 @@ class TableRenderer
         if ($moduleContext->getModule() instanceof IReadModule && $table instanceof ISummaryTable) {
             unset($columns[IReadModule::SUMMARY_TABLE_ID_COLUMN]);
         }
-
         if ($this->allowsRowReorder($table, $viewName)) {
-            $reorderRowActionUrl = $moduleContext->getUrl('action.run', [$table->getReorderAction($viewName)->getName()]);
+            $reorderRowActionUrl = $moduleContext->getUrl('action.run', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName(), 'action' => $table->getReorderAction($viewName)->getName()]);
         } else {
             $reorderRowActionUrl = null;
         }
