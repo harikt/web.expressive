@@ -10,6 +10,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
 use Zend\Expressive\Router\RouteResult;
 use Zend\Expressive\Router\RouterInterface;
+use Zend\Expressive\Session\SessionMiddleware;
 
 class Authenticate implements ServerMiddlewareInterface
 {
@@ -38,6 +39,9 @@ class Authenticate implements ServerMiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        $session = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE);
+        // set the session to auth system
+        $this->auth->setSession($session);
         $path = '/dms'. $request->getUri()->getPath();
         $routeResult = $request->getAttribute(RouteResult::class);
         if (

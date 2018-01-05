@@ -34,11 +34,12 @@ if (! function_exists('csrf_token')) {
      */
     function csrf_token()
     {
-        $session = app(Session::class);
-        $csrfToken = $session->getCsrfToken();
-        $csrfToken->regenerateValue();
+        return "csrf_token";
+        // $session = app(Session::class);
+        // $csrfToken = $session->getCsrfToken();
+        // $csrfToken->regenerateValue();
 
-        return $csrfToken->getValue();
+        // return $csrfToken->getValue();
     }
 }
 
@@ -85,6 +86,8 @@ if (! function_exists('session')) {
      */
     function session($key = null, $default = null)
     {
+        throw new \Exception("Removed");
+        
         // return "session" . var_export($key, true) . var_export($default, true);
         if (is_null($key)) {
             return app(Session::class)->getSegment('session');

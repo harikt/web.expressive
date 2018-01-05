@@ -2,8 +2,6 @@
 
 namespace Dms\Web\Expressive;
 
-use Aura\Session\Session;
-use Aura\Session\SessionFactory;
 use BehEh\Flaps\Flap;
 use BehEh\Flaps\Flaps;
 use BehEh\Flaps\Storage\DoctrineCacheAdapter;
@@ -83,12 +81,6 @@ class ContainerConfig
         });
 
         $container->bindValue(Container::class, $container->getLaravelContainer());
-
-        $container->bindCallback(IIocContainer::SCOPE_SINGLETON, Session::class, function () {
-            $session_factory = new SessionFactory;
-            $session = $session_factory->newInstance($_COOKIE);
-            return $session;
-        });
 
         $container->bind(IIocContainer::SCOPE_SINGLETON, AdminDmsUserProvider::class, AdminDmsUserProvider::class);
 

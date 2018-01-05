@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Dms\Web\Expressive\Auth;
 
-use Aura\Session\Session;
 use Dms\Core\Auth\AdminBannedException;
 use Dms\Core\Auth\AdminForbiddenException;
 use Dms\Core\Auth\AuthSystem;
@@ -17,6 +16,7 @@ use Dms\Core\Event\IEventDispatcher;
 use Dms\Core\Exception\InvalidArgumentException;
 use Dms\Core\Ioc\IIocContainer;
 use Dms\Web\Expressive\Auth\Password\IPasswordHasherFactory;
+use Zend\Expressive\Session\SessionInterface;
 
 /**
  * The auth system implementation using aura session.
@@ -26,7 +26,7 @@ use Dms\Web\Expressive\Auth\Password\IPasswordHasherFactory;
 class HktAuthSystem extends AuthSystem
 {
     /**
-     * @var Session
+     * @var SessionInterface
      */
     protected $session;
 
@@ -65,24 +65,35 @@ class HktAuthSystem extends AuthSystem
     /**
      * constructor.
      *
-     * @param Session                $session
      * @param IAdminRepository       $userRepository
      * @param IRoleRepository        $roleRepository
      * @param IPasswordHasherFactory $passwordHasherFactory
      * @param IIocContainer          $iocContainer
      */
     public function __construct(
-        Session $session,
         IAdminRepository $userRepository,
         IRoleRepository $roleRepository,
         IPasswordHasherFactory $passwordHasherFactory,
         IIocContainer $iocContainer
     ) {
-        $this->session               = $session;
         $this->userRepository        = $userRepository;
         $this->passwordHasherFactory = $passwordHasherFactory;
         $this->roleRepository        = $roleRepository;
         $this->iocContainer          = $iocContainer;
+    }
+
+    public function setSession(SessionInterface $session)
+    {
+        $this->session = $session;
+    }
+
+    public function getSession()
+    {
+        if (! $this->session) {
+            throw new \Exception('Session not set');
+        }
+
+        return $this->session;
     }
 
     /**
@@ -132,8 +143,7 @@ class HktAuthSystem extends AuthSystem
     public function login(string $username, string $password)
     {
         $user = $this->loadByCredentials($username, $password);
-        $segment = $this->session->getSegment(__CLASS__);
-        $segment->set('auth', $user->getUsername());
+        $this->getSession()->set('auth', $user->getUsername());
     }
 
     /**
@@ -146,7 +156,7 @@ class HktAuthSystem extends AuthSystem
     {
         $this->getAuthenticatedUser();
 
-        $this->session->clear();
+        $this->getSession()->clear();
     }
 
     /**
@@ -176,8 +186,7 @@ class HktAuthSystem extends AuthSystem
      */
     public function isAuthenticated() : bool
     {
-        $segment = $this->session->getSegment(__CLASS__);
-        $user = $segment->get('auth');
+        $user = $this->getSession()->get('auth');
 
         return $user !== null;
     }
@@ -190,8 +199,7 @@ class HktAuthSystem extends AuthSystem
      */
     public function getAuthenticatedUser() : IAdmin
     {
-        $segment = $this->session->getSegment(__CLASS__);
-        $username = $segment->get('auth');
+        $username = $this->getSession()->get('auth');
 
         if (!$username) {
             throw NotAuthenticatedException::format('No user is authenticated');
