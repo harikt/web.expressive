@@ -37,10 +37,8 @@
         "symfony/translation": "3.*",
         "symfony/validator": "3.*",
         "zendframework/zend-expressive": "^3.0.0-dev",
-        "zendframework/zend-expressive-csrf": "1.0.0-dev",
-        "zendframework/zend-expressive-flash": "1.0.0-dev",
-        "zendframework/zend-expressive-session": "1.0.0-dev",
-        "zendframework/zend-expressive-session-ext": "1.0.0-dev"
+        "zendframework/zend-expressive-session": "^1.0.0-dev",
+        "zendframework/zend-expressive-session-ext": "^1.0.0-dev"
     },
     "autoload-dev": {
         "psr-4": {
