@@ -3,11 +3,13 @@
 @extends('dms::template.auth')
 @section('content')
     <p class="login-box-msg">Log in to continue</p>
-    @if (session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-    @endif
+    {{--
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+    --}}
     <form action="{{ $serverUrlHelper->generate($urlHelper->generate('dms::auth.login')) }}" method="post">
         <input type="hidden" name="_token" value="{!! csrf_token() !!}">
 

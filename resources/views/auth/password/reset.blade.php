@@ -4,9 +4,11 @@
 @section('content')
     <p class="login-box-msg">Reset your password</p>
 
+    {{--
     @if(session('success'))
         <p class="alert alert-success">{{ session('success') }}</p>
     @endif
+    --}}
 
     <form action="{{ $serverUrlHelper->generate($urlHelper->generate('dms::auth.password.reset')) }}" method="post">
         <input type="hidden" name="_token" value="{!! csrf_token() !!}">
