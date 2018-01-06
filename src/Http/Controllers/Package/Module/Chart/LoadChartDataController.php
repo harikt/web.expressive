@@ -43,7 +43,7 @@ class LoadChartDataController extends DmsController implements ServerMiddlewareI
         TemplateRendererInterface $template,
         RouterInterface $router,
         ChartControlRenderer $chartRenderer
-     ) {
+    ) {
         parent::__construct($cms, $auth, $template, $router);
         $this->chartRenderer = $chartRenderer;
     }

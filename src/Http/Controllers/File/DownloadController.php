@@ -19,7 +19,7 @@ use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
- * The file upload/download controller.
+ * The file download controller.
  *
  * @author Elliot Levin <elliotlevin@hotmail.com>
  */
@@ -46,10 +46,10 @@ class DownloadController extends DmsController implements ServerMiddlewareInterf
      * @param Repository                $config
      */
     public function __construct(
-         ICms $cms,
-         IAuthSystem $auth,
-         TemplateRendererInterface $template,
-         RouterInterface $router,
+        ICms $cms,
+        IAuthSystem $auth,
+        TemplateRendererInterface $template,
+        RouterInterface $router,
         ITemporaryFileService $tempFileService,
         Repository $config
     ) {
@@ -58,14 +58,11 @@ class DownloadController extends DmsController implements ServerMiddlewareInterf
         $this->config          = $config;
     }
 
-    // public function download($token, CookieJar $cookieJar)
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $token = $request->getAttribute('token');
         try {
             $file = $this->tempFileService->getTempFile($token)->getFile();
-
-            // $cookieJar->queue('file-download-' . $token, true, 60, null, null, false, false);
 
             $response = new Response();
 

@@ -109,7 +109,6 @@ class HandleProviderResponseController extends DmsController implements ServerMi
         $adminAccountDetails = $oauthProvider->getAdminDetailsFromResourceOwner($resourceOwner);
 
         if (!$oauthProvider->allowsAccount($adminAccountDetails)) {
-
             // ->with('error', trans('dms::auth.oauth.invalid-email'))
             $response = new Response();
             $response = $response->withHeader('Location', $this->router->generateUri('dms::auth.login'));

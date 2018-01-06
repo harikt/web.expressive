@@ -27,17 +27,17 @@ class UploadedFileFactory
     {
         if ($clientMimeType && stripos($clientMimeType, 'image') === 0) {
             return new UploadedImage(
-                    $fullPath,
-                    $uploadStatus,
-                    $clientFileName,
-                    $clientMimeType
+                $fullPath,
+                $uploadStatus,
+                $clientFileName,
+                $clientMimeType
             );
         } else {
             return new UploadedFile(
-                    $fullPath,
-                    $uploadStatus,
-                    $clientFileName,
-                    $clientMimeType
+                $fullPath,
+                $uploadStatus,
+                $clientFileName,
+                $clientMimeType
             );
         }
     }

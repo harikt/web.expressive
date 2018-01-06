@@ -23,6 +23,7 @@ class SymfonyLanguageProvider implements ILanguageProvider
     /**
      * LaravelLanguageProvider constructor.
      *
+     * @param Translator $translator
      */
     public function __construct(Translator $translator)
     {

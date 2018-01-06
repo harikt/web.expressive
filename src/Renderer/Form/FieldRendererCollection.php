@@ -36,7 +36,7 @@ class FieldRendererCollection
             foreach ($fieldRenderer->getFieldTypeClasses() as $class) {
                 $this->fieldRenderers[$class][] = $fieldRenderer;
             }
-            
+
             $fieldRenderer->setRendererCollection($this);
         }
     }

@@ -70,16 +70,16 @@ class DmsNavigationViewComposer
         $view->with(
             'navigation',
             $this->filterElementsByPermissions(
-            $authSystem->getAuthenticatedUser()->isSuperUser(),
-            $this->getPermissionNames($authSystem->getUserPermissions()),
-            $this->cache->remember(
-                $navigationCacheKey,
-                self::NAVIGATION_CACHE_EXPIRY_MINUTES,
-                function () {
-                    return $this->loadNavigation();
-                }
+                $authSystem->getAuthenticatedUser()->isSuperUser(),
+                $this->getPermissionNames($authSystem->getUserPermissions()),
+                $this->cache->remember(
+                    $navigationCacheKey,
+                    self::NAVIGATION_CACHE_EXPIRY_MINUTES,
+                    function () {
+                        return $this->loadNavigation();
+                    }
+                )
             )
-        )
         );
     }
 

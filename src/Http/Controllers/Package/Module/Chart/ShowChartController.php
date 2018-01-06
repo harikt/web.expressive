@@ -41,7 +41,7 @@ class ShowChartController extends DmsController implements ServerMiddlewareInter
         TemplateRendererInterface $template,
         RouterInterface $router,
         ChartControlRenderer $chartRenderer
-     ) {
+    ) {
         parent::__construct($cms, $auth, $template, $router);
         $this->chartRenderer = $chartRenderer;
     }

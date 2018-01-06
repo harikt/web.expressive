@@ -38,7 +38,10 @@ class PackageController extends DmsController implements ServerMiddlewareInterfa
     /**
      * PackageController constructor.
      *
-     * @param ICms                      $cms
+     * @param ICms $cms
+     * @param IAuthSystem $auth
+     * @param TemplateRendererInterface $template
+     * @param RouterInterface $router
      * @param PackageRendererCollection $packageRenderers
      */
     public function __construct(

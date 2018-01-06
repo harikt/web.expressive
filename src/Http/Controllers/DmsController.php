@@ -52,7 +52,6 @@ class DmsController
      * @param IAuthSystem               $auth
      * @param TemplateRendererInterface $template
      * @param RouterInterface           $router
-     *
      */
     public function __construct(
         ICms $cms,

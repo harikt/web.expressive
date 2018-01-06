@@ -15,7 +15,7 @@ interface IFormRenderer
      * @return FieldRendererCollection
      */
     public function getFieldRenderers() : FieldRendererCollection;
-    
+
     /**
      * Returns whether this renderer can render the supplied form.
      *

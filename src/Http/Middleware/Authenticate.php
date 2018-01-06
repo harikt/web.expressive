@@ -24,6 +24,7 @@ class Authenticate implements ServerMiddlewareInterface
      * Authenticate constructor.
      *
      * @param IAuthSystem $auth
+     * @param RouterInterface $router
      */
     public function __construct(
         IAuthSystem $auth,
@@ -40,8 +41,7 @@ class Authenticate implements ServerMiddlewareInterface
     {
         $path = '/dms'. $request->getUri()->getPath();
         $routeResult = $request->getAttribute(RouteResult::class);
-        if (
-            $this->auth->isAuthenticated() ||
+        if ($this->auth->isAuthenticated() ||
             in_array($routeResult->getMatchedRouteName(), [
                 'dms::auth.login',
                 'dms::auth.password.forgot',

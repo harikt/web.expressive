@@ -29,10 +29,9 @@ class LoadVariablesToTemplate implements ServerMiddlewareInterface
 
     /**
      *
-     * @param ICms                      $cms
-     * @param IAuthSystem               $auth
+     * @param ICms $cms
+     * @param IAuthSystem $auth
      * @param TemplateRendererInterface $template
-     *
      */
     public function __construct(
         ICms $cms,
