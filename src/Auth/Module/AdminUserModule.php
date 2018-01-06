@@ -99,8 +99,8 @@ class AdminUserModule extends CrudModule
                 $form->section('Details', array_filter([
                     $admin
                         ? $form->field(
-                        Field::create('type', 'Type')->string()->readonly()->value($this->getAdminType($admin))
-                    )->withoutBinding()
+                            Field::create('type', 'Type')->string()->readonly()->value($this->getAdminType($admin))
+                        )->withoutBinding()
                         : null,
                     //
                     $form->field($fullNameField)->bindToProperty(Admin::FULL_NAME),

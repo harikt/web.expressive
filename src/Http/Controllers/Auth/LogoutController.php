@@ -29,9 +29,10 @@ class LogoutController implements ServerMiddlewareInterface
     protected $auth;
 
     /**
-     * Create a new authentication controller instance.
+     * Logout controller instance.
      *
      * @param ICms $cms
+     * @param IAuthSystem $auth
      */
     public function __construct(
         ICms $cms,

@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Zend\Diactoros\Response\JsonResponse;
 
 /**
- * The file upload/download controller.
+ * The file upload controller.
  *
  * @author Elliot Levin <elliotlevin@hotmail.com>
  */

@@ -22,6 +22,15 @@ class IndexController extends DmsController implements ServerMiddlewareInterface
 {
     private $dashboardRenderer;
 
+    /**
+     * Dashboard
+     *
+     * @param ICms $cms
+     * @param IAuthSystem $auth
+     * @param TemplateRendererInterface $template
+     * @param RouterInterface $router
+     * @param PackageRendererCollection $dashboardRenderer
+     */
     public function __construct(
         ICms $cms,
         IAuthSystem $auth,

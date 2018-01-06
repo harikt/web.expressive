@@ -51,11 +51,12 @@ class ModuleContext
     /**
      * ModuleContext constructor.
      *
-     * @param RouterInterface  $router
-     * @param string           $rootUrl
-     * @param array            $titles
-     * @param string[]         $breadcrumbs
-     * @param IModule|callable $moduleLoaderCallback
+     * @param RouterInterface $router
+     * @param string $rootUrl
+     * @param array $titles
+     * @param array $breadcrumbs
+     * @param [type] $moduleLoaderCallback
+     * @param boolean $isSubmodule
      */
     public function __construct(RouterInterface $router, string $rootUrl, array $titles, array $breadcrumbs, $moduleLoaderCallback, bool $isSubmodule = false)
     {

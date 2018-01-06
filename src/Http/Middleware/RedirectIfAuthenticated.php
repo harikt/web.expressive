@@ -23,6 +23,7 @@ class RedirectIfAuthenticated implements ServerMiddlewareInterface
      * Authenticate constructor.
      *
      * @param IAuthSystem $auth
+     * @param RouterInterface $router
      */
     public function __construct(IAuthSystem $auth, RouterInterface $router)
     {

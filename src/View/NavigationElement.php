@@ -49,13 +49,13 @@ class NavigationElement
     /**
      * NavigationElement constructor.
      *
-     * @param string          $label
-     * @param string          $routeName
-     * @param array           $routeParams
-     * @param string          $icon
-     * @param string[]        $requiredPermissionNames
-     * @param bool            $requiresAnyFromGroups
+     * @param string $label
+     * @param string $routeName
+     * @param array $routeParams
+     * @param string $icon
      * @param RouterInterface $router
+     * @param array $requiredPermissionNames
+     * @param boolean $requiresAnyFromGroups
      */
     public function __construct(
         string $label,

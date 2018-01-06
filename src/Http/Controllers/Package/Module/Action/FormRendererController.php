@@ -142,7 +142,7 @@ class FormRendererController extends DmsController implements ServerMiddlewareIn
         if (!($renderer instanceof IFormRendererWithActions)) {
             return $this->abort($request, 404);
         }
-        
+
         return $renderer->handleAction($renderingContext, $form, $request, $formRendererAction, $request->get('__field_action_data') ?? []);
     }
 

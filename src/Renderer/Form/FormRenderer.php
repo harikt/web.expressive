@@ -27,6 +27,7 @@ abstract class FormRenderer implements IFormRenderer
      * FormRenderer constructor.
      *
      * @param FieldRendererCollection $fieldRenderers
+     * @param TemplateRendererInterface $template
      */
     public function __construct(FieldRendererCollection $fieldRenderers, TemplateRendererInterface $template)
     {

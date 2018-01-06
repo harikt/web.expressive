@@ -295,10 +295,10 @@ class ContainerConfig
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, PublicFileModule::class, function () use ($container) {
             return new PublicFileModule(
-               DirectoryTree::from($container->get(Repository::class)->get('dms.storage.public-files.dir')),
-               DirectoryTree::from($container->get(Repository::class)->get('dms.storage.trashed-files.dir')),
-               $container->get(IAuthSystem::class)
-           );
+                DirectoryTree::from($container->get(Repository::class)->get('dms.storage.public-files.dir')),
+                DirectoryTree::from($container->get(Repository::class)->get('dms.storage.trashed-files.dir')),
+                $container->get(IAuthSystem::class)
+            );
         });
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, Flap::class, function () use ($container) {

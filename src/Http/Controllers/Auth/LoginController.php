@@ -42,10 +42,13 @@ class LoginController extends DmsController implements ServerMiddlewareInterface
     /**
      * Create a new authentication controller instance.
      *
-     * @param ICms                      $cms
-     * @param IAuthSystem               $auth
-     * @param OauthProviderCollection   $oauthProviderCollection
+     * @param ICms $cms
+     * @param IAuthSystem $auth
      * @param TemplateRendererInterface $template
+     * @param RouterInterface $router
+     * @param OauthProviderCollection $oauthProviderCollection
+     * @param Flap $flap
+     * @param Translator $translator
      */
     public function __construct(
         ICms $cms,
@@ -83,7 +86,7 @@ class LoginController extends DmsController implements ServerMiddlewareInterface
                     // too many login attempts
                     throw TooManyFailedAttemptsException::defaultMessage();
                 }
-                
+
                 $username = $request->getParsedBody()['username'];
                 $password = $request->getParsedBody()['password'];
                 $this->auth->login($username, $password);

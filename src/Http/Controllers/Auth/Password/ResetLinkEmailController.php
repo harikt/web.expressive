@@ -8,8 +8,6 @@ use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\ICms;
 use Dms\Web\Expressive\Auth\Password\IPasswordResetService;
 use Dms\Web\Expressive\Http\Controllers\DmsController;
-use Illuminate\Auth\Passwords\PasswordBrokerManager;
-use Illuminate\Contracts\Auth\PasswordBroker;
 use Interop\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
 use Interop\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -27,11 +25,6 @@ use Zend\Expressive\Template\TemplateRendererInterface;
 class ResetLinkEmailController extends DmsController implements ServerMiddlewareInterface
 {
     /**
-     * @var PasswordBroker
-     */
-    protected $passwordBroker;
-
-    /**
      * @var IPasswordResetService
      */
     protected $passwordResetService;
@@ -39,9 +32,10 @@ class ResetLinkEmailController extends DmsController implements ServerMiddleware
     /**
      * Create a new password controller instance.
      *
-     * @param ICms                  $cms
-     * @param IAuthSystem           $auth
-     * @param PasswordBrokerManager $passwordBrokerManager
+     * @param ICms $cms
+     * @param IAuthSystem $auth
+     * @param TemplateRendererInterface $template
+     * @param RouterInterface $router
      * @param IPasswordResetService $passwordResetService
      */
     public function __construct(
@@ -49,12 +43,10 @@ class ResetLinkEmailController extends DmsController implements ServerMiddleware
         IAuthSystem $auth,
         TemplateRendererInterface $template,
         RouterInterface $router,
-        PasswordBrokerManager $passwordBrokerManager,
         IPasswordResetService $passwordResetService
     ) {
         parent::__construct($cms, $auth, $template, $router);
 
-        $this->passwordBroker       = $passwordBrokerManager->broker('dms');
         $this->passwordResetService = $passwordResetService;
     }
 
@@ -64,7 +56,7 @@ class ResetLinkEmailController extends DmsController implements ServerMiddleware
             return $this->sendResetLinkEmail($request);
         }
 
-        $this->showResetLinkEmailForm();
+        return $this->showResetLinkEmailForm();
     }
 
     /**
@@ -74,7 +66,7 @@ class ResetLinkEmailController extends DmsController implements ServerMiddleware
      */
     public function showResetLinkEmailForm()
     {
-        return new HtmlResponse($this->template->render('dms::auth.password.forgot'));
+        return new HtmlResponse($this->template->render('dms::auth.password.forgot', ['errors' => $this->errors]));
     }
 
     /**
@@ -87,9 +79,11 @@ class ResetLinkEmailController extends DmsController implements ServerMiddleware
     public function sendResetLinkEmail(ServerRequestInterface $request)
     {
         // $this->validate($request, ['email' => 'required|email']);
+        $post = $request->getParsedBody();
+        $email = $post['email'] ?: '';
 
-        $credentials = ['emailAddress' => new EmailAddress($request->get('email'))];
-        $response    = $this->passwordBroker->sendResetLink($credentials);
+        $credentials = ['emailAddress' => new EmailAddress($email)];
+        // $response    = $this->passwordBroker->sendResetLink($credentials);
 
         $to = '';
 
@@ -126,7 +120,7 @@ class ResetLinkEmailController extends DmsController implements ServerMiddleware
             return $this->showResetLinkEmailForm();
         }
 
-        return $this->template->render('dms::auth.password.reset', ['token' => $token]);
+        return $this->template->render('dms::auth.password.reset', ['token' => $token, 'errors' => $this->errors]);
     }
 
     /**

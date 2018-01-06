@@ -17,7 +17,7 @@ use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
- * The file upload/download controller.
+ * The file preview controller.
  *
  * @author Elliot Levin <elliotlevin@hotmail.com>
  */
