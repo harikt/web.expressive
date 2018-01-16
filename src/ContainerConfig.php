@@ -138,7 +138,7 @@ class ContainerConfig
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, ColumnRendererFactoryCollection::class, function () use ($container) {
             return new ColumnRendererFactoryCollection(
-                $container->make(ColumnComponentRendererCollection::class),
+                $container->get(ColumnComponentRendererCollection::class),
                 $container->makeAll(
                     $container->get(Repository::class)->get('dms.services.renderers.table.columns')
                 )
@@ -207,7 +207,7 @@ class ContainerConfig
         });
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, \Illuminate\Contracts\Cache\Store::class, function () use ($container) {
-            return $container->make(\Illuminate\Cache\ArrayStore::class);
+            return $container->get(\Illuminate\Cache\ArrayStore::class);
         });
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, \Dms\Common\Structure\FileSystem\Directory::class, function () {
