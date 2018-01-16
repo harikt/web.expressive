@@ -42,7 +42,6 @@ use Dms\Web\Expressive\File\LaravelApplicationDirectories;
 use Dms\Web\Expressive\File\Persistence\ITemporaryFileRepository;
 use Dms\Web\Expressive\File\Persistence\TemporaryFileRepository;
 use Dms\Web\Expressive\File\TemporaryFileService;
-use Dms\Web\Expressive\Ioc\LaravelIocContainer;
 use Dms\Web\Expressive\Language\SymfonyLanguageProvider;
 use Dms\Web\Expressive\Middleware\AuthenticationMiddleware;
 use Dms\Web\Expressive\Renderer\Chart\ChartRendererCollection;
@@ -70,7 +69,7 @@ use Symfony\Component\Translation\Translator;
 
 class ContainerConfig
 {
-    public function define(LaravelIocContainer $container)
+    public function define(IIocContainer $container)
     {
         $container->bindValue(Repository::class, new Repository($container->get('config')));
         $container->alias(Repository::class, ConfigRepository::class);
@@ -82,7 +81,7 @@ class ContainerConfig
             return $container;
         });
 
-        $container->bindValue(Container::class, $container->getLaravelContainer());
+        $container->bindValue(Container::class, $container->getIlluminateContainer());
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, Session::class, function () {
             $session_factory = new SessionFactory;
@@ -266,7 +265,7 @@ class ContainerConfig
 
             $viewFactory->composer('dms::template.default', DmsNavigationViewComposer::class);
             $viewFactory->composer('dms::dashboard', DmsNavigationViewComposer::class);
-            $viewFactory->setContainer($container->getLaravelContainer());
+            $viewFactory->setContainer($container->getIlluminateContainer());
 
             return $viewFactory;
         });

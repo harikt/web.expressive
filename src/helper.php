@@ -1,6 +1,6 @@
 <?php
 use Aura\Session\Session;
-use Dms\Web\Expressive\Ioc\LaravelIocContainer;
+use Dms\Web\Expressive\AppContainer;
 use Illuminate\Container\Container;
 use Zend\Expressive\Router\RouterInterface;
 
@@ -15,12 +15,12 @@ if (! function_exists('app')) {
     function app($abstract = null, array $parameters = [])
     {
         if (is_null($abstract)) {
-            return LaravelIocContainer::getInstance();
+            return AppContainer::getInstance();
         }
 
         return empty($parameters)
-            ? LaravelIocContainer::getInstance()->get($abstract)
-            : LaravelIocContainer::getInstance()->makeWith($abstract, $parameters);
+            ? AppContainer::getInstance()->get($abstract)
+            : AppContainer::getInstance()->makeWith($abstract, $parameters);
     }
 }
 
