@@ -9,6 +9,7 @@ use Dms\Core\Form\IFieldType;
 use Dms\Web\Expressive\Renderer\Form\FieldRendererCollection;
 use Dms\Web\Expressive\Renderer\Form\FormRenderingContext;
 use Dms\Web\Expressive\Renderer\Form\IFieldRenderer;
+use Dms\Web\Expressive\Renderer\Form\Field\RelatedEntityLinker;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**
@@ -34,12 +35,18 @@ abstract class FieldRenderer implements IFieldRenderer
     protected $template;
 
     /**
+     * @var RelatedEntityLinker
+     */
+    protected $relatedEntityLinker;
+
+    /**
      * FieldRenderer constructor.
      */
-    public function __construct(TemplateRendererInterface $template)
+    public function __construct(TemplateRendererInterface $template, RelatedEntityLinker $relatedEntityLinker)
     {
-        $this->fieldTypeClasses = $this->getFieldTypeClasses();
         $this->template = $template;
+        $this->relatedEntityLinker = $relatedEntityLinker;
+        $this->fieldTypeClasses = $this->getFieldTypeClasses();
     }
 
     /**

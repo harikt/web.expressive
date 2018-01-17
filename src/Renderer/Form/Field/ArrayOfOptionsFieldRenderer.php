@@ -75,7 +75,7 @@ class ArrayOfOptionsFieldRenderer extends BladeFieldRenderer
 
         /** @var IFieldOptions $options */
         $options     = $elementField->getType()->get(ArrayOfType::ATTR_OPTIONS);
-        $urlCallback = RelatedEntityLinker::getUrlCallbackFor($options);
+        $urlCallback = $this->relatedEntityLinker->getUrlCallbackFor($options);
 
         return $this->renderValueViewWithNullDefault(
             $field,
