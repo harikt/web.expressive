@@ -8,6 +8,7 @@ use Dms\Core\Form\IField;
 use Dms\Core\Form\IFieldOptions;
 use Dms\Core\Form\IFieldType;
 use Dms\Web\Expressive\Renderer\Form\FormRenderingContext;
+use Dms\Web\Expressive\Renderer\Form\Field\RelatedEntityLinker;
 use Illuminate\Contracts\Config\Repository;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
@@ -19,12 +20,15 @@ use Zend\Expressive\Template\TemplateRendererInterface;
 class MoneyFieldRenderer extends BladeFieldRenderer
 {
     /**
+     * 
      * @param Repository $configRepository
+     * @param TemplateRendererInterface $template
+     * @param RelatedEntityLinker $relatedEntityLinker
      */
-    public function __construct(Repository $configRepository, TemplateRendererInterface $template)
+    public function __construct(Repository $configRepository, TemplateRendererInterface $template, RelatedEntityLinker $relatedEntityLinker)
     {
         $this->configRepository = $configRepository;
-        parent::__construct($template);
+        parent::__construct($template, $relatedEntityLinker);
     }
 
     /**
