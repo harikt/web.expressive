@@ -56,23 +56,6 @@ if (! function_exists('public_path')) {
     }
 }
 
-// Need to remove usage of 2 calls inside Dms\Web\Expressive\Renderer\Form\Field\RelatedEntityLinker
-if (! function_exists('route')) {
-    /**
-     * Generate the URL to a named route.
-     *
-     * @param  string $name
-     * @param  array  $parameters
-     * @param  array  $absolute
-     * @return string
-     */
-    function route($name, $parameters = [], $absolute = [])
-    {
-        return app(RouterInterface::class)
-            ->generateUri($name, $parameters, []);
-    }
-}
-
 if (! function_exists('session')) {
     /**
      * Get / set the specified session value.

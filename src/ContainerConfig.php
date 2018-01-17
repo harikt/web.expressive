@@ -110,57 +110,79 @@ class ContainerConfig
         $container->bind(IIocContainer::SCOPE_SINGLETON, \Psr\Http\Message\ResponseInterface::class, \Zend\Diactoros\Response::class);
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, PackageRendererCollection::class, function () use ($container) {
-            return new PackageRendererCollection($container->makeAll(
-                $container->get(Repository::class)->get('dms.services.renderers.packages')
-            ));
+            return new PackageRendererCollection(
+                $this->makeAll(
+                    $container,
+                    $container->get(Repository::class)->get('dms.services.renderers.packages')
+                )
+            );
         });
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, FormRendererCollection::class, function () use ($container) {
-            return new FormRendererCollection($container->makeAll(
-                $container->get(Repository::class)->get('dms.services.renderers.forms')
-            ));
+            return new FormRendererCollection(
+                $this->makeAll(
+                    $container,
+                    $container->get(Repository::class)->get('dms.services.renderers.forms')
+                )
+            );
         });
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, FieldRendererCollection::class, function () use ($container) {
-            return new FieldRendererCollection($container->makeAll(
-                $container->get(Repository::class)->get('dms.services.renderers.form-fields')
-            ));
+            return new FieldRendererCollection(
+                $this->makeAll(
+                    $container,
+                    $container->get(Repository::class)->get('dms.services.renderers.form-fields')
+                )
+            );
         });
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, ColumnComponentRendererCollection::class, function () use ($container) {
-            return new ColumnComponentRendererCollection($container->makeAll(
-                array_merge(
-                    $container->get(Repository::class)->get('dms.services.renderers.table.column-components'),
-                    $container->get(Repository::class)->get('dms.services.renderers.form-fields')
+            return new ColumnComponentRendererCollection(
+                $this->makeAll(
+                    $container,
+                    array_merge(
+                        $container->get(Repository::class)->get('dms.services.renderers.table.column-components'),
+                        $container->get(Repository::class)->get('dms.services.renderers.form-fields')
+                    )
                 )
-            ));
+            );
         });
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, ColumnRendererFactoryCollection::class, function () use ($container) {
             return new ColumnRendererFactoryCollection(
                 $container->get(ColumnComponentRendererCollection::class),
-                $container->makeAll(
+                $this->makeAll(
+                    $container,
                     $container->get(Repository::class)->get('dms.services.renderers.table.columns')
                 )
             );
         });
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, ChartRendererCollection::class, function () use ($container) {
-            return new ChartRendererCollection($container->makeAll(
-                $container->get(Repository::class)->get('dms.services.renderers.charts')
-            ));
+            return new ChartRendererCollection(
+                $this->makeAll(
+                    $container,
+                    $container->get(Repository::class)->get('dms.services.renderers.charts')
+                )
+            );
         });
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, WidgetRendererCollection::class, function () use ($container) {
-            return new WidgetRendererCollection($container->makeAll(
-                $container->get(Repository::class)->get('dms.services.renderers.widgets')
-            ));
+            return new WidgetRendererCollection(
+                $this->makeAll(
+                    $container,
+                    $container->get(Repository::class)->get('dms.services.renderers.widgets')
+                )
+            );
         });
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, ModuleRendererCollection::class, function () use ($container) {
-            return new ModuleRendererCollection($container->makeAll(
-                $container->get(Repository::class)->get('dms.services.renderers.modules')
-            ));
+            return new ModuleRendererCollection(
+                $this->makeAll(
+                    $container,
+                    $container->get(Repository::class)->get('dms.services.renderers.modules')
+                )
+            );
         });
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, Translator::class, function () use ($container) {
@@ -273,21 +295,30 @@ class ContainerConfig
         $container->bind(IIocContainer::SCOPE_SINGLETON, Illuminate\Contracts\Events\Dispatcher::class, Illuminate\Events\Dispatcher::class);
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, ActionInputTransformerCollection::class, function () use ($container) {
-            return new ActionInputTransformerCollection($container->makeAll(
-                $container->get(Repository::class)->get('dms.services.actions.input-transformers')
-            ));
+            return new ActionInputTransformerCollection(
+                $this->makeAll(
+                    $container,
+                    $container->get(Repository::class)->get('dms.services.actions.input-transformers')
+                )
+            );
         });
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, ActionResultHandlerCollection::class, function () use ($container) {
-            return new ActionResultHandlerCollection($container->makeAll(
-                $container->get(Repository::class)->get('dms.services.actions.result-handlers')
-            ));
+            return new ActionResultHandlerCollection(
+                $this->makeAll(
+                    $container,
+                    $container->get(Repository::class)->get('dms.services.actions.result-handlers')
+                )
+            );
         });
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, ActionExceptionHandlerCollection::class, function () use ($container) {
-            return new ActionExceptionHandlerCollection($container->makeAll(
-                $container->get(Repository::class)->get('dms.services.actions.exception-handlers')
-            ));
+            return new ActionExceptionHandlerCollection(
+                $this->makeAll(
+                    $container,
+                    $container->get(Repository::class)->get('dms.services.actions.exception-handlers')
+                )
+            );
         });
 
         $container->bind(IIocContainer::SCOPE_SINGLETON, AuthenticationMiddleware::class, AuthenticationMiddleware::class);
@@ -312,5 +343,14 @@ class ContainerConfig
 
             return $flap;
         });
+    }
+
+
+    private function makeAll(IIocContainer $container, array $services)
+    {
+        foreach ($services as $key => $service) {
+            $services[$key] = $container->get($service);
+        }
+        return $services;
     }
 }

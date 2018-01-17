@@ -11,6 +11,7 @@ use Dms\Core\Form\IField;
 use Dms\Core\Form\IFieldType;
 use Dms\Web\Expressive\File\ITemporaryFileService;
 use Dms\Web\Expressive\Renderer\Form\FormRenderingContext;
+use Dms\Web\Expressive\Renderer\Form\Field\RelatedEntityLinker;
 use Illuminate\Contracts\Config\Repository;
 use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
@@ -41,9 +42,10 @@ class FileFieldRenderer extends BladeFieldRenderer
         ITemporaryFileService $tempFileService,
         Repository $config,
         TemplateRendererInterface $template,
-        RouterInterface $router
+        RouterInterface $router,
+        RelatedEntityLinker $relatedEntityLinker
     ) {
-        parent::__construct($template);
+        parent::__construct($template, $relatedEntityLinker);
         $this->tempFileService = $tempFileService;
         $this->config          = $config;
         $this->router = $router;
