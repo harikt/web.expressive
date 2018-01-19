@@ -58,7 +58,7 @@ class ActionResultHandlerCollection
      */
     public function findHandlerFor(ModuleContext $moduleContext, IAction $action, $result) : IActionResultHandler
     {
-        $resultClass = get_class($result);
+        $resultClass = is_object($result) ? get_class($result) : null;
 
         while ($resultClass) {
             if (isset($this->handlers[$resultClass])) {
