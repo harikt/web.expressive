@@ -103,9 +103,7 @@ if (!function_exists('asset_file_url')) {
         $s3Prefixes = ['s3://', 's3-dms://'];
 
         foreach ($s3Prefixes as $s3Prefix) {
-            $isFileOnS3 = starts_with($file->getFullPath(), $s3Prefix);
-
-            if ($isFileOnS3) {
+            if ($s3Prefix !== '' && substr($file->getFullPath(), 0, strlen($s3Prefix)) === (string) $s3Prefix) {
                 list($bucketName, $objectKey) = explode('/', substr($file->getFullPath(), strlen($s3Prefix)), 2);
 
                 return 'https://' . $bucketName . '.s3.amazonaws.com/' . $objectKey;
