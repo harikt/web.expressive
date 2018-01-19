@@ -3,13 +3,15 @@
 <?php /** @var \Dms\Core\Common\Crud\Table\ISummaryTable $summaryTable */ ?>
 <?php /** @var string $rootDirectory */ ?>
 <?php /** @var \Dms\Web\Expressive\Document\DirectoryTree $directoryTree */ ?>
+@inject('actionFormRenderer', 'Dms\Web\Expressive\Renderer\Form\ActionFormRenderer')
+
 <div class="row">
     <div class="col-xs-12">
         <div class="panel panel-default dms-file-tree"
              data-reload-file-tree-url="{{ $serverUrlHelper->generate($moduleContext->getUrl('dashboard', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName()])) }}"
         >
             <div class="panel-body dms-upload-form">
-                {!! app(\Dms\Web\Expressive\Renderer\Form\ActionFormRenderer::class)->renderActionForm($moduleContext, $moduleContext->getModule()->getAction('upload-files')) !!}
+                {!! $actionFormRenderer->renderActionForm($moduleContext, $moduleContext->getModule()->getAction('upload-files')) !!}
             </div>
 
             <div class="dms-file-tree-header clearfix">

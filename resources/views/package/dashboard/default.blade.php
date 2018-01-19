@@ -1,8 +1,10 @@
 <?php /** @var \Dms\Web\Expressive\Renderer\Widget\WidgetRendererCollection $widgetRenderers */ ?>
 <?php /** @var \Dms\Core\Module\IModule $module */ ?>
 <?php /** @var \Dms\Core\Package\IDashboardWidget[] $widgets */ ?>
+@inject('moduleRequestRouter', 'Dms\Web\Expressive\Http\ModuleRequestRouter')
+
 @foreach($widgets as $widget)
-    <?php $moduleContext = app(\Dms\Web\Expressive\Http\ModuleRequestRouter::class)->getRootContextFromModule($widget->getModule()) ?>
+    <?php $moduleContext = $moduleRequestRouter->getRootContextFromModule($widget->getModule()) ?>
     <?php $renderer = $widgetRenderers->findRendererFor($moduleContext, $widget->getWidget()) ?>
     <div class="row">
         <div class="col-sm-12">
