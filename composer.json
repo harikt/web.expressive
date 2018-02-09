@@ -34,11 +34,11 @@
         "dms-org/library.metadata": "^0.8.0",
         "harikt/blade-renderer": "^0.3.0",
         "harikt/dms-illuminate-container": "^0.0",
-        "http-interop/http-server-middleware": "^1.0",
+        "psr/http-server-middleware": "^1.0",
         "illuminate/config": "^5.4",
         "symfony/translation": "3.*",
         "symfony/validator": "3.*",
-        "zendframework/zend-expressive": "^3.0.0-dev"
+        "zendframework/zend-expressive": "^3.0.0alpha1"
     },
     "autoload-dev": {
         "psr-4": {
