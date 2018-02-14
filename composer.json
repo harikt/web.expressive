@@ -32,10 +32,10 @@
         "dms-org/common.structure": "^0.8",
         "dms-org/core": "^0.8",
         "dms-org/library.metadata": "^0.8.0",
-        "harikt/blade-renderer": "^0.3.0",
+        "harikt/blade-renderer": "^0.4.0",
         "harikt/dms-illuminate-container": "^0.0",
         "psr/http-server-middleware": "^1.0",
-        "illuminate/config": "^5.4",
+        "illuminate/config": "5.5.*",
         "symfony/translation": "3.*",
         "symfony/validator": "3.*",
         "zendframework/zend-expressive": "^3.0.0alpha1"
@@ -51,5 +51,5 @@
         "dms-org/library.testing": "dev-master",
         "dms-org/common.testing": "dev-master"
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "alpha"
 }
