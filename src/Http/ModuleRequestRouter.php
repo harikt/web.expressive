@@ -99,9 +99,13 @@ class ModuleRequestRouter
 
     public function getRootContextFromModule(IModule $module) : ModuleContext
     {
-        return $this->getRootContext($module->getPackageName(), $module->getName(), function () use ($module) {
-            return $module;
-        });
+        return $this->getRootContext(
+            $module->getPackageName(),
+            $module->getName(),
+            function () use ($module) {
+                return $module;
+            }
+        );
     }
 
     public function getRootContext(string $packageName, string $moduleName, callable $moduleLoaderCallback) : ModuleContext

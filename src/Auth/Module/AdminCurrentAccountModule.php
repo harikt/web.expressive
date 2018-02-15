@@ -64,43 +64,58 @@ class AdminCurrentAccountModule extends Module
     {
         $module->name('account');
 
-        $module->metadata([
+        $module->metadata(
+            [
             'icon' => 'cog',
-        ]);
+            ]
+        );
 
-        /** @var Admin $user */
+        /**
+ * @var Admin $user
+*/
         $user = $this->authSystem->getAuthenticatedUser();
 
         $module->action('update-profile')
-            ->form(Form::create()->section('Details', [
-                AdminProfileFields::buildFullNameField($this->dataSource)->value($user->getFullName()),
-                AdminProfileFields::buildEmailField($this->dataSource)->value($user->getEmailAddressObject()),
-                AdminProfileFields::buildUsernameField($this->dataSource)->value($user->getUsername()),
-            ]))
+            ->form(
+                Form::create()->section(
+                    'Details',
+                    [
+                    AdminProfileFields::buildFullNameField($this->dataSource)->value($user->getFullName()),
+                    AdminProfileFields::buildEmailField($this->dataSource)->value($user->getEmailAddressObject()),
+                    AdminProfileFields::buildUsernameField($this->dataSource)->value($user->getUsername()),
+                    ]
+                )
+            )
             ->returns(Message::class)
-            ->handler(function (ArrayDataObject $input) {
-                /** @var Admin $user */
-                $user = $this->authSystem->getAuthenticatedUser();
+            ->handler(
+                function (ArrayDataObject $input) {
+                    /**
+                * @var Admin $user
+                */
+                    $user = $this->authSystem->getAuthenticatedUser();
 
-                $user->setFullName($input['name']);
-                $user->setUsername($input['username']);
-                $user->setEmailAddress($input['email']);
+                    $user->setFullName($input['name']);
+                    $user->setUsername($input['username']);
+                    $user->setEmailAddress($input['email']);
 
-                $this->dataSource->save($user);
+                    $this->dataSource->save($user);
 
-                return new Message('auth.user.profile-updated');
-            });
+                    return new Message('auth.user.profile-updated');
+                }
+            );
 
         $module->action('change-password')
             ->form(new AdminPasswordResetForm())
             ->returns(Message::class)
-            ->handler(function (AdminPasswordResetForm $input) {
-                $user = $this->authSystem->getAuthenticatedUser();
+            ->handler(
+                function (AdminPasswordResetForm $input) {
+                    $user = $this->authSystem->getAuthenticatedUser();
 
-                $this->passwordResetService->resetUserPassword($user, $input->newPassword);
+                    $this->passwordResetService->resetUserPassword($user, $input->newPassword);
 
-                return new Message('auth.user.password-reset');
-            });
+                    return new Message('auth.user.password-reset');
+                }
+            );
 
         $module->widget('update-profile')
             ->label('Update Profile')

@@ -12,14 +12,13 @@ use Dms\Core\Module\ITableDisplay;
 use Dms\Core\Module\ITableView;
 use Dms\Core\Table\Criteria\RowCriteria;
 use Dms\Core\Table\ITableStructure;
+use Dms\Web\Expressive\Http\CurrentModuleContext;
 use Dms\Web\Expressive\Http\Handler\DmsHandler;
 use Dms\Web\Expressive\Http\Handler\Package\Module\ModuleContextTrait;
-use Dms\Web\Expressive\Http\CurrentModuleContext;
 use Dms\Web\Expressive\Renderer\Table\TableRenderer;
-use Psr\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\JsonResponse;
 use Zend\Expressive\Router\RouterInterface;
@@ -74,13 +73,15 @@ class LoadTableRowsHandler extends DmsHandler implements RequestHandlerInterface
 
         $isFiltered = $this->filterCriteriaFromRequest($request, $table->getDataSource()->getStructure(), $criteria);
 
-        return new HtmlResponse($this->tableRenderer->renderTableData(
-            $moduleContext,
-            $table,
-            $table->getDataSource()->load($criteria),
-            $viewName,
-            $isFiltered
-        ));
+        return new HtmlResponse(
+            $this->tableRenderer->renderTableData(
+                $moduleContext,
+                $table,
+                $table->getDataSource()->load($criteria),
+                $viewName,
+                $isFiltered
+            )
+        );
     }
 
     protected function filterCriteriaFromRequest(ServerRequestInterface $request, ITableStructure $structure, RowCriteria $criteria) : bool
@@ -162,9 +163,12 @@ class LoadTableRowsHandler extends DmsHandler implements RequestHandlerInterface
         try {
             return $module->getTable($tableName);
         } catch (InvalidArgumentException $e) {
-            $response = new JsonResponse([
+            $response = new JsonResponse(
+                [
                 'message' => 'Invalid table name',
-            ], 404);
+                ],
+                404
+            );
         }
 
         return $response;

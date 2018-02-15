@@ -28,10 +28,9 @@ use Dms\Web\Expressive\Renderer\Form\ActionFormRenderer;
 use Dms\Web\Expressive\Renderer\Form\FormRenderingContext;
 use Dms\Web\Expressive\Renderer\Form\IFormRendererWithActions;
 use Dms\Web\Expressive\Util\ActionSafetyChecker;
-use Psr\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response\JsonResponse;
 use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
@@ -157,17 +156,22 @@ class FormRendererHandler extends DmsHandler implements RequestHandlerInterface
         $action = $this->loadAction($moduleContext->getModule(), $actionName, $request);
 
         if (!($action instanceof IParameterizedAction)) {
-            return new JsonResponse([
+            return new JsonResponse(
+                [
                 'message' => 'This action does not require an input form',
-            ], 403);
+                ],
+                403
+            );
         }
 
         if ($objectId !== null && $action instanceof IObjectAction) {
             $object = $this->loadObject($objectId, $action);
 
-            $action = $action->withSubmittedFirstStage([
+            $action = $action->withSubmittedFirstStage(
+                [
                 IObjectAction::OBJECT_FIELD_NAME => $object,
-            ]);
+                ]
+            );
 
             $stageNumber--;
         }
@@ -176,9 +180,12 @@ class FormRendererHandler extends DmsHandler implements RequestHandlerInterface
         $stageNumber = (int)$stageNumber;
 
         if ($stageNumber < 1 || $stageNumber > $form->getAmountOfStages()) {
-            return new JsonResponse([
+            return new JsonResponse(
+                [
                 'message' => 'Invalid stage number',
-            ], 404);
+                ],
+                404
+            );
         }
 
         $input = $this->inputTransformers->transform($moduleContext, $action, $request->getParsedBody());
@@ -210,9 +217,12 @@ class FormRendererHandler extends DmsHandler implements RequestHandlerInterface
 
             return $action;
         } catch (ActionNotFoundException $e) {
-            $response = new JsonResponse([
+            $response = new JsonResponse(
+                [
                 'message' => 'Invalid action name',
-            ], 404);
+                ],
+                404
+            );
         }
 
         return $response;
@@ -227,7 +237,9 @@ class FormRendererHandler extends DmsHandler implements RequestHandlerInterface
     protected function loadObject(string $objectId, IObjectAction $action) : ITypedObject
     {
         try {
-            /** @var ObjectIdType $objectField */
+            /**
+ * @var ObjectIdType $objectField
+*/
             $objectFieldType = $action->getObjectForm()->getField(IObjectAction::OBJECT_FIELD_NAME)->getType();
 
             return $this->loadObjectFromDataSource($objectId, $objectFieldType->getObjects());

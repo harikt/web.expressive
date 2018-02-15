@@ -6,10 +6,9 @@ use Dms\Common\Structure\FileSystem\UploadedFileFactory;
 use Dms\Core\ICms;
 use Dms\Web\Expressive\File\ITemporaryFileService;
 use Illuminate\Contracts\Config\Repository;
-use Psr\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Zend\Diactoros\Response\JsonResponse;
 
@@ -53,7 +52,9 @@ class UploadHandler implements RequestHandlerInterface
     {
         $tokens = [];
 
-        /** @var UploadedFile $file */
+        /**
+ * @var UploadedFile $file
+*/
         foreach ($request->getUploadedFiles() as $key => $file) {
             $tokens[$key] = $this->tempFileService->storeTempFile(
                 UploadedFileFactory::build(
@@ -66,9 +67,11 @@ class UploadHandler implements RequestHandlerInterface
             )->getToken();
         }
 
-        return new JsonResponse([
+        return new JsonResponse(
+            [
             'message' => 'The files were successfully uploaded',
             'tokens'  => $tokens,
-        ]);
+            ]
+        );
     }
 }

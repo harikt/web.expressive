@@ -52,11 +52,11 @@ class ModuleContext
      * ModuleContext constructor.
      *
      * @param RouterInterface $router
-     * @param string $rootUrl
-     * @param array $titles
-     * @param array $breadcrumbs
-     * @param [type] $moduleLoaderCallback
-     * @param boolean $isSubmodule
+     * @param string          $rootUrl
+     * @param array           $titles
+     * @param array           $breadcrumbs
+     * @param [type]          $moduleLoaderCallback
+     * @param boolean         $isSubmodule
      */
     public function __construct(RouterInterface $router, string $rootUrl, array $titles, array $breadcrumbs, $moduleLoaderCallback, bool $isSubmodule = false)
     {
@@ -112,9 +112,14 @@ class ModuleContext
      */
     public static function rootContextForModule(RouterInterface $router, IModule $module) : ModuleContext
     {
-        return self::rootContext($router, $module->getPackageName(), $module->getName(), function () use ($module) {
-            return $module;
-        });
+        return self::rootContext(
+            $router,
+            $module->getPackageName(),
+            $module->getName(),
+            function () use ($module) {
+                return $module;
+            }
+        );
     }
 
     /**
@@ -159,10 +164,13 @@ class ModuleContext
         $fragmentIdentifier = null,
         array $options = []
     ) : string {
-        $routeParams = array_merge($routeParams, [
+        $routeParams = array_merge(
+            $routeParams,
+            [
             'package' => $this->getModule()->getPackageName(),
             'module' => $this->getModule()->getName(),
-        ]);
+            ]
+        );
 
         $uriString = $this->router->generateUri('dms::package.module.' . $name, $routeParams);
 

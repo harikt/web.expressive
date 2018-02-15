@@ -59,7 +59,9 @@ class AdminDmsUserProvider implements UserProvider
      */
     public function retrieveByToken($id, $token)
     {
-        /** @var LocalAdmin[] $admins */
+        /**
+ * @var LocalAdmin[] $admins
+*/
         $admins = $this->repository->matching(
             $this->repository->criteria()
                 ->whereInstanceOf(LocalAdmin::class)

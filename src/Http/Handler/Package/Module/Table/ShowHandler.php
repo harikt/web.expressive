@@ -13,10 +13,9 @@ use Dms\Web\Expressive\Http\Handler\DmsHandler;
 use Dms\Web\Expressive\Http\Handler\Package\Module\ModuleContextTrait;
 use Dms\Web\Expressive\Renderer\Table\TableRenderer;
 use Dms\Web\Expressive\Util\StringHumanizer;
-use Psr\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\JsonResponse;
@@ -69,14 +68,18 @@ class ShowHandler extends DmsHandler implements RequestHandlerInterface
         $table = $this->loadTable($module, $tableName);
 
         if ($table instanceof ISummaryTable) {
-            $to = $urlHelper->generate('dms::package.module.dashboard', [
+            $to = $urlHelper->generate(
+                'dms::package.module.dashboard',
+                [
                 'package' => $package->getName(),
                 'module'  => $firstModule,
-            ], [
+                ],
+                [
                 '__content_only' => isset($request->getQueryParams()['__content_only']) ? $request->getQueryParams()['__content_only'] : null,
                 '__template_only' => isset($request->getQueryParams()['__template_only']) ? $request->getQueryParams()['__template_only'] : null,
                 '__no_template' => isset($request->getQueryParams()['__no_template']) ? $request->getQueryParams()['__no_template'] : null,
-            ]);
+                ]
+            );
 
             $response = new Response('php://memory', 302);
             return $response->withHeader('Location', $to);
@@ -88,14 +91,17 @@ class ShowHandler extends DmsHandler implements RequestHandlerInterface
         $this->loadTableView($table, $viewName);
 
         return new HtmlResponse(
-            $this->template->render('dms::package.module.table', [
+            $this->template->render(
+                'dms::package.module.table',
+                [
                 'assetGroups'     => ['tables'],
                 'pageTitle'       => implode(' :: ', array_merge($moduleContext->getTitles(), [StringHumanizer::title($tableName)])),
                 'pageSubTitle'    => $viewName,
                 'breadcrumbs'     => $moduleContext->getBreadcrumbs(),
                 'finalBreadcrumb' => StringHumanizer::title($tableName),
                 'tableContent'    => $this->tableRenderer->renderTableControl($moduleContext, $table, $viewName),
-            ])
+                ]
+            )
         );
     }
 
@@ -125,9 +131,12 @@ class ShowHandler extends DmsHandler implements RequestHandlerInterface
         try {
             return $module->getTable($tableName);
         } catch (InvalidArgumentException $e) {
-            $response = new JsonResponse([
+            $response = new JsonResponse(
+                [
                 'message' => 'Invalid table name',
-            ], 404);
+                ],
+                404
+            );
         }
 
         return $response;

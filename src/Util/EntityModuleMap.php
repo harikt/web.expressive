@@ -39,19 +39,23 @@ class EntityModuleMap
         $moduleMapKey         = 'dms:module-map:' . $installedModulesHash;
 
         $this->cms = $cms;
-        $this->map = $cache->remember($moduleMapKey, self::CACHE_EXPIRY, function () {
-            $map = [];
+        $this->map = $cache->remember(
+            $moduleMapKey,
+            self::CACHE_EXPIRY,
+            function () {
+                $map = [];
 
-            foreach ($this->cms->loadPackages() as $package) {
-                foreach ($package->loadModules() as $module) {
-                    if ($module instanceof IReadModule) {
-                        $map[$module->getObjectType()] = $package->getName() . '.' . $module->getName();
+                foreach ($this->cms->loadPackages() as $package) {
+                    foreach ($package->loadModules() as $module) {
+                        if ($module instanceof IReadModule) {
+                            $map[$module->getObjectType()] = $package->getName() . '.' . $module->getName();
+                        }
                     }
                 }
-            }
 
-            return $map;
-        });
+                return $map;
+            }
+        );
     }
 
     /**

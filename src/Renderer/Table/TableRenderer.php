@@ -97,14 +97,17 @@ class TableRenderer
             }
         }
 
-        return $this->template->render('dms::components.table.data-table', [
+        return $this->template->render(
+            'dms::components.table.data-table',
+            [
                 'dataSource'       => $table->getDataSource(),
                 'columns'          => $tableData->getStructure()->getColumns(),
                 'columnRenderers'  => $columnRenderers,
                 'sections'         => $tableData->getSections(),
                 'rowActionButtons' => $rowActionButtons,
                 'allowsReorder'    => !$isFiltered && $viewName && $this->allowsRowReorder($table, $viewName),
-            ]);
+            ]
+        );
     }
 
     /**

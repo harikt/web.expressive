@@ -68,30 +68,34 @@ class AdminMapper extends EntityMapper
             ->withParentIdAs('user_id')
             ->withRelatedIdAs('role_id');
 
-        $map->subclass()->withTypeInColumn('type', 'local')->define(function (MapperDefinition $map) {
-            $map->type(LocalAdmin::class);
+        $map->subclass()->withTypeInColumn('type', 'local')->define(
+            function (MapperDefinition $map) {
+                $map->type(LocalAdmin::class);
 
-            $map->embedded(LocalAdmin::PASSWORD)
-                ->withColumnsPrefixedBy('password_')
-                ->using(new HashedPasswordMapper());
+                $map->embedded(LocalAdmin::PASSWORD)
+                    ->withColumnsPrefixedBy('password_')
+                    ->using(new HashedPasswordMapper());
 
-            $map->property(LocalAdmin::REMEMBER_TOKEN)
-                ->to(self::AUTH_REMEMBER_TOKEN_COLUMN)
-                ->nullable()
-                ->asVarchar(255);
-        });
+                $map->property(LocalAdmin::REMEMBER_TOKEN)
+                    ->to(self::AUTH_REMEMBER_TOKEN_COLUMN)
+                    ->nullable()
+                    ->asVarchar(255);
+            }
+        );
 
-        $map->subclass()->withTypeInColumn('type', 'oauth')->define(function (MapperDefinition $map) {
-            $map->type(OauthAdmin::class);
+        $map->subclass()->withTypeInColumn('type', 'oauth')->define(
+            function (MapperDefinition $map) {
+                $map->type(OauthAdmin::class);
 
-            $map->property(OauthAdmin::OAUTH_PROVIDER_NAME)
-                ->to('oauth_provider_name')
-                ->asVarchar(255);
+                $map->property(OauthAdmin::OAUTH_PROVIDER_NAME)
+                    ->to('oauth_provider_name')
+                    ->asVarchar(255);
 
-            $map->property(OauthAdmin::OAUTH_ACCOUNT_ID)
-                ->to('oauth_account_id')
-                ->asVarchar(255);
-        });
+                $map->property(OauthAdmin::OAUTH_ACCOUNT_ID)
+                    ->to('oauth_account_id')
+                    ->asVarchar(255);
+            }
+        );
 
         MetadataMapper::mapMetadataToJsonColumn($map, 'metadata');
     }

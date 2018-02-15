@@ -8,10 +8,9 @@ use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\ICms;
 use Dms\Web\Expressive\Auth\Password\IPasswordResetService;
 use Dms\Web\Expressive\Http\Handler\DmsHandler;
-use Psr\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Router\RouterInterface;
@@ -32,11 +31,11 @@ class ResetLinkEmailHandler extends DmsHandler implements RequestHandlerInterfac
     /**
      * Create a new password controller instance.
      *
-     * @param ICms $cms
-     * @param IAuthSystem $auth
+     * @param ICms                      $cms
+     * @param IAuthSystem               $auth
      * @param TemplateRendererInterface $template
-     * @param RouterInterface $router
-     * @param IPasswordResetService $passwordResetService
+     * @param RouterInterface           $router
+     * @param IPasswordResetService     $passwordResetService
      */
     public function __construct(
         ICms $cms,
@@ -91,16 +90,16 @@ class ResetLinkEmailHandler extends DmsHandler implements RequestHandlerInterfac
 
         // todo change redirect method calls
         switch ($response) {
-            case PasswordBroker::RESET_LINK_SENT:
-                $response = new Response('php://memory', '302');
-                $response->withHeader('Location', $to);
-                return $response;
+        case PasswordBroker::RESET_LINK_SENT:
+            $response = new Response('php://memory', '302');
+            $response->withHeader('Location', $to);
+            return $response;
                 // return redirect()->back()->with('success', trans($response));
 
-            case PasswordBroker::INVALID_USER:
-                $response = new Response('php://memory', '302');
-                $response->withHeader('Location', $to);
-                return $response;
+        case PasswordBroker::INVALID_USER:
+            $response = new Response('php://memory', '302');
+            $response->withHeader('Location', $to);
+            return $response;
                 // return redirect()->back()->withErrors(['email' => trans($response)]);
         }
     }
@@ -145,23 +144,26 @@ class ResetLinkEmailHandler extends DmsHandler implements RequestHandlerInterfac
             'token'
         );
 
-        $response = $this->passwordBroker->reset($credentials, function (IAdmin $user, $password) {
-            $this->passwordResetService->resetUserPassword($user, $password);
-        });
+        $response = $this->passwordBroker->reset(
+            $credentials,
+            function (IAdmin $user, $password) {
+                $this->passwordResetService->resetUserPassword($user, $password);
+            }
+        );
 
         switch ($response) {
-            case PasswordBroker::PASSWORD_RESET:
-                $response = new Response();
-                $response = $response->withHeader('Location', $this->router->generateUri('dms::auth.login'));
+        case PasswordBroker::PASSWORD_RESET:
+            $response = new Response();
+            $response = $response->withHeader('Location', $this->router->generateUri('dms::auth.login'));
 
-                // ->with('success', trans($response))
-                return $response;
+            // ->with('success', trans($response))
+            return $response;
 
-            default:
-                $response = new Response();
-                $response = $response->withHeader('Location', $this->router->generateUri('dms::auth.login'));
+        default:
+            $response = new Response();
+            $response = $response->withHeader('Location', $this->router->generateUri('dms::auth.login'));
 
-                return $response;
+            return $response;
                 // return redirect()->back()
                 //     ->withInput($request->only('email'))
                 //     ->withErrors(['email' => trans($response)]);

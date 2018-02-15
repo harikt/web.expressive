@@ -31,15 +31,19 @@ class AuthOrm extends Orm
      */
     protected function define(OrmDefinition $orm)
     {
-        $orm->valueObjects([
+        $orm->valueObjects(
+            [
             HashedPassword::class => HashedPasswordMapper::class,
             Permission::class     => PermissionMapper::class,
-        ]);
+            ]
+        );
 
-        $orm->entities([
+        $orm->entities(
+            [
             Role::class               => RoleMapper::class,
             Admin::class              => AdminMapper::class,
             PasswordResetToken::class => PasswordResetTokenMapper::class,
-        ]);
+            ]
+        );
     }
 }

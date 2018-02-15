@@ -29,10 +29,9 @@ use Dms\Web\Expressive\Renderer\Form\ActionFormRenderer;
 use Dms\Web\Expressive\Util\ActionLabeler;
 use Dms\Web\Expressive\Util\ActionSafetyChecker;
 use Dms\Web\Expressive\Util\StringHumanizer;
-use Psr\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\JsonResponse;
 use Zend\Expressive\Router\RouterInterface;
@@ -142,7 +141,9 @@ class ShowResultHandler extends DmsHandler implements RequestHandlerInterface
         $response = $this->resultHandlers->handle($moduleContext, $action, $result);
 
         if ($objectId !== null && $module instanceof IReadModule) {
-            /** @var IReadModule $module */
+            /**
+ * @var IReadModule $module
+*/
             $object        = $this->loadObjectFromDataSource($objectId, $module->getDataSource());
             $objectLabel   = $module->getLabelFor($object);
             $actionButtons = $this->actionButtonBuilder->buildActionButtons($moduleContext, $object, $actionName);
@@ -151,7 +152,10 @@ class ShowResultHandler extends DmsHandler implements RequestHandlerInterface
             $actionButtons = [];
         }
 
-        return new HtmlResponse($this->template->render('dms::package.module.details', [
+        return new HtmlResponse(
+            $this->template->render(
+                'dms::package.module.details',
+                [
                 'assetGroups'     => ['forms'],
                 'pageTitle'       => implode(' :: ', array_merge($moduleContext->getTitles(), [ActionLabeler::getActionButtonLabel($action)])),
                 'breadcrumbs'     => $moduleContext->getBreadcrumbs(),
@@ -161,7 +165,9 @@ class ShowResultHandler extends DmsHandler implements RequestHandlerInterface
                 'actionResult'    => $response,
                 'actionButtons'   => $actionButtons,
                 'objectId'        => $objectId,
-            ]));
+                ]
+            )
+        );
     }
 
     /**
@@ -175,13 +181,17 @@ class ShowResultHandler extends DmsHandler implements RequestHandlerInterface
     protected function runActionWithDataFromRequest(ServerRequestInterface $request, ModuleContext $moduleContext, IAction $action, array $extraData = [])
     {
         if ($action instanceof IParameterizedAction) {
-            /** @var IParameterizedAction $action */
+            /**
+ * @var IParameterizedAction $action
+*/
             $input  = $this->inputTransformers->transform($moduleContext, $action, $request->getParsedBody() + $extraData);
             $result = $action->run($input);
 
             return $result;
         } else {
-            /** @var IUnparameterizedAction $action */
+            /**
+ * @var IUnparameterizedAction $action
+*/
             $result = $action->run();
 
             return $result;
@@ -205,9 +215,12 @@ class ShowResultHandler extends DmsHandler implements RequestHandlerInterface
 
             return $action;
         } catch (ActionNotFoundException $e) {
-            $response = new JsonResponse([
+            $response = new JsonResponse(
+                [
                 'message' => 'Invalid action name',
-            ], 404);
+                ],
+                404
+            );
         }
 
         return $response;
@@ -222,7 +235,9 @@ class ShowResultHandler extends DmsHandler implements RequestHandlerInterface
     protected function loadObject(string $objectId, IObjectAction $action) : ITypedObject
     {
         try {
-            /** @var ObjectIdType $objectField */
+            /**
+ * @var ObjectIdType $objectField
+*/
             $objectFieldType = $action->getObjectForm()->getField(IObjectAction::OBJECT_FIELD_NAME)->getType();
 
             return $this->loadObjectFromDataSource($objectId, $objectFieldType->getObjects());

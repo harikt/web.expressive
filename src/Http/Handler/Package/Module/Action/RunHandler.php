@@ -21,10 +21,9 @@ use Dms\Web\Expressive\Http\ModuleContext;
 use Dms\Web\Expressive\Renderer\Action\ObjectActionButtonBuilder;
 use Dms\Web\Expressive\Renderer\Form\ActionFormRenderer;
 use Dms\Web\Expressive\Util\ActionSafetyChecker;
-use Psr\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response\JsonResponse;
 use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
@@ -142,13 +141,17 @@ class RunHandler extends DmsHandler implements RequestHandlerInterface
     protected function runActionWithDataFromRequest(ServerRequestInterface $request, ModuleContext $moduleContext, IAction $action, array $extraData = [])
     {
         if ($action instanceof IParameterizedAction) {
-            /** @var IParameterizedAction $action */
+            /**
+ * @var IParameterizedAction $action
+*/
             $input  = $this->inputTransformers->transform($moduleContext, $action, $request->getParsedBody() + $request->getQueryParams() + $extraData);
             $result = $action->run($input);
 
             return $result;
         } else {
-            /** @var IUnparameterizedAction $action */
+            /**
+ * @var IUnparameterizedAction $action
+*/
             $result = $action->run();
 
             return $result;
@@ -179,10 +182,13 @@ class RunHandler extends DmsHandler implements RequestHandlerInterface
      */
     protected function handleUnknownHandlerException(\Exception $e)
     {
-        return new JsonResponse([
+        return new JsonResponse(
+            [
             'message_type' => 'danger',
             'message'      => 'An internal error occurred',
-        ], 500);
+            ],
+            500
+        );
     }
 
     /**
@@ -202,9 +208,12 @@ class RunHandler extends DmsHandler implements RequestHandlerInterface
 
             return $action;
         } catch (ActionNotFoundException $e) {
-            return new JsonResponse([
+            return new JsonResponse(
+                [
                 'message' => 'Invalid action name',
-            ], 404);
+                ],
+                404
+            );
         }
     }
 }

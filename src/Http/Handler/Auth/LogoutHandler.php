@@ -5,9 +5,9 @@ namespace Dms\Web\Expressive\Http\Handler\Auth;
 use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\Auth\NotAuthenticatedException;
 use Dms\Core\ICms;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response;
 
 /**
@@ -30,7 +30,7 @@ class LogoutHandler implements RequestHandlerInterface
     /**
      * Logout controller instance.
      *
-     * @param ICms $cms
+     * @param ICms        $cms
      * @param IAuthSystem $auth
      */
     public function __construct(

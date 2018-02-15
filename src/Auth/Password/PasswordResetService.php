@@ -50,7 +50,9 @@ class PasswordResetService implements IPasswordResetService
 
         $hashedPassword = $this->hasherFactory->buildDefault()->hash($newPassword);
 
-        /** @var LocalAdmin $admin */
+        /**
+ * @var LocalAdmin $admin
+*/
         $admin->setPassword($hashedPassword);
 
         $this->adminRepository->save($admin);

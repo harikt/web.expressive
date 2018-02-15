@@ -30,12 +30,14 @@ class GoogleOauthProvider extends OauthProvider
      */
     protected function loadProvider(string $clientId, string $clientSecret) : AbstractProvider
     {
-        return new Google([
+        return new Google(
+            [
             'clientId'     => $clientId,
             'clientSecret' => $clientSecret,
             // todo global route removal
             'redirectUri'  => $this->router->generateUri('dms::auth.oauth.response', ['provider' => $this->name]),
-        ]);
+            ]
+        );
     }
 
     /**
@@ -45,7 +47,9 @@ class GoogleOauthProvider extends OauthProvider
      */
     public function getAdminDetailsFromResourceOwner(ResourceOwnerInterface $resourceOwner) : AdminAccountDetails
     {
-        /** @var GoogleUser $resourceOwner */
+        /**
+ * @var GoogleUser $resourceOwner
+*/
 
         return new AdminAccountDetails(
             $resourceOwner->getFirstName() . ' ' . $resourceOwner->getLastName(),

@@ -50,9 +50,12 @@ class TempUploadedFileToUploadedFileTransformer implements IActionInputTransform
             $uploadedTokenStructure = $input[self::TEMP_FILES_KEY];
             $uploadedFileTokens     = [];
 
-            array_walk_recursive($uploadedTokenStructure, function ($token) use (&$uploadedFileTokens) {
-                $uploadedFileTokens[] = $token;
-            });
+            array_walk_recursive(
+                $uploadedTokenStructure,
+                function ($token) use (&$uploadedFileTokens) {
+                    $uploadedFileTokens[] = $token;
+                }
+            );
 
             $uploadedFiles = [];
             foreach ($this->tempFileService->getTempFiles($uploadedFileTokens) as $file) {
@@ -60,9 +63,12 @@ class TempUploadedFileToUploadedFileTransformer implements IActionInputTransform
             }
 
             $uploadedFileStructure = $uploadedTokenStructure;
-            array_walk_recursive($uploadedFileStructure, function (&$token) use (&$uploadedFiles) {
-                $token = $uploadedFiles[$token];
-            });
+            array_walk_recursive(
+                $uploadedFileStructure,
+                function (&$token) use (&$uploadedFiles) {
+                    $token = $uploadedFiles[$token];
+                }
+            );
 
             unset($input[self::TEMP_FILES_KEY]);
 

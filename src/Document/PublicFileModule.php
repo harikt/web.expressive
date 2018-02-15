@@ -130,162 +130,232 @@ class PublicFileModule extends CrudModule
     {
         $module->name('files');
 
-        $module->metadata([
+        $module->metadata(
+            [
             'icon' => 'hdd-o'
-        ]);
+            ]
+        );
 
-        $module->labelObjects()->fromCallback(function (File $file) {
-            return $this->relativePathCalculator->getRelativePath($this->rootDirectory, $file->getFullPath());
-        });
+        $module->labelObjects()->fromCallback(
+            function (File $file) {
+                return $this->relativePathCalculator->getRelativePath($this->rootDirectory, $file->getFullPath());
+            }
+        );
 
         $module->action('upload-files')
             ->authorizeAll([self::VIEW_PERMISSION, self::EDIT_PERMISSION])
-            ->form(Form::create()->section('Upload Files', [
-                $this->folderField('folder', 'Folder')->value(self::ROOT_PATH)->required(),
-                Field::create('files', 'Files')->arrayOf(
-                    Field::element()->file()->required()
-                )->required(),
-            ]))
-            ->handler(function (ArrayDataObject $input) {
-                foreach ($input['files'] as $file) {
-                    /** @var IUploadedFile $file */
-                    $fullPath = PathHelper::combine($this->rootDirectory, $input['folder'], $file->getClientFileNameWithFallback());
-                    $file->moveTo($this->getNonConflictingFileName($fullPath));
+            ->form(
+                Form::create()->section(
+                    'Upload Files',
+                    [
+                    $this->folderField('folder', 'Folder')->value(self::ROOT_PATH)->required(),
+                    Field::create('files', 'Files')->arrayOf(
+                        Field::element()->file()->required()
+                    )->required(),
+                    ]
+                )
+            )
+            ->handler(
+                function (ArrayDataObject $input) {
+                    foreach ($input['files'] as $file) {
+                        /**
+                * @var IUploadedFile $file
+                */
+                        $fullPath = PathHelper::combine($this->rootDirectory, $input['folder'], $file->getClientFileNameWithFallback());
+                        $file->moveTo($this->getNonConflictingFileName($fullPath));
+                    }
                 }
-            });
+            );
 
         $module->action('empty-trash')
             ->authorizeAll([self::VIEW_PERMISSION, self::EDIT_PERMISSION])
-            ->handler(function () {
-                self::deleteDirectory($this->trashDirectoryTree, $deleteFolder = false);
-            });
+            ->handler(
+                function () {
+                    self::deleteDirectory($this->trashDirectoryTree, $deleteFolder = false);
+                }
+            );
 
         $module->action('restore-file')
             ->authorizeAll([self::VIEW_PERMISSION, self::EDIT_PERMISSION])
-            ->form(Form::create()->section('File', [
-                Field::create('file', 'File')->objectFromIndex($this->trashDataSource)->required(),
-            ]))
-            ->handler(function (ArrayDataObject $input) {
-                /** @var IFile $file */
-                $file         = $input['file'];
-                $relativePath = $this->relativePathCalculator->getRelativePath($this->trashDirectory, $file->getFullPath());
-                $file->moveTo(PathHelper::combine($this->rootDirectory, $relativePath));
-            });
+            ->form(
+                Form::create()->section(
+                    'File',
+                    [
+                    Field::create('file', 'File')->objectFromIndex($this->trashDataSource)->required(),
+                    ]
+                )
+            )
+            ->handler(
+                function (ArrayDataObject $input) {
+                    /**
+                * @var IFile $file
+                */
+                    $file         = $input['file'];
+                    $relativePath = $this->relativePathCalculator->getRelativePath($this->trashDirectory, $file->getFullPath());
+                    $file->moveTo(PathHelper::combine($this->rootDirectory, $relativePath));
+                }
+            );
 
         $module->action('create-folder')
             ->authorizeAll([self::VIEW_PERMISSION, self::EDIT_PERMISSION])
-            ->form(Form::create()->section('Create Folder', [
-                $this->folderField('folder', 'Folder'),
-            ]))
-            ->handler(function (ArrayDataObject $input) {
-                @mkdir(PathHelper::combine($this->rootDirectory, $input['folder']), 0644, true);
-            });
-
-        $module->crudForm(function (CrudFormDefinition $form) {
-            $form->dependentOnObject(function (CrudFormDefinition $form, File $file = null) {
-                $directoryPath = $file
-                    ? $this->getRelativePath($file->getDirectory()->getFullPath())
-                    : null;
-
-                $form->section('Details', [
-                    $form->field(
-                        $this->folderField('folder', 'Folder')
-                            ->value($directoryPath)
-                    )->withoutBinding(),
-                ]);
-            }, ['folder']);
-
-            $form->dependentOn(['folder'], function (CrudFormDefinition $form, array $input, File $file = null) {
-                $directoryPath = PathHelper::combine($this->rootDirectory, $input['folder']);
-
-                $fileUploadField = Field::create('file', 'File')->file()->required()
-                    ->moveToPathWithClientsFileName($directoryPath)
-                    ->value($file);
-                $form->section('File', [
-                    $form->field(
-                        $form->isEditForm()
-                            ? $fileUploadField->readonly()
-                            : $fileUploadField
-                    )->withoutBinding(),
-                ]);
-            });
-
-            $form->dependentOnObject(function (CrudFormDefinition $form, File $file) {
-                $form->section('Details', [
-                    $form->field(
-                        Field::create('created_at', 'Created At')->dateTime()->readonly()->value(
-                            new DateTime(new \DateTimeImmutable('@' . $file->getInfo()->getCTime()))
-                        )
-                    )->withoutBinding(),
-                    $form->field(
-                        Field::create('modified_at', 'Modified At')->dateTime()->readonly()->value(
-                            new DateTime(new \DateTimeImmutable('@' . $file->getInfo()->getMTime()))
-                        )
-                    )->withoutBinding(),
-                ]);
-            });
-
-            $form->createObjectType()->fromCallback(function (array $input) : File {
-                return $input['file'];
-            });
-
-
-            $form->onSave(function (File $file, array $input) use ($form) {
-                if ($form->isEditForm()) {
-                    $fullPath = PathHelper::combine($this->rootDirectory, $input['folder'], $file->getName());
-
-                    if ($file->getFullPath() !== $fullPath) {
-                        $file->moveTo($fullPath);
-                    }
+            ->form(
+                Form::create()->section(
+                    'Create Folder',
+                    [
+                    $this->folderField('folder', 'Folder'),
+                    ]
+                )
+            )
+            ->handler(
+                function (ArrayDataObject $input) {
+                    @mkdir(PathHelper::combine($this->rootDirectory, $input['folder']), 0644, true);
                 }
-            });
-        });
+            );
+
+        $module->crudForm(
+            function (CrudFormDefinition $form) {
+                $form->dependentOnObject(
+                    function (CrudFormDefinition $form, File $file = null) {
+                        $directoryPath = $file
+                        ? $this->getRelativePath($file->getDirectory()->getFullPath())
+                        : null;
+
+                        $form->section(
+                            'Details',
+                            [
+                            $form->field(
+                                $this->folderField('folder', 'Folder')
+                                    ->value($directoryPath)
+                            )->withoutBinding(),
+                            ]
+                        );
+                    },
+                    ['folder']
+                );
+
+                $form->dependentOn(
+                    ['folder'],
+                    function (CrudFormDefinition $form, array $input, File $file = null) {
+                        $directoryPath = PathHelper::combine($this->rootDirectory, $input['folder']);
+
+                        $fileUploadField = Field::create('file', 'File')->file()->required()
+                        ->moveToPathWithClientsFileName($directoryPath)
+                        ->value($file);
+                        $form->section(
+                            'File',
+                            [
+                            $form->field(
+                                $form->isEditForm()
+                                ? $fileUploadField->readonly()
+                                : $fileUploadField
+                            )->withoutBinding(),
+                            ]
+                        );
+                    }
+                );
+
+                $form->dependentOnObject(
+                    function (CrudFormDefinition $form, File $file) {
+                        $form->section(
+                            'Details',
+                            [
+                            $form->field(
+                                Field::create('created_at', 'Created At')->dateTime()->readonly()->value(
+                                    new DateTime(new \DateTimeImmutable('@' . $file->getInfo()->getCTime()))
+                                )
+                            )->withoutBinding(),
+                            $form->field(
+                                Field::create('modified_at', 'Modified At')->dateTime()->readonly()->value(
+                                    new DateTime(new \DateTimeImmutable('@' . $file->getInfo()->getMTime()))
+                                )
+                            )->withoutBinding(),
+                            ]
+                        );
+                    }
+                );
+
+                $form->createObjectType()->fromCallback(
+                    function (array $input) : File {
+                        return $input['file'];
+                    }
+                );
+
+
+                $form->onSave(
+                    function (File $file, array $input) use ($form) {
+                        if ($form->isEditForm()) {
+                            $fullPath = PathHelper::combine($this->rootDirectory, $input['folder'], $file->getName());
+
+                            if ($file->getFullPath() !== $fullPath) {
+                                $file->moveTo($fullPath);
+                            }
+                        }
+                    }
+                );
+            }
+        );
 
         $module->objectAction('download')
             ->authorize(self::VIEW_PERMISSION)
             ->returns(File::class)
-            ->handler(function (File $file) : File {
-                return $file;
-            });
+            ->handler(
+                function (File $file) : File {
+                    return $file;
+                }
+            );
 
-        $module->removeAction()->handler(function (File $file) {
-            $file->moveTo(PathHelper::combine($this->trashDirectory, $this->getRelativePath($file->getFullPath())));
-        });
+        $module->removeAction()->handler(
+            function (File $file) {
+                $file->moveTo(PathHelper::combine($this->trashDirectory, $this->getRelativePath($file->getFullPath())));
+            }
+        );
 
-        $module->summaryTable(function (SummaryTableDefinition $table) {
-            $table->mapCallback(function (File $file) {
-                return $file;
-            })->to(Field::create('preview', 'Preview')->file());
+        $module->summaryTable(
+            function (SummaryTableDefinition $table) {
+                $table->mapCallback(
+                    function (File $file) {
+                        return $file;
+                    }
+                )->to(Field::create('preview', 'Preview')->file());
 
-            $table->mapProperty(File::CLIENT_FILE_NAME)->to(Field::create('name', 'Name')->string());
+                $table->mapProperty(File::CLIENT_FILE_NAME)->to(Field::create('name', 'Name')->string());
 
-            $table->mapCallback(function (File $file) {
-                return FileSizeFormatter::formatBytes($file->getSize());
-            })->to(Field::create('size', 'File Size')->string());
+                $table->mapCallback(
+                    function (File $file) {
+                        return FileSizeFormatter::formatBytes($file->getSize());
+                    }
+                )->to(Field::create('size', 'File Size')->string());
 
-            $table->view('all', 'All')
-                ->asDefault()
-                ->loadAll();
-        });
+                $table->view('all', 'All')
+                    ->asDefault()
+                    ->loadAll();
+            }
+        );
     }
 
     protected function folderField($name, $label) : FieldBuilderBase
     {
         return Field::create($name, $label)->string()->required()
             ->autocomplete($this->getAllDirectoryOptions())
-            ->onlyContainsCharacterRanges([
+            ->onlyContainsCharacterRanges(
+                [
                 'a'                 => 'z',
                 'A'                 => 'Z',
                 '0'                 => '9',
                 '_'                 => '_',
                 '-'                 => '-',
                 DIRECTORY_SEPARATOR => DIRECTORY_SEPARATOR,
-            ])
-            ->map(function (string $i) {
-                return $i === self::ROOT_NAME ? self::ROOT_PATH : $i;
-            }, function (string $i) {
-                return $i === self::ROOT_PATH ? self::ROOT_NAME : $i;
-            }, Type::string());
+                ]
+            )
+            ->map(
+                function (string $i) {
+                    return $i === self::ROOT_NAME ? self::ROOT_PATH : $i;
+                },
+                function (string $i) {
+                    return $i === self::ROOT_PATH ? self::ROOT_NAME : $i;
+                },
+                Type::string()
+            );
     }
 
     private function getAllDirectoryOptions() : array

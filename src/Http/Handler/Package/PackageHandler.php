@@ -8,10 +8,9 @@ use Dms\Core\Package\IPackage;
 use Dms\Web\Expressive\Http\Handler\DmsHandler;
 use Dms\Web\Expressive\Renderer\Package\PackageRendererCollection;
 use Dms\Web\Expressive\Util\StringHumanizer;
-use Psr\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Helper\UrlHelper;
@@ -38,10 +37,10 @@ class PackageHandler extends DmsHandler implements RequestHandlerInterface
     /**
      * PackageHandler constructor.
      *
-     * @param ICms $cms
-     * @param IAuthSystem $auth
+     * @param ICms                      $cms
+     * @param IAuthSystem               $auth
      * @param TemplateRendererInterface $template
-     * @param RouterInterface $router
+     * @param RouterInterface           $router
      * @param PackageRendererCollection $packageRenderers
      */
     public function __construct(
@@ -68,13 +67,17 @@ class PackageHandler extends DmsHandler implements RequestHandlerInterface
             $moduleNames = $this->package->getModuleNames();
             $firstModule = reset($moduleNames);
             $urlHelper = new UrlHelper($this->router);
-            $to = $urlHelper->generate('dms::package.module.dashboard', [
+            $to = $urlHelper->generate(
+                'dms::package.module.dashboard',
+                [
                 'package' => $this->package->getName(),
                 'module'  => $firstModule,
-            ], [
+                ],
+                [
                 '__no_template' => isset($request->getQueryParams()['__no_template']) ? $request->getQueryParams()['__no_template'] : '',
                 '__content_only' => isset($request->getQueryParams()['__content_only']) ? $request->getQueryParams()['__content_only'] : '',
-            ]);
+                ]
+            );
 
             $response = new Response('php://memory', 302);
             return $response->withHeader('Location', $to);

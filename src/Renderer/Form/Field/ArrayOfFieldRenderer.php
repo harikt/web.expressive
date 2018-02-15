@@ -28,7 +28,9 @@ class ArrayOfFieldRenderer extends BladeFieldRenderer
 
     protected function canRender(FormRenderingContext $renderingContext, IField $field, IFieldType $fieldType) : bool
     {
-        /** @var ArrayOfType $fieldType */
+        /**
+ * @var ArrayOfType $fieldType
+*/
         return !$fieldType->has(FieldType::ATTR_OPTIONS);
     }
 
@@ -37,7 +39,9 @@ class ArrayOfFieldRenderer extends BladeFieldRenderer
         IField $field,
         IFieldType $fieldType
     ) : string {
-        /** @var ArrayOfType $fieldType */
+        /**
+ * @var ArrayOfType $fieldType
+*/
         $elementField = $this->makeElementField($fieldType);
 
         return $this->renderView(
@@ -62,7 +66,9 @@ class ArrayOfFieldRenderer extends BladeFieldRenderer
         $value,
         IFieldType $fieldType
     ) : string {
-        /** @var ArrayOfType $fieldType */
+        /**
+ * @var ArrayOfType $fieldType
+*/
         $elementField = $this->makeElementField($fieldType);
 
         return $this->renderValueViewWithNullDefault(

@@ -14,11 +14,10 @@ use Dms\Web\Expressive\Auth\Oauth\OauthProviderCollection;
 use Dms\Web\Expressive\Auth\OauthAdmin;
 use Dms\Web\Expressive\Auth\Role;
 use Dms\Web\Expressive\Http\Handler\DmsHandler;
-use Psr\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response;
 use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
@@ -88,9 +87,12 @@ class HandleProviderResponseHandler extends DmsHandler implements RequestHandler
             return $response;
         }
 
-        $accessToken = $oauthProvider->getProvider()->getAccessToken('authorization_code', [
+        $accessToken = $oauthProvider->getProvider()->getAccessToken(
+            'authorization_code',
+            [
             'code' => $request->input('code'),
-        ]);
+            ]
+        );
 
         $resourceOwner = $oauthProvider->getProvider()->getResourceOwner($accessToken);
         $adminAccount  = $this->loadAdminAccount($oauthProvider, $resourceOwner);

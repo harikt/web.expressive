@@ -4,13 +4,13 @@ namespace Dms\Web\Expressive\Http\Middleware;
 
 use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\ICms;
-use Psr\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
-class LoadVariablesToTemplate implements ServerMiddlewareInterface
+class LoadVariablesToTemplate implements MiddlewareInterface
 {
     /**
      * @var ICms
@@ -29,8 +29,8 @@ class LoadVariablesToTemplate implements ServerMiddlewareInterface
 
     /**
      *
-     * @param ICms $cms
-     * @param IAuthSystem $auth
+     * @param ICms                      $cms
+     * @param IAuthSystem               $auth
      * @param TemplateRendererInterface $template
      */
     public function __construct(

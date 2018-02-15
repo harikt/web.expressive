@@ -91,12 +91,15 @@ abstract class DmsHandler
      */
     protected function renderErrorView(int $statusCode)
     {
-        return $this->template->render('dms::errors.' . $statusCode, [
+        return $this->template->render(
+            'dms::errors.' . $statusCode,
+            [
                 'title' => $statusCode,
                 'pageTitle' => $statusCode,
                 'user'  => $this->auth->isAuthenticated() ? $this->auth->getAuthenticatedUser() : null,
                 'finalBreadcrumb' => $statusCode,
-            ]);
+            ]
+        );
     }
 
 

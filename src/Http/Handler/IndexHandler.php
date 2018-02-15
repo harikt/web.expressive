@@ -5,10 +5,9 @@ namespace Dms\Web\Expressive\Http\Handler;
 use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\ICms;
 use Dms\Web\Expressive\Renderer\Package\PackageRendererCollection;
-use Psr\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
@@ -25,10 +24,10 @@ class IndexHandler extends DmsHandler implements RequestHandlerInterface
     /**
      * Dashboard
      *
-     * @param ICms $cms
-     * @param IAuthSystem $auth
+     * @param ICms                      $cms
+     * @param IAuthSystem               $auth
      * @param TemplateRendererInterface $template
-     * @param RouterInterface $router
+     * @param RouterInterface           $router
      * @param PackageRendererCollection $dashboardRenderer
      */
     public function __construct(
@@ -52,12 +51,17 @@ class IndexHandler extends DmsHandler implements RequestHandlerInterface
             $analyticsWidgets = null;
         }
 
-        return new HtmlResponse($this->template->render('dms::dashboard', [
-            'assetGroups'      => ['tables', 'charts'],
-            'pageTitle'        => 'Dashboard',
-            'finalBreadcrumb'  => 'Dashboard',
-            'analyticsWidgets' => $analyticsWidgets,
-            'request'           => $request,
-        ]));
+        return new HtmlResponse(
+            $this->template->render(
+                'dms::dashboard',
+                [
+                'assetGroups'      => ['tables', 'charts'],
+                'pageTitle'        => 'Dashboard',
+                'finalBreadcrumb'  => 'Dashboard',
+                'analyticsWidgets' => $analyticsWidgets,
+                'request'           => $request,
+                ]
+            )
+        );
     }
 }

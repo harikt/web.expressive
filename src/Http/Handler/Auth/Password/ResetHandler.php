@@ -9,10 +9,9 @@ use Dms\Web\Expressive\Auth\Password\IPasswordResetService;
 use Dms\Web\Expressive\Http\Handler\DmsHandler;
 // use Illuminate\Auth\Passwords\PasswordBrokerManager;
 // use Illuminate\Contracts\Auth\PasswordBroker;
-use Psr\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Router\RouterInterface;
@@ -58,8 +57,8 @@ class ResetHandler extends DmsHandler implements RequestHandlerInterface
      *
      * If no token is present, display the link request form.
      *
-     * @param ServerRequestInterface $request
-     * @param RequestHandlerInterface $handler
+     * @param  ServerRequestInterface  $request
+     * @param  RequestHandlerInterface $handler
      * @return ResponseInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -74,9 +73,14 @@ class ResetHandler extends DmsHandler implements RequestHandlerInterface
             return $this->reset($request);
         }
 
-        return new HtmlResponse($this->template->render('dms::auth.password.reset', [
-            'token' => $token,
-        ]));
+        return new HtmlResponse(
+            $this->template->render(
+                'dms::auth.password.reset',
+                [
+                'token' => $token,
+                ]
+            )
+        );
     }
 
     /**

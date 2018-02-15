@@ -201,7 +201,9 @@ class GenericDmsUserProvider implements UserProviderInterface
 
         $user = $this->validateUser($user);
 
-        /** @var BcryptHasher $app */
+        /**
+ * @var BcryptHasher $app
+*/
         $app = app('hash');
 
         return $app->check($credentials['password'], $user->{$this->config['password']});

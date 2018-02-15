@@ -72,13 +72,16 @@ class FileResultHandler extends ActionResultHandler
      */
     protected function handleResult(ModuleContext $moduleContext, IAction $action, $result)
     {
-        /** @var File $result */
+        /**
+ * @var File $result
+*/
         $tempFile = $this->tempFileService->storeTempFile(
             $result,
             $this->config->get('dms.storage.temp-files.download-expiry')
         );
 
-        return new JsonResponse([
+        return new JsonResponse(
+            [
             'message' => 'The action was successfully executed',
             'files'   => [
                 [
@@ -86,6 +89,7 @@ class FileResultHandler extends ActionResultHandler
                     'token' => $tempFile->getToken(),
                 ],
             ],
-        ]);
+            ]
+        );
     }
 }

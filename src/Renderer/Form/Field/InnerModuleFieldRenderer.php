@@ -79,8 +79,12 @@ class InnerModuleFieldRenderer extends BladeFieldRendererWithActions implements 
 
     protected function renderFieldValue(FormRenderingContext $renderingContext, IField $field, $value, IFieldType $fieldType) : string
     {
-        /** @var InnerCrudModuleType $fieldType */
-        /** @var IReadModule $innerModule */
+        /**
+ * @var InnerCrudModuleType $fieldType
+*/
+        /**
+ * @var IReadModule $innerModule
+*/
         $innerModule        = $fieldType->getModule();
         $innerModuleContext = $this->loadInnerModuleContext($field, $renderingContext);
 
@@ -123,11 +127,15 @@ class InnerModuleFieldRenderer extends BladeFieldRendererWithActions implements 
 
     protected function handleFieldAction(FormRenderingContext $renderingContext, IField $field, IFieldType $fieldType, ServerRequestInterface $request, string $actionName = null, array $data)
     {
-        /** @var InnerCrudModuleType $fieldType */
+        /**
+ * @var InnerCrudModuleType $fieldType
+*/
         if ($actionName === 'state') {
-            return new JsonResponse([
+            return new JsonResponse(
+                [
                 'state' => $field->unprocess($fieldType->getModule()->getDataSource()),
-            ]);
+                ]
+            );
         }
 
         $currentState      = json_decode(($data['current_state'] ?? false) ?: '[]', true);
@@ -138,20 +146,27 @@ class InnerModuleFieldRenderer extends BladeFieldRendererWithActions implements 
         $moduleContext = $this->loadInnerModuleContext($field, $renderingContext, $currentState);
 
         // @todo
-        /** @var ModuleRequestRouter $moduleRequestRouter */
+        /**
+ * @var ModuleRequestRouter $moduleRequestRouter
+*/
         $moduleRequestRouter = app(ModuleRequestRouter::class);
 
-        /** @var Request $innerModuleRequest */
+        /**
+ * @var Request $innerModuleRequest
+*/
         $innerModuleRequest = Request::create($request->root() . $requestUrl, $requestMethod, $requestParameters);
 
         $this->emulateAjaxRequest($innerModuleRequest);
 
         $innerModuleResponse = $moduleRequestRouter->dispatch($moduleContext, $innerModuleRequest);
 
-        return new JsonResponse([
+        return new JsonResponse(
+            [
             'new_state' => $field->unprocess($moduleContext->getModule()->getDataSource()),
             'response'  => $innerModuleResponse->getContent(),
-        ], $innerModuleResponse->getStatusCode());
+            ],
+            $innerModuleResponse->getStatusCode()
+        );
     }
 
     protected function emulateAjaxRequest(Request $innerModuleRequest)
@@ -161,10 +176,14 @@ class InnerModuleFieldRenderer extends BladeFieldRendererWithActions implements 
 
     protected function loadInnerModuleContext(IField $field, FormRenderingContext $renderingContext, array $moduleState = null)
     {
-        /** @var InnerCrudModuleType $fieldType */
+        /**
+ * @var InnerCrudModuleType $fieldType
+*/
         $fieldType = $field->getType();
 
-        /** @var IReadModule $module */
+        /**
+ * @var IReadModule $module
+*/
         $innerModule = $fieldType->getModule();
 
         if ($moduleState) {
@@ -174,17 +193,22 @@ class InnerModuleFieldRenderer extends BladeFieldRendererWithActions implements 
         $moduleContext = $renderingContext->getModuleContext();
 
         if ($renderingContext->getObjectId() !== null) {
-            /** @var ICrudModule|IReadModule $currentModule */
+            /**
+ * @var ICrudModule|IReadModule $currentModule
+*/
             $currentModule = $moduleContext->getModule();
 
             $moduleContext = $moduleContext->withBreadcrumb(
                 $currentModule->getLabelFor($renderingContext->getObject()),
-                $moduleContext->getUrl('action.form', [
+                $moduleContext->getUrl(
+                    'action.form',
+                    [
                     'package' => $currentModule->getPackageName(),
                     'module' =>  $currentModule->getName(),
                     'action' => $renderingContext->getAction()->getName(),
                     'object_id' => $renderingContext->getObjectId(),
-                ])
+                    ]
+                )
             );
         }
 

@@ -12,10 +12,9 @@ use Dms\Web\Expressive\Http\Handler\DmsHandler;
 use Dms\Web\Expressive\Http\Handler\Package\Module\ModuleContextTrait;
 use Dms\Web\Expressive\Renderer\Chart\ChartControlRenderer;
 use Dms\Web\Expressive\Util\StringHumanizer;
-use Psr\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\JsonResponse;
 use Zend\Expressive\Router\RouterInterface;
@@ -100,9 +99,12 @@ class ShowChartHandler extends DmsHandler implements RequestHandlerInterface
 
             return $action;
         } catch (InvalidArgumentException $e) {
-            $response = new JsonResponse([
+            $response = new JsonResponse(
+                [
                 'message' => 'Invalid chart name',
-            ], 404);
+                ],
+                404
+            );
         }
 
         return $response;

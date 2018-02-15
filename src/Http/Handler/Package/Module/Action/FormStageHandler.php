@@ -28,10 +28,9 @@ use Dms\Web\Expressive\Renderer\Form\ActionFormRenderer;
 use Dms\Web\Expressive\Renderer\Form\FormRenderingContext;
 use Dms\Web\Expressive\Util\ActionSafetyChecker;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Psr\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\JsonResponse;
 use Zend\Expressive\Router\RouterInterface;
@@ -129,17 +128,24 @@ class FormStageHandler extends DmsHandler implements RequestHandlerInterface
         }
 
         if (!($action instanceof IParameterizedAction)) {
-            throw new HttpResponseException(new JsonResponse([
-                'message' => 'This action does not require an input form',
-            ], 403));
+            throw new HttpResponseException(
+                new JsonResponse(
+                    [
+                    'message' => 'This action does not require an input form',
+                    ],
+                    403
+                )
+            );
         }
 
         if ($objectId !== null && $action instanceof IObjectAction) {
             $object = $this->loadObject($objectId, $action);
 
-            $action = $action->withSubmittedFirstStage([
+            $action = $action->withSubmittedFirstStage(
+                [
                 IObjectAction::OBJECT_FIELD_NAME => $object,
-            ]);
+                ]
+            );
 
             $stageNumber--;
         }
@@ -148,9 +154,14 @@ class FormStageHandler extends DmsHandler implements RequestHandlerInterface
         $stageNumber = (int)$stageNumber;
 
         if ($stageNumber < 1 || $stageNumber > $form->getAmountOfStages()) {
-            throw new HttpResponseException(new JsonResponse([
-                'message' => 'Invalid stage number',
-            ], 404));
+            throw new HttpResponseException(
+                new JsonResponse(
+                    [
+                    'message' => 'Invalid stage number',
+                    ],
+                    404
+                )
+            );
         }
 
         $input = $this->inputTransformers->transform($moduleContext, $action, $request->getParsedBody());
@@ -209,9 +220,12 @@ class FormStageHandler extends DmsHandler implements RequestHandlerInterface
 
             return $action;
         } catch (ActionNotFoundException $e) {
-            $response = new JsonResponse([
+            $response = new JsonResponse(
+                [
                 'message' => 'Invalid action name',
-            ], 404);
+                ],
+                404
+            );
         }
 
         return $response;
@@ -226,7 +240,9 @@ class FormStageHandler extends DmsHandler implements RequestHandlerInterface
     protected function loadObject(string $objectId, IObjectAction $action) : ITypedObject
     {
         try {
-            /** @var ObjectIdType $objectField */
+            /**
+ * @var ObjectIdType $objectField
+*/
             $objectFieldType = $action->getObjectForm()->getField(IObjectAction::OBJECT_FIELD_NAME)->getType();
 
             return $this->loadObjectFromDataSource($objectId, $objectFieldType->getObjects());

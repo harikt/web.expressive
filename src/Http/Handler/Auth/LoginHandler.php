@@ -11,10 +11,9 @@ use Dms\Web\Expressive\Auth\Oauth\OauthProviderCollection;
 use Dms\Web\Expressive\Exception\TooManyFailedAttemptsException;
 use Dms\Web\Expressive\Exception\ValidationFailedException;
 use Dms\Web\Expressive\Http\Handler\DmsHandler;
-use Psr\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\Constraints as Assert;
 use Zend\Diactoros\Response;
@@ -42,13 +41,13 @@ class LoginHandler extends DmsHandler implements RequestHandlerInterface
     /**
      * Create a new authentication controller instance.
      *
-     * @param ICms $cms
-     * @param IAuthSystem $auth
+     * @param ICms                      $cms
+     * @param IAuthSystem               $auth
      * @param TemplateRendererInterface $template
-     * @param RouterInterface $router
-     * @param OauthProviderCollection $oauthProviderCollection
-     * @param Flap $flap
-     * @param Translator $translator
+     * @param RouterInterface           $router
+     * @param OauthProviderCollection   $oauthProviderCollection
+     * @param Flap                      $flap
+     * @param Translator                $translator
      */
     public function __construct(
         ICms $cms,
@@ -69,7 +68,8 @@ class LoginHandler extends DmsHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         if ($request->getMethod() == "POST") {
-            $constraint = new Assert\Collection([
+            $constraint = new Assert\Collection(
+                [
                 'username' => [
                     new Assert\NotBlank(),
                 ],
@@ -77,7 +77,8 @@ class LoginHandler extends DmsHandler implements RequestHandlerInterface
                     new Assert\NotBlank(),
                 ],
                 '_token' => []
-            ]);
+                ]
+            );
 
             try {
                 $this->validate($request->getParsedBody(), $constraint);
@@ -92,10 +93,12 @@ class LoginHandler extends DmsHandler implements RequestHandlerInterface
                 $this->auth->login($username, $password);
 
                 if ('XMLHttpRequest' == $request->getHeaderLine('X-Requested-With')) {
-                    return new JsonResponse([
+                    return new JsonResponse(
+                        [
                         'response'   => 'Authenticated',
                         'csrf_token' => csrf_token(),
-                    ]);
+                        ]
+                    );
                 } else {
                     $to = $this->router->generateUri('dms::index');
                     $response = new Response('php://memory', 302);

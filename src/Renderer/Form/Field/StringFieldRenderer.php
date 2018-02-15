@@ -34,7 +34,9 @@ class StringFieldRenderer extends BladeFieldRenderer
 
     protected function renderField(FormRenderingContext $renderingContext, IField $field, IFieldType $fieldType) : string
     {
-        /** @var StringType $fieldType */
+        /**
+ * @var StringType $fieldType
+*/
         $inputType = $this->getInputType($fieldType);
 
         return $this->renderView(
@@ -53,26 +55,28 @@ class StringFieldRenderer extends BladeFieldRenderer
     private function getInputType(StringType $fieldType)
     {
         switch ($fieldType->get(StringType::ATTR_STRING_TYPE)) {
-            case StringType::TYPE_URL:
-                return 'url';
+        case StringType::TYPE_URL:
+            return 'url';
 
-            case StringType::TYPE_IP_ADDRESS:
-                return 'ip-address';
+        case StringType::TYPE_IP_ADDRESS:
+            return 'ip-address';
 
-            case StringType::TYPE_EMAIL:
-                return 'email';
+        case StringType::TYPE_EMAIL:
+            return 'email';
 
-            case StringType::TYPE_PASSWORD:
-                return 'password';
+        case StringType::TYPE_PASSWORD:
+            return 'password';
 
-            default:
-                return 'text';
+        default:
+            return 'text';
         }
     }
 
     protected function renderFieldValue(FormRenderingContext $renderingContext, IField $field, $value, IFieldType $fieldType) : string
     {
-        /** @var StringType $fieldType */
+        /**
+ * @var StringType $fieldType
+*/
         $inputType = $this->getInputType($fieldType);
 
         return $this->renderValueViewWithNullDefault(

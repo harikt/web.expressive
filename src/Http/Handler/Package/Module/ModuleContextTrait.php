@@ -14,11 +14,16 @@ trait ModuleContextTrait
         $packageName = $request->getAttribute('package');
         $moduleName = $request->getAttribute('module');
 
-        $moduleContext = ModuleContext::rootContext($router, $packageName, $moduleName, function () use ($packageName, $moduleName, $cms) {
-            $package = $cms->loadPackage($packageName);
+        $moduleContext = ModuleContext::rootContext(
+            $router,
+            $packageName,
+            $moduleName,
+            function () use ($packageName, $moduleName, $cms) {
+                $package = $cms->loadPackage($packageName);
 
-            return $package->loadModule($moduleName);
-        });
+                return $package->loadModule($moduleName);
+            }
+        );
 
         return $moduleContext;
     }

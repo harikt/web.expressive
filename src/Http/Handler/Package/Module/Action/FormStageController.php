@@ -5,8 +5,6 @@ namespace Dms\Web\Expressive\Http\Handler\Package\Module\Action;
 use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\Common\Crud\Action\Object\IObjectAction;
 use Dms\Core\Form\Builder\Form;
-use Dms\Core\Form\Field\Type\ArrayOfType;
-use Dms\Core\Form\Field\Type\InnerFormType;
 use Dms\Core\Form\Field\Type\ObjectIdType;
 use Dms\Core\Form\IForm;
 use Dms\Core\Form\InvalidInputException;
@@ -28,12 +26,12 @@ use Dms\Web\Expressive\Http\ModuleContext;
 use Dms\Web\Expressive\Renderer\Action\ObjectActionButtonBuilder;
 use Dms\Web\Expressive\Renderer\Form\ActionFormRenderer;
 use Dms\Web\Expressive\Renderer\Form\FormRenderingContext;
-use Dms\Web\Expressive\Renderer\Form\IFieldRendererWithActions;
 use Dms\Web\Expressive\Util\ActionSafetyChecker;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
+use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\JsonResponse;
 use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
@@ -43,7 +41,7 @@ use Zend\Expressive\Template\TemplateRendererInterface;
  *
  * @author Elliot Levin <elliotlevin@hotmail.com>
  */
-class FieldRendererHandler extends DmsHandler implements RequestHandlerInterface
+class FormStageHandler extends DmsHandler implements RequestHandlerInterface
 {
     use ModuleContextTrait;
 
@@ -116,45 +114,6 @@ class FieldRendererHandler extends DmsHandler implements RequestHandlerInterface
         $this->actionButtonBuilder = $actionButtonBuilder;
     }
 
-    public function handle(ServerRequestInterface $request): ResponseInterface
-    {
-        $moduleContext = $this->getModuleContext($request, $this->router, $this->cms);
-        $module = $moduleContext->getModule();
-
-        $objectId = $request->getAttribute('object_id');
-        $actionName = $request->getAttribute('action');
-        $stageNumber = $request->getAttribute('stage');
-        $fieldName = $request->getAttribute('field_name');
-        $fieldRendererAction = $request->getAttribute('field_action');
-
-        $action = $this->loadAction($moduleContext->getModule(), $actionName, $request);
-        if ($action instanceof ResponseInterface) {
-            return $action;
-        }
-
-        $form   = $this->loadFormStage($request, $moduleContext, $actionName, $stageNumber, $objectId, $object);
-        if ($form instanceof ResponseInterface) {
-            return $form;
-        }
-
-        $field = $this->findFieldFromBracketSyntaxName($form, $fieldName);
-
-        if (!$field) {
-            return $this->abort($request, 404);
-        }
-
-        $renderingContext = new FormRenderingContext($moduleContext, $action, $stageNumber, $object);
-        $renderer         = $this->actionFormRenderer->getFormRenderer($renderingContext, $form)
-            ->getFieldRenderers()
-            ->findRendererFor($renderingContext, $field);
-
-        if (!($renderer instanceof IFieldRendererWithActions)) {
-            return $this->abort($request, 404);
-        }
-
-        return $renderer->handleAction($renderingContext, $field, $request, $fieldRendererAction, $request->get('__field_action_data') ?? []);
-    }
-
     protected function loadFormStage(
         ServerRequestInterface $request,
         ModuleContext $moduleContext,
@@ -164,26 +123,22 @@ class FieldRendererHandler extends DmsHandler implements RequestHandlerInterface
         &$object = null
     ) : IForm {
         $action = $this->loadAction($moduleContext->getModule(), $actionName, $request);
+        if ($action instanceof ResponseInterface) {
+            return $action;
+        }
 
         if (!($action instanceof IParameterizedAction)) {
-            throw new HttpResponseException(
-                new JsonResponse(
-                    [
-                    'message' => 'This action does not require an input form',
-                    ],
-                    403
-                )
-            );
+            throw new HttpResponseException(new JsonResponse([
+                'message' => 'This action does not require an input form',
+            ], 403));
         }
 
         if ($objectId !== null && $action instanceof IObjectAction) {
             $object = $this->loadObject($objectId, $action);
 
-            $action = $action->withSubmittedFirstStage(
-                [
+            $action = $action->withSubmittedFirstStage([
                 IObjectAction::OBJECT_FIELD_NAME => $object,
-                ]
-            );
+            ]);
 
             $stageNumber--;
         }
@@ -192,19 +147,14 @@ class FieldRendererHandler extends DmsHandler implements RequestHandlerInterface
         $stageNumber = (int)$stageNumber;
 
         if ($stageNumber < 1 || $stageNumber > $form->getAmountOfStages()) {
-            throw new HttpResponseException(
-                new JsonResponse(
-                    [
-                    'message' => 'Invalid stage number',
-                    ],
-                    404
-                )
-            );
+            throw new HttpResponseException(new JsonResponse([
+                'message' => 'Invalid stage number',
+            ], 404));
         }
 
         $input = $this->inputTransformers->transform($moduleContext, $action, $request->getParsedBody());
 
-        if ($request->input('__initial_dependent_data')) {
+        if (isset($request->getParsedBody()['__initial_dependent_data'])) {
             for ($i = 1; $i < $stageNumber; $i++) {
                 $formStage = $form->getFormForStage($i, $input);
                 $input += $formStage->unprocess($formStage->getInitialValues());
@@ -214,42 +164,31 @@ class FieldRendererHandler extends DmsHandler implements RequestHandlerInterface
         return $form->getFormForStage($stageNumber, $input);
     }
 
-    protected function findFieldFromBracketSyntaxName(IForm $form, string $fieldName)
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $parts = array_map(
-            function (string $part) {
-                return trim($part, '][');
-            },
-            explode('[', $fieldName)
-        );
+        $moduleContext = $this->getModuleContext($request, $this->router, $this->cms);
 
-        foreach ($parts as $key => $part) {
-            if (!$form->hasField($part)) {
-                return null;
-            }
+        $objectId = $request->getAttribute('object_id');
+        $actionName = $request->getAttribute('action');
+        $stageNumber = (int) $request->getAttribute('stage');
+        $formRendererAction = $request->getAttribute('form_action');
 
-            $field     = $form->getField($part);
-            $fieldType = $field->getType();
-
-            $isLastPart = $key === count($parts) - 1;
-
-            if ($isLastPart) {
-                return $field;
-            } elseif ($fieldType instanceof InnerFormType) {
-                $form = $fieldType->getForm();
-            } elseif ($fieldType instanceof ArrayOfType) {
-                $nextPart = $parts[$key + 1];
-
-                $form = Form::create()->section(
-                    '',
-                    [
-                    $fieldType->getElementField()->withName($nextPart)
-                    ]
-                )->build();
-            } else {
-                return null;
-            }
+        if (!$objectId) {
+            $objectId = isset($request->getParsedBody()[IObjectAction::OBJECT_FIELD_NAME]) ? (string)$request->getParsedBody()[IObjectAction::OBJECT_FIELD_NAME] : null;
         }
+
+        $module = $moduleContext->getModule();
+        $action = $this->loadAction($module, $actionName, $request);
+
+        try {
+            $form = $this->loadFormStage($request, $moduleContext, $actionName, $stageNumber, $objectId, $object);
+        } catch (\Exception $e) {
+            return $this->exceptionHandlers->handle($moduleContext, $action, $e);
+        }
+
+        $renderingContext = new FormRenderingContext($moduleContext, $action, $stageNumber, $object);
+
+        return new HtmlResponse($this->actionFormRenderer->renderFormFields($renderingContext, $form));
     }
 
     /**
@@ -269,12 +208,9 @@ class FieldRendererHandler extends DmsHandler implements RequestHandlerInterface
 
             return $action;
         } catch (ActionNotFoundException $e) {
-            $response = new JsonResponse(
-                [
+            $response = new JsonResponse([
                 'message' => 'Invalid action name',
-                ],
-                404
-            );
+            ], 404);
         }
 
         return $response;
@@ -289,9 +225,7 @@ class FieldRendererHandler extends DmsHandler implements RequestHandlerInterface
     protected function loadObject(string $objectId, IObjectAction $action) : ITypedObject
     {
         try {
-            /**
- * @var ObjectIdType $objectField
-*/
+            /** @var ObjectIdType $objectField */
             $objectFieldType = $action->getObjectForm()->getField(IObjectAction::OBJECT_FIELD_NAME)->getType();
 
             return $this->loadObjectFromDataSource($objectId, $objectFieldType->getObjects());

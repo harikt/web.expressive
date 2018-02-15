@@ -26,10 +26,9 @@ use Dms\Web\Expressive\Renderer\Form\ActionFormRenderer;
 use Dms\Web\Expressive\Util\ActionLabeler;
 use Dms\Web\Expressive\Util\ActionSafetyChecker;
 use Dms\Web\Expressive\Util\StringHumanizer;
-use Psr\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\JsonResponse;
 use Zend\Expressive\Router\RouterInterface;
@@ -133,12 +132,16 @@ class ShowFormHandler extends DmsHandler implements RequestHandlerInterface
         $hiddenValues = [];
 
         if ($objectId !== null && $action instanceof IObjectAction) {
-            /** @var IReadModule $module */
+            /**
+ * @var IReadModule $module
+*/
             $object = $this->loadObject($objectId, $action);
 
-            $action = $action->withSubmittedFirstStage([
+            $action = $action->withSubmittedFirstStage(
+                [
                 IObjectAction::OBJECT_FIELD_NAME => $object,
-            ]);
+                ]
+            );
 
             $hiddenValues[IObjectAction::OBJECT_FIELD_NAME] = $objectId;
             $objectLabel                                    = $module->getLabelFor($object);
@@ -185,9 +188,12 @@ class ShowFormHandler extends DmsHandler implements RequestHandlerInterface
 
             return $action;
         } catch (ActionNotFoundException $e) {
-            $response = new JsonResponse([
+            $response = new JsonResponse(
+                [
                 'message' => 'Invalid action name',
-            ], 404);
+                ],
+                404
+            );
         }
 
         return $response;
@@ -202,7 +208,9 @@ class ShowFormHandler extends DmsHandler implements RequestHandlerInterface
     protected function loadObject(string $objectId, IObjectAction $action) : ITypedObject
     {
         try {
-            /** @var ObjectIdType $objectField */
+            /**
+ * @var ObjectIdType $objectField
+*/
             $objectFieldType = $action->getObjectForm()->getField(IObjectAction::OBJECT_FIELD_NAME)->getType();
 
             return $this->loadObjectFromDataSource($objectId, $objectFieldType->getObjects());
