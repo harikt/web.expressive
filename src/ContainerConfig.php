@@ -42,6 +42,8 @@ use Dms\Web\Expressive\File\LaravelApplicationDirectories;
 use Dms\Web\Expressive\File\Persistence\ITemporaryFileRepository;
 use Dms\Web\Expressive\File\Persistence\TemporaryFileRepository;
 use Dms\Web\Expressive\File\TemporaryFileService;
+use Dms\Web\Expressive\Http\Middleware\Authenticate;
+use Dms\Web\Expressive\Http\Middleware\LoadVariablesToTemplate;
 use Dms\Web\Expressive\Language\SymfonyLanguageProvider;
 use Dms\Web\Expressive\Middleware\AuthenticationMiddleware;
 use Dms\Web\Expressive\Renderer\Chart\ChartRendererCollection;
@@ -90,6 +92,9 @@ class ContainerConfig
         });
 
         $container->bind(IIocContainer::SCOPE_SINGLETON, AdminDmsUserProvider::class, AdminDmsUserProvider::class);
+
+        $container->bind(IIocContainer::SCOPE_SINGLETON, Authenticate::class, Authenticate::class);
+        $container->bind(IIocContainer::SCOPE_SINGLETON, LoadVariablesToTemplate::class, LoadVariablesToTemplate::class);
 
         $container->bindCallback(IIocContainer::SCOPE_SINGLETON, IPasswordHasherFactory::class, function () {
             return new PasswordHasherFactory(

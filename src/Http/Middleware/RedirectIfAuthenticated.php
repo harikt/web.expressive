@@ -40,6 +40,6 @@ class RedirectIfAuthenticated implements ServerMiddlewareInterface
             return $response;
         }
 
-        return $next($request);
+        return $handler($request);
     }
 }
