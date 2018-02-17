@@ -61,8 +61,8 @@ class TableWidgetRenderer extends WidgetRenderer
     protected function getWidgetLinks(ModuleContext $moduleContext, IWidget $widget) : array
     {
         /**
- * @var TableWidget $widget
-*/
+         * @var TableWidget $widget
+         */
         $tableDisplay = $widget->getTableDisplay();
 
         $links = [];
@@ -93,8 +93,8 @@ class TableWidgetRenderer extends WidgetRenderer
     protected function renderWidget(ModuleContext $moduleContext, IWidget $widget) : string
     {
         /**
- * @var TableWidget $widget
-*/
+         * @var TableWidget $widget
+         */
         $tableDisplay = $widget->getTableDisplay();
 
         return $this->template->render(

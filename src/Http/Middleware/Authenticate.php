@@ -44,7 +44,6 @@ class Authenticate implements MiddlewareInterface
         if ($this->auth->isAuthenticated()
             || in_array(
                 $routeResult->getMatchedRouteName(),
-
                 [
                 'dms::auth.login',
                 'dms::auth.password.forgot',

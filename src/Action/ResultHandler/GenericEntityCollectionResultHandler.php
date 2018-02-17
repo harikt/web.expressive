@@ -60,8 +60,8 @@ class GenericEntityCollectionResultHandler extends ActionResultHandler
     protected function canHandleResult(ModuleContext $moduleContext, IAction $action, $result) : bool
     {
         /**
- * @var EntityCollection $result
-*/
+         * @var EntityCollection $result
+        */
 
         return $this->getEntityModuleMap()->loadModuleFor($result->getObjectType()) instanceof IReadModule;
     }
@@ -76,16 +76,16 @@ class GenericEntityCollectionResultHandler extends ActionResultHandler
     protected function handleResult(ModuleContext $moduleContext, IAction $action, $result)
     {
         /**
- * @var EntityCollection $result
-*/
+         * @var EntityCollection $result
+        */
         /**
- * @var IReadModule $module
-*/
+         * @var IReadModule $module
+        */
         $module = $this->getEntityModuleMap()->loadModuleFor($result->getObjectType());
 
         /**
- * @var ObjectTableDataSource $tableDataSource
-*/
+         * @var ObjectTableDataSource $tableDataSource
+        */
         $tableDataSource = $module->getSummaryTable()->getDataSource();
 
         $tableHtml = $this->tableRenderer->renderTableData(

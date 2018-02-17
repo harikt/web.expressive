@@ -48,11 +48,11 @@ class MoneyFieldRenderer extends BladeFieldRenderer
     protected function renderField(FormRenderingContext $renderingContext, IField $field, IFieldType $fieldType) : string
     {
         /**
- * @var MoneyType $fieldType
-*/
+         * @var MoneyType $fieldType
+         */
         /**
- * @var IFieldOptions $currencyOptions
-*/
+         * @var IFieldOptions $currencyOptions
+         */
         $currencyOptions = $fieldType->getForm()
             ->getField('currency')
             ->getType()

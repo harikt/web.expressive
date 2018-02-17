@@ -66,8 +66,8 @@ class DmsNavigationViewComposer
         $navigationCacheKey   = 'dms:navigation:' . $installedModulesHash;
 
         /**
- * @var LaravelAuthSystem $authSystem
-*/
+         * @var LaravelAuthSystem $authSystem
+         */
         $authSystem = $this->cms->getAuth();
         $view->with(
             'navigation',

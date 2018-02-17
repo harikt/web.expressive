@@ -133,8 +133,8 @@ class ShowFormHandler extends DmsHandler implements RequestHandlerInterface
 
         if ($objectId !== null && $action instanceof IObjectAction) {
             /**
- * @var IReadModule $module
-*/
+             * @var IReadModule $module
+             */
             $object = $this->loadObject($objectId, $action);
 
             $action = $action->withSubmittedFirstStage(
@@ -209,8 +209,8 @@ class ShowFormHandler extends DmsHandler implements RequestHandlerInterface
     {
         try {
             /**
- * @var ObjectIdType $objectField
-*/
+             * @var ObjectIdType $objectField
+             */
             $objectFieldType = $action->getObjectForm()->getField(IObjectAction::OBJECT_FIELD_NAME)->getType();
 
             return $this->loadObjectFromDataSource($objectId, $objectFieldType->getObjects());

@@ -41,8 +41,8 @@ class ObjectActionButtonBuilder
     public function buildActionButtons(ModuleContext $moduleContext, ITypedObject $object = null, string $currentActionName = null) : array
     {
         /**
- * @var IReadModule $module
-*/
+         * @var IReadModule $module
+         */
         $module     = $moduleContext->getModule();
         $rowActions = [];
 

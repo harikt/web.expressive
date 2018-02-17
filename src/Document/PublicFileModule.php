@@ -159,8 +159,8 @@ class PublicFileModule extends CrudModule
                 function (ArrayDataObject $input) {
                     foreach ($input['files'] as $file) {
                         /**
-                * @var IUploadedFile $file
-                */
+                         * @var IUploadedFile $file
+                         */
                         $fullPath = PathHelper::combine($this->rootDirectory, $input['folder'], $file->getClientFileNameWithFallback());
                         $file->moveTo($this->getNonConflictingFileName($fullPath));
                     }
@@ -188,8 +188,8 @@ class PublicFileModule extends CrudModule
             ->handler(
                 function (ArrayDataObject $input) {
                     /**
-                * @var IFile $file
-                */
+                     * @var IFile $file
+                     */
                     $file         = $input['file'];
                     $relativePath = $this->relativePathCalculator->getRelativePath($this->trashDirectory, $file->getFullPath());
                     $file->moveTo(PathHelper::combine($this->rootDirectory, $relativePath));

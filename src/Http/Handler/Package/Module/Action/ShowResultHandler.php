@@ -142,8 +142,8 @@ class ShowResultHandler extends DmsHandler implements RequestHandlerInterface
 
         if ($objectId !== null && $module instanceof IReadModule) {
             /**
- * @var IReadModule $module
-*/
+             * @var IReadModule $module
+             */
             $object        = $this->loadObjectFromDataSource($objectId, $module->getDataSource());
             $objectLabel   = $module->getLabelFor($object);
             $actionButtons = $this->actionButtonBuilder->buildActionButtons($moduleContext, $object, $actionName);
@@ -182,16 +182,16 @@ class ShowResultHandler extends DmsHandler implements RequestHandlerInterface
     {
         if ($action instanceof IParameterizedAction) {
             /**
- * @var IParameterizedAction $action
-*/
+             * @var IParameterizedAction $action
+             */
             $input  = $this->inputTransformers->transform($moduleContext, $action, $request->getParsedBody() + $extraData);
             $result = $action->run($input);
 
             return $result;
         } else {
             /**
- * @var IUnparameterizedAction $action
-*/
+             * @var IUnparameterizedAction $action
+             */
             $result = $action->run();
 
             return $result;
@@ -236,8 +236,8 @@ class ShowResultHandler extends DmsHandler implements RequestHandlerInterface
     {
         try {
             /**
- * @var ObjectIdType $objectField
-*/
+             * @var ObjectIdType $objectField
+             */
             $objectFieldType = $action->getObjectForm()->getField(IObjectAction::OBJECT_FIELD_NAME)->getType();
 
             return $this->loadObjectFromDataSource($objectId, $objectFieldType->getObjects());

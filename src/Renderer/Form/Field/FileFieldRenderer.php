@@ -90,8 +90,8 @@ class FileFieldRenderer extends BladeFieldRenderer
     protected function getExistingFilesArray(array $files) : array
     {
         /**
- * @var IFile[] $existingFiles
-*/
+         * @var IFile[] $existingFiles
+         */
         $existingFiles = [];
         $publicFiles   = [];
 
@@ -116,8 +116,8 @@ class FileFieldRenderer extends BladeFieldRenderer
 
         foreach (array_merge($publicFiles, $existingFiles) as $key => $file) {
             /**
- * @var IFile $file
-*/
+             * @var IFile $file
+             */
             $tempFile        = $tempFiles[$key] ?? null;
             $imageDimensions = @getimagesize($file->getFullPath());
 

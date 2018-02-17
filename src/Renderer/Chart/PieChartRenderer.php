@@ -33,8 +33,8 @@ class PieChartRenderer extends ChartRenderer
     protected function renderChart(IChartDataTable $chartData) : string
     {
         /**
- * @var PieChart $chartStructure
-*/
+         * @var PieChart $chartStructure
+         */
         $chartStructure = $chartData->getStructure();
 
         $chartDataArray = $this->transformChartDataToIndexedArrays(

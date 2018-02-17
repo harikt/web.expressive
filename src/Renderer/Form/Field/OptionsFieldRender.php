@@ -22,8 +22,8 @@ abstract class OptionsFieldRender extends BladeFieldRenderer
         IFieldType $fieldType
     ) : string {
         /**
- * @var IFieldOptions $options
-*/
+         * @var IFieldOptions $options
+         */
         $options     = $fieldType->get(FieldType::ATTR_OPTIONS);
         $urlCallback = $this->relatedEntityLinker->getUrlCallbackFor($options);
 

@@ -40,8 +40,8 @@ class GraphChartRenderer extends ChartRenderer
     protected function renderChart(IChartDataTable $chartData) : string
     {
         /**
- * @var GraphChart $chartStructure
-*/
+         * @var GraphChart $chartStructure
+         */
         $chartStructure = $chartData->getStructure();
 
         $yAxisKeys   = [];

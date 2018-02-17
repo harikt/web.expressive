@@ -96,8 +96,8 @@ class HktAuthSystem extends AuthSystem
     protected function loadByCredentials(string $username, string $password) : IAdmin
     {
         /**
- * @var IAdmin $user
-*/
+         * @var IAdmin $user
+        */
         $users = $this->userRepository->matching(
             $this->userRepository->criteria()
                 ->where(Admin::USERNAME, '=', $username)

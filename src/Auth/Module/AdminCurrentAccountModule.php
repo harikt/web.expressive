@@ -71,8 +71,8 @@ class AdminCurrentAccountModule extends Module
         );
 
         /**
- * @var Admin $user
-*/
+         * @var Admin $user
+        */
         $user = $this->authSystem->getAuthenticatedUser();
 
         $module->action('update-profile')
@@ -90,8 +90,8 @@ class AdminCurrentAccountModule extends Module
             ->handler(
                 function (ArrayDataObject $input) {
                     /**
-                * @var Admin $user
-                */
+                     * @var Admin $user
+                     */
                     $user = $this->authSystem->getAuthenticatedUser();
 
                     $user->setFullName($input['name']);

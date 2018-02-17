@@ -35,8 +35,8 @@ class GeoChartRenderer extends ChartRenderer
     protected function renderChart(IChartDataTable $chartData) : string
     {
         /**
- * @var GeoChart $chartStructure
-*/
+         * @var GeoChart $chartStructure
+         */
         $chartStructure = $chartData->getStructure();
 
 
@@ -46,8 +46,8 @@ class GeoChartRenderer extends ChartRenderer
 
         if ($chartStructure instanceof GeoCityChart) {
             /**
- * @var GeoCityChart $chartStructure
-*/
+             * @var GeoCityChart $chartStructure
+             */
             $region = $chartStructure->getMapCountry() ? $chartStructure->getMapCountry()->getValue() : null;
 
             if ($chartStructure->hasCityLatLngAxis()) {
@@ -114,8 +114,8 @@ class GeoChartRenderer extends ChartRenderer
 
                 if ($latLngAxisName) {
                     /**
- * @var LatLng $latLng
-*/
+                     * @var LatLng $latLng
+                     */
                     $latLng                   = $row[$latLngAxisName][$latLngComponentName];
                     $results[$key]['lat_lng'] = [$latLng->getLat(), $latLng->getLng()];
                 }

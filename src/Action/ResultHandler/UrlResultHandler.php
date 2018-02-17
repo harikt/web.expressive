@@ -45,8 +45,8 @@ class UrlResultHandler extends ActionResultHandler
     protected function handleResult(ModuleContext $moduleContext, IAction $action, $result)
     {
         /**
- * @var Url $result
-*/
+         * @var Url $result
+        */
 
         return new JsonResponse(
             [

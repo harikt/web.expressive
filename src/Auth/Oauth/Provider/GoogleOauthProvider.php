@@ -48,8 +48,8 @@ class GoogleOauthProvider extends OauthProvider
     public function getAdminDetailsFromResourceOwner(ResourceOwnerInterface $resourceOwner) : AdminAccountDetails
     {
         /**
- * @var GoogleUser $resourceOwner
-*/
+         * @var GoogleUser $resourceOwner
+        */
 
         return new AdminAccountDetails(
             $resourceOwner->getFirstName() . ' ' . $resourceOwner->getLastName(),

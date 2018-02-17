@@ -49,8 +49,8 @@ class DeletedObjectResultHandler extends ActionResultHandler
     protected function handleResult(ModuleContext $moduleContext, IAction $action, $result)
     {
         /**
- * @var IReadModule $module
-*/
+         * @var IReadModule $module
+        */
         $module = $moduleContext->getModule();
         $label  = $module->getLabelFor($result);
         $type   = str_singular(StringHumanizer::humanize($module->getName()));

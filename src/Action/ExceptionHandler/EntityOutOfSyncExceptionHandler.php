@@ -47,14 +47,14 @@ class EntityOutOfSyncExceptionHandler extends ActionExceptionHandler
     protected function handleException(ModuleContext $moduleContext, IAction $action, \Exception $exception)
     {
         /**
- * @var EntityOutOfSyncException $exception
-*/
+         * @var EntityOutOfSyncException $exception
+        */
         $hasEntityBeenDeleted = !$exception->hasCurrentEntityInDb();
         $entity               = $exception->getEntityBeingPersisted();
 
         /**
- * @var IReadModule $module
-*/
+         * @var IReadModule $module
+        */
         $module = $moduleContext->getModule();
         $label  = $module->getLabelFor($entity);
         $type   = str_singular(StringHumanizer::humanize($module->getName()));

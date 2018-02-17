@@ -53,8 +53,8 @@ class ChartWidgetRenderer extends WidgetRenderer
     protected function getWidgetLinks(ModuleContext $moduleContext, IWidget $widget) : array
     {
         /**
- * @var ChartWidget $widget
-*/
+         * @var ChartWidget $widget
+         */
         $chartDisplay = $widget->getChartDisplay();
 
         $links = [];
@@ -83,8 +83,8 @@ class ChartWidgetRenderer extends WidgetRenderer
     protected function renderWidget(ModuleContext $moduleContext, IWidget $widget) : string
     {
         /**
- * @var ChartWidget $widget
-*/
+         * @var ChartWidget $widget
+         */
         $chartData = $widget->loadData();
 
         return $this->template->render(

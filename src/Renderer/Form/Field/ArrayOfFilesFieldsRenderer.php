@@ -30,8 +30,8 @@ class ArrayOfFilesFieldsRenderer extends FileFieldRenderer
     protected function canRender(FormRenderingContext $renderingContext, IField $field, IFieldType $fieldType) : bool
     {
         /**
- * @var ArrayOfType $fieldType
-*/
+         * @var ArrayOfType $fieldType
+         */
         return !$fieldType->has(FieldType::ATTR_OPTIONS)
         && $fieldType->getElementType() instanceof FileUploadType;
     }
@@ -39,11 +39,11 @@ class ArrayOfFilesFieldsRenderer extends FileFieldRenderer
     protected function renderField(FormRenderingContext $renderingContext, IField $field, IFieldType $fieldType) : string
     {
         /**
- * @var ArrayOfType $fieldType
-*/
+         * @var ArrayOfType $fieldType
+         */
         /**
- * @var FileUploadType $elementType
-*/
+         * @var FileUploadType $elementType
+         */
         $elementType = $fieldType->getElementType();
 
         return $this->renderView(

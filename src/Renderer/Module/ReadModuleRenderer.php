@@ -67,15 +67,15 @@ class ReadModuleRenderer extends ModuleRenderer
         $summaryTable = $module->getSummaryTable();
 
         /**
- * @var ITableView[] $views
-*/
+         * @var ITableView[] $views
+         */
         $views = $summaryTable->getViews() ?: [$summaryTable->getDefaultView()];
 
         $createActionName = null;
         if ($module instanceof ICrudModule) {
             /**
- * @var ICrudModule $module
-*/
+             * @var ICrudModule $module
+             */
             if ($module->allowsCreate() && $module->getCreateAction()->isAuthorized()) {
                 $createActionName = $module->getCreateAction()->getName();
             }

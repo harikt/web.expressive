@@ -73,8 +73,8 @@ class FileResultHandler extends ActionResultHandler
     protected function handleResult(ModuleContext $moduleContext, IAction $action, $result)
     {
         /**
- * @var File $result
-*/
+         * @var File $result
+        */
         $tempFile = $this->tempFileService->storeTempFile(
             $result,
             $this->config->get('dms.storage.temp-files.download-expiry')

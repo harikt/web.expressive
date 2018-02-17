@@ -69,8 +69,8 @@ class GenericEntityResultHandler extends ActionResultHandler
     protected function canHandleResult(ModuleContext $moduleContext, IAction $action, $result) : bool
     {
         /**
- * @var Entity $result
-*/
+         * @var Entity $result
+        */
         $class = get_class($result);
 
         return $result->getId() && $this->getEntityModuleMap()->hasModuleFor($class)
@@ -96,8 +96,8 @@ class GenericEntityResultHandler extends ActionResultHandler
         }
 
         /**
- * @var Entity $result
-*/
+         * @var Entity $result
+        */
         $url = $this->router->generateUri('dms::package.module.action.show', ['package' => $module->getPackageName(), 'module' => $module->getName(), 'action' => $module->getDetailsAction()->getName(), 'object_id' => $result->getId()]);
 
         return new JsonResponse(

@@ -53,8 +53,8 @@ class UploadHandler implements RequestHandlerInterface
         $tokens = [];
 
         /**
- * @var UploadedFile $file
-*/
+         * @var UploadedFile $file
+        */
         foreach ($request->getUploadedFiles() as $key => $file) {
             $tokens[$key] = $this->tempFileService->storeTempFile(
                 UploadedFileFactory::build(

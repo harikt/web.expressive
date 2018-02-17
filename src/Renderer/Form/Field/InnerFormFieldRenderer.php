@@ -43,8 +43,8 @@ class InnerFormFieldRenderer extends BladeFieldRenderer
         IFieldType $fieldType
     ) : string {
         /**
- * @var InnerFormType $fieldType
-*/
+         * @var InnerFormType $fieldType
+         */
         $formWithArrayFields = $fieldType->getInnerArrayForm($field->getName());
         $formRenderer        = new DefaultFormRenderer($this->fieldRendererCollection, $this->template);
 
@@ -66,8 +66,8 @@ class InnerFormFieldRenderer extends BladeFieldRenderer
         IFieldType $fieldType
     ) : string {
         /**
- * @var InnerFormType $fieldType
-*/
+         * @var InnerFormType $fieldType
+         */
         $fieldType = $field->withInitialValue($field->process($value))->getType();
 
         $formWithArrayFields = $fieldType->getInnerArrayForm($field->getName());

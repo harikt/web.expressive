@@ -35,8 +35,8 @@ class StringFieldRenderer extends BladeFieldRenderer
     protected function renderField(FormRenderingContext $renderingContext, IField $field, IFieldType $fieldType) : string
     {
         /**
- * @var StringType $fieldType
-*/
+         * @var StringType $fieldType
+         */
         $inputType = $this->getInputType($fieldType);
 
         return $this->renderView(
@@ -75,8 +75,8 @@ class StringFieldRenderer extends BladeFieldRenderer
     protected function renderFieldValue(FormRenderingContext $renderingContext, IField $field, $value, IFieldType $fieldType) : string
     {
         /**
- * @var StringType $fieldType
-*/
+         * @var StringType $fieldType
+         */
         $inputType = $this->getInputType($fieldType);
 
         return $this->renderValueViewWithNullDefault(

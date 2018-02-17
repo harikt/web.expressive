@@ -51,11 +51,11 @@ class CreatedObjectResultHandler extends ActionResultHandler
     protected function handleResult(ModuleContext $moduleContext, IAction $action, $result)
     {
         /**
- * @var IReadModule $module
-*/
+         * @var IReadModule $module
+        */
         /**
- * @var ITypedObject $result
-*/
+         * @var ITypedObject $result
+        */
         // $moduleContext = ModuleRequestRouter::currentModuleContext();
         $module        = $moduleContext->getModule();
         $label         = $module->getLabelFor($result);

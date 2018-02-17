@@ -241,8 +241,8 @@ class FormStageHandler extends DmsHandler implements RequestHandlerInterface
     {
         try {
             /**
- * @var ObjectIdType $objectField
-*/
+             * @var ObjectIdType $objectField
+            */
             $objectFieldType = $action->getObjectForm()->getField(IObjectAction::OBJECT_FIELD_NAME)->getType();
 
             return $this->loadObjectFromDataSource($objectId, $objectFieldType->getObjects());

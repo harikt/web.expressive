@@ -62,8 +62,8 @@ class FilePreviewComponentRenderer implements IColumnComponentRenderer
     public function render(IColumnComponent $component, $value): string
     {
         /**
- * @var IFile $value
-*/
+         * @var IFile $value
+         */
         $isImage = $value instanceof Image;
 
         $name = $value->getClientFileNameWithFallback();

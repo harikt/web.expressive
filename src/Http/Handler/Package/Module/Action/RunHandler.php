@@ -142,16 +142,16 @@ class RunHandler extends DmsHandler implements RequestHandlerInterface
     {
         if ($action instanceof IParameterizedAction) {
             /**
- * @var IParameterizedAction $action
-*/
+             * @var IParameterizedAction $action
+             */
             $input  = $this->inputTransformers->transform($moduleContext, $action, $request->getParsedBody() + $request->getQueryParams() + $extraData);
             $result = $action->run($input);
 
             return $result;
         } else {
             /**
- * @var IUnparameterizedAction $action
-*/
+             * @var IUnparameterizedAction $action
+             */
             $result = $action->run();
 
             return $result;

@@ -45,8 +45,8 @@ class HtmlResultHandler extends ActionResultHandler
     protected function handleResult(ModuleContext $moduleContext, IAction $action, $result)
     {
         /**
- * @var Html $result
-*/
+         * @var Html $result
+        */
 
         return new JsonResponse(
             [

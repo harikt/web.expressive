@@ -65,8 +65,8 @@ class FileTreeModuleRenderer extends ModuleRenderer
     protected function renderDashboard(ModuleContext $moduleContext) : string
     {
         /**
- * @var PublicFileModule $module
-*/
+         * @var PublicFileModule $module
+         */
         $module        = $moduleContext->getModule();
         $rootDirectory = $module->getRootDirectory();
 
