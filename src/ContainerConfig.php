@@ -45,7 +45,6 @@ use Dms\Web\Expressive\File\TemporaryFileService;
 use Dms\Web\Expressive\Http\Middleware\Authenticate;
 use Dms\Web\Expressive\Http\Middleware\LoadVariablesToTemplate;
 use Dms\Web\Expressive\Language\SymfonyLanguageProvider;
-use Dms\Web\Expressive\Middleware\AuthenticationMiddleware;
 use Dms\Web\Expressive\Renderer\Chart\ChartRendererCollection;
 use Dms\Web\Expressive\Renderer\Form\FieldRendererCollection;
 use Dms\Web\Expressive\Renderer\Form\FormRendererCollection;
@@ -65,6 +64,7 @@ use Illuminate\Events\Dispatcher;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 use Psr\Cache\CacheItemPoolInterface;
+use RKA\Middleware\IpAddress;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\MessageSelector;
 use Symfony\Component\Translation\Translator;
@@ -103,6 +103,7 @@ class ContainerConfig
 
         $container->bind(IIocContainer::SCOPE_SINGLETON, Authenticate::class, Authenticate::class);
         $container->bind(IIocContainer::SCOPE_SINGLETON, LoadVariablesToTemplate::class, LoadVariablesToTemplate::class);
+        $container->bind(IIocContainer::SCOPE_SINGLETON, IpAddress::class, IpAddress::class);
 
         $container->bindCallback(
             IIocContainer::SCOPE_SINGLETON,
@@ -429,8 +430,6 @@ class ContainerConfig
                 );
             }
         );
-
-        $container->bind(IIocContainer::SCOPE_SINGLETON, AuthenticationMiddleware::class, AuthenticationMiddleware::class);
 
         $container->bindCallback(
             IIocContainer::SCOPE_SINGLETON,
