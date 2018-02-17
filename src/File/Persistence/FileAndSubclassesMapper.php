@@ -46,12 +46,15 @@ class FileAndSubclassesMapper extends BaseFileMapper
     {
         parent::define($map);
 
-        $map->subclass()->withTypeInColumnMap('type', [
+        $map->subclass()->withTypeInColumnMap(
+            'type',
+            [
             'uploaded-image' => UploadedImage::class,
             'uploaded-file'  => UploadedFile::class,
             'stored-image'   => Image::class,
             'in-memory'      => InMemoryFile::class,
             'stored-file'    => File::class,
-        ]);
+            ]
+        );
     }
 }

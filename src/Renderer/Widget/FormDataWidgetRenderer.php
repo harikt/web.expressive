@@ -74,7 +74,9 @@ class FormDataWidgetRenderer extends WidgetRenderer
      */
     protected function renderWidget(ModuleContext $moduleContext, IWidget $widget) : string
     {
-        /** @var FormDataWidget $widget */
+        /**
+         * @var FormDataWidget $widget
+         */
         $form             = $widget->getForm();
         $renderingContext = new FormRenderingContext($moduleContext);
 

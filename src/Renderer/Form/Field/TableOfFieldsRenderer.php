@@ -31,13 +31,17 @@ class TableOfFieldsRenderer extends BladeFieldRenderer
 
     protected function canRender(FormRenderingContext $renderingContext, IField $field, IFieldType $fieldType) : bool
     {
-        /** @var ArrayOfType $fieldType */
+        /**
+         * @var ArrayOfType $fieldType
+         */
         return !$fieldType->has(FieldType::ATTR_OPTIONS);
     }
 
     protected function renderField(FormRenderingContext $renderingContext, IField $field, IFieldType $fieldType) : string
     {
-        /** @var TableType $fieldType */
+        /**
+         * @var TableType $fieldType
+         */
         $columnField = $fieldType->getColumnField();
         $rowField    = $fieldType->getRowField();
         $cellField   = $fieldType->getCellField();
@@ -114,7 +118,9 @@ class TableOfFieldsRenderer extends BladeFieldRenderer
 
     public function renderFieldValue(FormRenderingContext $renderingContext, IField $field, $value, IFieldType $fieldType) : string
     {
-        /** @var TableType $fieldType */
+        /**
+         * @var TableType $fieldType
+         */
         $columnField = $fieldType->getColumnField();
         $rowField    = $fieldType->getRowField();
         $cellField   = $fieldType->getCellField();

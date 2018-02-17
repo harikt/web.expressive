@@ -75,7 +75,9 @@ class ActionFormRenderer
         ITypedObject $object = null,
         int $initialStageNumber = 1
     ) : string {
-        return $this->template->render('dms::components.form.staged-form', [
+        return $this->template->render(
+            'dms::components.form.staged-form',
+            [
             'moduleContext'          => $moduleContext,
             'renderingContext'       => new FormRenderingContext($moduleContext, $action, null, $object),
             'action'                 => $action,
@@ -85,7 +87,8 @@ class ActionFormRenderer
             'submitButtonClass'      => $this->keywordTypeIdentifier->getTypeFromName($action->getName()),
             'hiddenValues'           => $hiddenValues,
             'initialStageNumber'     => $initialStageNumber,
-        ]);
+            ]
+        );
     }
 
     /**

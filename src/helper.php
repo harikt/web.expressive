@@ -2,14 +2,13 @@
 use Aura\Session\Session;
 use Dms\Web\Expressive\AppContainer;
 use Illuminate\Container\Container;
-use Zend\Expressive\Router\RouterInterface;
 
 if (! function_exists('app')) {
     /**
      * Get the available container instance.
      *
-     * @param  string                                   $abstract
-     * @param  array                                    $parameters
+     * @param  string $abstract
+     * @param  array  $parameters
      * @return mixed|\Illuminate\Foundation\Application
      */
     function app($abstract = null, array $parameters = [])

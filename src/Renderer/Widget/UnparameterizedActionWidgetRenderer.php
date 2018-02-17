@@ -74,7 +74,9 @@ class UnparameterizedActionWidgetRenderer extends WidgetRenderer
      */
     protected function renderWidget(ModuleContext $moduleContext, IWidget $widget) : string
     {
-        /** @var ActionWidget $widget */
+        /**
+         * @var ActionWidget $widget
+         */
         $action = $widget->getAction();
 
         return $this->template->render(

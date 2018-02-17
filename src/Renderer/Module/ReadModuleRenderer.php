@@ -60,16 +60,22 @@ class ReadModuleRenderer extends ModuleRenderer
      */
     protected function renderDashboard(ModuleContext $moduleContext) : string
     {
-        /** @var IReadModule $module */
+        /**
+ * @var IReadModule $module
+*/
         $module       = $moduleContext->getModule();
         $summaryTable = $module->getSummaryTable();
 
-        /** @var ITableView[] $views */
+        /**
+         * @var ITableView[] $views
+         */
         $views = $summaryTable->getViews() ?: [$summaryTable->getDefaultView()];
 
         $createActionName = null;
         if ($module instanceof ICrudModule) {
-            /** @var ICrudModule $module */
+            /**
+             * @var ICrudModule $module
+             */
             if ($module->allowsCreate() && $module->getCreateAction()->isAuthorized()) {
                 $createActionName = $module->getCreateAction()->getName();
             }

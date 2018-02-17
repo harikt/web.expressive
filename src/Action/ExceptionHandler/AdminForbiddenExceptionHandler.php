@@ -44,8 +44,11 @@ class AdminForbiddenExceptionHandler extends ActionExceptionHandler
      */
     protected function handleException(ModuleContext $moduleContext, IAction $action, \Exception $exception)
     {
-        return new JsonResponse([
+        return new JsonResponse(
+            [
             'message' => 'The current account is forbidden from running this action',
-        ], 403);
+            ],
+            403
+        );
     }
 }

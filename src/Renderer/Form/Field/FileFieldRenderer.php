@@ -11,7 +11,6 @@ use Dms\Core\Form\IField;
 use Dms\Core\Form\IFieldType;
 use Dms\Web\Expressive\File\ITemporaryFileService;
 use Dms\Web\Expressive\Renderer\Form\FormRenderingContext;
-use Dms\Web\Expressive\Renderer\Form\Field\RelatedEntityLinker;
 use Illuminate\Contracts\Config\Repository;
 use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
@@ -90,7 +89,9 @@ class FileFieldRenderer extends BladeFieldRenderer
 
     protected function getExistingFilesArray(array $files) : array
     {
-        /** @var IFile[] $existingFiles */
+        /**
+         * @var IFile[] $existingFiles
+         */
         $existingFiles = [];
         $publicFiles   = [];
 
@@ -114,7 +115,9 @@ class FileFieldRenderer extends BladeFieldRenderer
         $data = [];
 
         foreach (array_merge($publicFiles, $existingFiles) as $key => $file) {
-            /** @var IFile $file */
+            /**
+             * @var IFile $file
+             */
             $tempFile        = $tempFiles[$key] ?? null;
             $imageDimensions = @getimagesize($file->getFullPath());
 

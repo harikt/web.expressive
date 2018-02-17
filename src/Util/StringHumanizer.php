@@ -15,11 +15,14 @@ class StringHumanizer
      */
     public static function humanize(string $input) : string
     {
-        return strtr($input, [
+        return strtr(
+            $input,
+            [
             '.' => ' ',
             '-' => ' ',
             '_' => ' ',
-        ]);
+            ]
+        );
     }
 
     /**

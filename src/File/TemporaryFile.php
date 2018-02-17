@@ -69,9 +69,11 @@ class TemporaryFile extends Entity
      */
     public static function expiredSpec(IClock $clock) : ISpecification
     {
-        return self::specification(function (SpecificationDefinition $match) use ($clock) {
-            return $match->where(self::EXPIRY, '<=', new DateTime($clock->utcNow()));
-        });
+        return self::specification(
+            function (SpecificationDefinition $match) use ($clock) {
+                return $match->where(self::EXPIRY, '<=', new DateTime($clock->utcNow()));
+            }
+        );
     }
 
     /**

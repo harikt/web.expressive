@@ -31,7 +31,9 @@ class AdminPasswordResetForm extends IndependentFormObject
      */
     protected function defineForm(FormObjectDefinition $form)
     {
-        $form->section('Details', [
+        $form->section(
+            'Details',
+            [
             $form->field($this->newPassword)
                 ->name('new_password')
                 ->label('New Password')
@@ -46,7 +48,8 @@ class AdminPasswordResetForm extends IndependentFormObject
                 ->string()
                 ->password()
                 ->required(),
-        ]);
+            ]
+        );
 
         $form->fieldsMatch('new_password', 'new_password_confirmation');
     }

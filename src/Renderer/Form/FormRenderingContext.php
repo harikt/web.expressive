@@ -182,22 +182,28 @@ class FormRenderingContext
         $moduleContext = $this->moduleContext;
         $currentModule = $moduleContext->getModule();
         if ($this->objectId) {
-            $url = $moduleContext->getUrl('action.form.object.stage.field.action', [
+            $url = $moduleContext->getUrl(
+                'action.form.object.stage.field.action',
+                [
                 'package' => $currentModule->getPackageName(),
                 'module' =>  $currentModule->getName(),
                 'action' => $this->getAction()->getName(),
                 'object_id' => $this->getObjectId(),
                 'stage' => $this->getCurrentStageNumber(),
                 'field_name' => $field->getName(),
-            ]);
+                ]
+            );
         } else {
-            $url = $moduleContext->getUrl('action.form.stage.field.action', [
+            $url = $moduleContext->getUrl(
+                'action.form.stage.field.action',
+                [
                 'package' => $currentModule->getPackageName(),
                 'module' =>  $currentModule->getName(),
                 'action' => $this->getAction()->getName(),
                 'stage' => $this->getCurrentStageNumber(),
                 'field_name' => $field->getName(),
-            ]);
+                ]
+            );
         }
 
         return $url;

@@ -3,14 +3,14 @@
 namespace Dms\Web\Expressive\Http\Middleware;
 
 use Dms\Core\Auth\IAuthSystem;
-use Psr\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response;
 use Zend\Expressive\Router\RouterInterface;
 
-class RedirectIfAuthenticated implements ServerMiddlewareInterface
+class RedirectIfAuthenticated implements MiddlewareInterface
 {
     /**
      * @var IAuthSystem
@@ -22,7 +22,7 @@ class RedirectIfAuthenticated implements ServerMiddlewareInterface
     /**
      * Authenticate constructor.
      *
-     * @param IAuthSystem $auth
+     * @param IAuthSystem     $auth
      * @param RouterInterface $router
      */
     public function __construct(IAuthSystem $auth, RouterInterface $router)
@@ -40,6 +40,6 @@ class RedirectIfAuthenticated implements ServerMiddlewareInterface
             return $response;
         }
 
-        return $next($request);
+        return $handler($request);
     }
 }

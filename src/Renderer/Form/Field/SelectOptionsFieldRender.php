@@ -40,7 +40,9 @@ class SelectOptionsFieldRender extends OptionsFieldRender implements IFieldRende
         IField $field,
         IFieldType $fieldType
     ) : string {
-        /** @var IFieldOptions $options */
+        /**
+         * @var IFieldOptions $options
+         */
         $options = $fieldType->get(FieldType::ATTR_OPTIONS);
 
         if ($options->canFilterOptions()) {
@@ -88,7 +90,9 @@ class SelectOptionsFieldRender extends OptionsFieldRender implements IFieldRende
     public function handleAction(FormRenderingContext $renderingContext, IField $field, ServerRequestInterface $request, string $actionName = null, array $data)
     {
         if (ends_with($request->url(), '/load-options') && $request->has('query')) {
-            /** @var IFieldOptions $options */
+            /**
+             * @var IFieldOptions $options
+             */
             $options = $field->getType()->get(FieldType::ATTR_OPTIONS);
 
             $data = [];

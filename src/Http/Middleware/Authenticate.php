@@ -3,15 +3,15 @@
 namespace Dms\Web\Expressive\Http\Middleware;
 
 use Dms\Core\Auth\IAuthSystem;
-use Psr\Http\Server\MiddlewareInterface as ServerMiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response;
 use Zend\Expressive\Router\RouteResult;
 use Zend\Expressive\Router\RouterInterface;
 
-class Authenticate implements ServerMiddlewareInterface
+class Authenticate implements MiddlewareInterface
 {
     /**
      * @var IAuthSystem
@@ -23,7 +23,7 @@ class Authenticate implements ServerMiddlewareInterface
     /**
      * Authenticate constructor.
      *
-     * @param IAuthSystem $auth
+     * @param IAuthSystem     $auth
      * @param RouterInterface $router
      */
     public function __construct(
@@ -41,13 +41,16 @@ class Authenticate implements ServerMiddlewareInterface
     {
         $path = '/dms'. $request->getUri()->getPath();
         $routeResult = $request->getAttribute(RouteResult::class);
-        if ($this->auth->isAuthenticated() ||
-            in_array($routeResult->getMatchedRouteName(), [
+        if ($this->auth->isAuthenticated()
+            || in_array(
+                $routeResult->getMatchedRouteName(),
+                [
                 'dms::auth.login',
                 'dms::auth.password.forgot',
                 'dms::auth.oauth.redirect',
                 'dms::auth.oauth.response',
-            ])
+                ]
+            )
         ) {
             return $handler->handle($request);
         }

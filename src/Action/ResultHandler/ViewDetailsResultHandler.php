@@ -65,7 +65,9 @@ class ViewDetailsResultHandler extends ActionResultHandler
      */
     protected function handleResult(ModuleContext $moduleContext, IAction $action, $result)
     {
-        /** @var IStagedForm $result */
+        /**
+         * @var IStagedForm $result
+        */
         $object           = $result->getFirstForm()->getField(IObjectAction::OBJECT_FIELD_NAME)->getInitialValue();
         $stageNumber      = 2;
         $renderingContext = new FormRenderingContext($moduleContext, $action, $stageNumber, $object);
@@ -73,7 +75,9 @@ class ViewDetailsResultHandler extends ActionResultHandler
         $forms = [];
 
         foreach (array_slice($result->getAllStages(), 1) as $stage) {
-            /** @var IndependentFormStage $stage */
+            /**
+             * @var IndependentFormStage $stage
+            */
             $forms[] = $this->formRenderer->renderFieldsAsValues($renderingContext, $stage->loadForm());
             $stageNumber++;
             $renderingContext->setCurrentStageNumber($stageNumber);

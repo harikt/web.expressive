@@ -102,7 +102,9 @@ class DefaultFormRenderer extends FormRenderer
         $fields = [];
 
         foreach ($form->getProcessors() as $processor) {
-            /** @var FieldComparisonValidator $processor */
+            /**
+             * @var FieldComparisonValidator $processor
+             */
             if ($processor instanceof $validatorClass) {
                 $fields[$processor->getField1()->getName()] = $processor->getField2()->getName();
             }

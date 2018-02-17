@@ -38,10 +38,13 @@ class LaravelEventDispatcher extends EventDispatcher
      */
     public function once(string $event, callable $listener)
     {
-        $this->dispatcher->listen($event, function (... $arguments) use ($event, $listener) {
-            $this->removeListener($event, $listener);
-            return $listener(...$arguments);
-        });
+        $this->dispatcher->listen(
+            $event,
+            function (... $arguments) use ($event, $listener) {
+                $this->removeListener($event, $listener);
+                return $listener(...$arguments);
+            }
+        );
     }
 
     /**

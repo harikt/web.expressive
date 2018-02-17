@@ -39,7 +39,9 @@ class GraphChartRenderer extends ChartRenderer
      */
     protected function renderChart(IChartDataTable $chartData) : string
     {
-        /** @var GraphChart $chartStructure */
+        /**
+         * @var GraphChart $chartStructure
+         */
         $chartStructure = $chartData->getStructure();
 
         $yAxisKeys   = [];
@@ -101,28 +103,28 @@ class GraphChartRenderer extends ChartRenderer
     private function getChartType(GraphChart $chartStructure)
     {
         switch (true) {
-            case $chartStructure instanceof LineChart:
-                return 'line';
-            case $chartStructure instanceof AreaChart:
-                return 'area';
-            case $chartStructure instanceof BarChart:
-                return 'bar';
+        case $chartStructure instanceof LineChart:
+            return 'line';
+        case $chartStructure instanceof AreaChart:
+            return 'area';
+        case $chartStructure instanceof BarChart:
+            return 'bar';
 
-            default:
-                throw InvalidArgumentException::format('Unknown chart type %s', get_class($chartStructure));
+        default:
+            throw InvalidArgumentException::format('Unknown chart type %s', get_class($chartStructure));
         }
     }
 
     private function getHorizontalUnitType(string $dateTimeClass) : string
     {
         switch ($dateTimeClass) {
-            case TimeOfDay::class:
-                return 'time';
-            case Date::class:
-                return 'date';
+        case TimeOfDay::class:
+            return 'time';
+        case Date::class:
+            return 'date';
 
-            default:
-                return 'datetime';
+        default:
+            return 'datetime';
         }
     }
 

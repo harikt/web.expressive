@@ -48,13 +48,17 @@ class EditedObjectResultHandler extends ActionResultHandler
      */
     protected function handleResult(ModuleContext $moduleContext, IAction $action, $result)
     {
-        /** @var IReadModule $module */
+        /**
+         * @var IReadModule $module
+        */
         $module = $moduleContext->getModule();
         $label  = $module->getLabelFor($result);
         $type   = str_singular(StringHumanizer::humanize($module->getName()));
 
-        return new JsonResponse([
+        return new JsonResponse(
+            [
             'message' => "The '{$label}' {$type} has been updated.",
-        ]);
+            ]
+        );
     }
 }

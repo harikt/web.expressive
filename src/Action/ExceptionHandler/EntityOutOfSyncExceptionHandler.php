@@ -46,27 +46,37 @@ class EntityOutOfSyncExceptionHandler extends ActionExceptionHandler
      */
     protected function handleException(ModuleContext $moduleContext, IAction $action, \Exception $exception)
     {
-        /** @var EntityOutOfSyncException $exception */
+        /**
+         * @var EntityOutOfSyncException $exception
+        */
         $hasEntityBeenDeleted = !$exception->hasCurrentEntityInDb();
         $entity               = $exception->getEntityBeingPersisted();
 
-        /** @var IReadModule $module */
+        /**
+         * @var IReadModule $module
+        */
         $module = $moduleContext->getModule();
         $label  = $module->getLabelFor($entity);
         $type   = str_singular(StringHumanizer::humanize($module->getName()));
 
         // TODO: add options to resave?
         if ($hasEntityBeenDeleted) {
-            return new JsonResponse([
+            return new JsonResponse(
+                [
                 'message'      => "The '{$label}' {$type} has been removed in another instance.",
                 'message_type' => 'danger',
                 'redirect'     => $moduleContext->getUrl('dashboard'),
-            ], 400);
+                ],
+                400
+            );
         } else {
-            return new JsonResponse([
+            return new JsonResponse(
+                [
                 'message'      => "The '{$label}' {$type} has been updated in another instance.",
                 'message_type' => 'warning',
-            ], 400);
+                ],
+                400
+            );
         }
     }
 }

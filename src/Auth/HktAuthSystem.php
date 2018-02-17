@@ -95,7 +95,9 @@ class HktAuthSystem extends AuthSystem
      */
     protected function loadByCredentials(string $username, string $password) : IAdmin
     {
-        /** @var IAdmin $user */
+        /**
+         * @var IAdmin $user
+        */
         $users = $this->userRepository->matching(
             $this->userRepository->criteria()
                 ->where(Admin::USERNAME, '=', $username)
@@ -278,11 +280,15 @@ class HktAuthSystem extends AuthSystem
         if ($this->currentUsersPermissions === null) {
             $this->currentUsersPermissions = Role::collection(
                 $this->roleRepository->getAllById($this->getAuthenticatedUser()->getRoleIds()->asArray())
-            )->selectMany(function (Role $role) {
-                return $role->getPermissions();
-            })->indexBy(function (IPermission $permission) {
-                return $permission->getName();
-            })->asArray();
+            )->selectMany(
+                function (Role $role) {
+                    return $role->getPermissions();
+                }
+            )->indexBy(
+                function (IPermission $permission) {
+                    return $permission->getName();
+                }
+            )->asArray();
         }
 
         return $this->currentUsersPermissions;

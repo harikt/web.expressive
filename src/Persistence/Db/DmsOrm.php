@@ -27,12 +27,14 @@ class DmsOrm extends Orm
      */
     protected function define(OrmDefinition $orm)
     {
-        $orm->encompassAll([
+        $orm->encompassAll(
+            [
             new CommonOrm(),
             new AuthOrm(),
             new TempFileOrm(),
             // new AnalyticsOrm(),
-        ]);
+            ]
+        );
     }
 
     /**

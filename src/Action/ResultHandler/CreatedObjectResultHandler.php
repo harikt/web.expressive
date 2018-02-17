@@ -50,8 +50,12 @@ class CreatedObjectResultHandler extends ActionResultHandler
      */
     protected function handleResult(ModuleContext $moduleContext, IAction $action, $result)
     {
-        /** @var IReadModule $module */
-        /** @var ITypedObject $result */
+        /**
+         * @var IReadModule $module
+        */
+        /**
+         * @var ITypedObject $result
+        */
         // $moduleContext = ModuleRequestRouter::currentModuleContext();
         $module        = $moduleContext->getModule();
         $label         = $module->getLabelFor($result);
@@ -71,10 +75,12 @@ class CreatedObjectResultHandler extends ActionResultHandler
             $redirectUrl = $moduleContext->getUrl('dashboard');
         }
 
-        return new JsonResponse([
+        return new JsonResponse(
+            [
             'message'      => "The '{$label}' {$type} has been created.",
             'message_type' => 'success',
             'redirect'     => $redirectUrl,
-        ]);
+            ]
+        );
     }
 }

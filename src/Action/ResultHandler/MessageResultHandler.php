@@ -62,9 +62,13 @@ class MessageResultHandler extends ActionResultHandler
      */
     protected function handleResult(ModuleContext $moduleContext, IAction $action, $result)
     {
-        /** @var Message $result */
-        return new JsonResponse([
+        /**
+         * @var Message $result
+        */
+        return new JsonResponse(
+            [
             'message' => $this->lang->format($result),
-        ]);
+            ]
+        );
     }
 }

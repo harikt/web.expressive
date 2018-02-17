@@ -64,17 +64,22 @@ class FileTreeModuleRenderer extends ModuleRenderer
      */
     protected function renderDashboard(ModuleContext $moduleContext) : string
     {
-        /** @var PublicFileModule $module */
+        /**
+         * @var PublicFileModule $module
+         */
         $module        = $moduleContext->getModule();
         $rootDirectory = $module->getRootDirectory();
 
         return $this->template->render(
             'dms::package.module.dashboard.file-tree',
             [
-                'isPublic'           => starts_with($rootDirectory, [
+                'isPublic'           => starts_with(
+                    $rootDirectory,
+                    [
                     rtrim(PathHelper::normalize($this->configRepository->get('dms.storage.public-files.dir')), '/\\'),
                     rtrim($this->configRepository->get('dms.public.path'), '/\\'),
-                ]),
+                    ]
+                ),
                 'moduleContext'      => $moduleContext,
                 'directoryTree'      => $module->getDirectoryTree(),
                 'trashDirectoryTree' => $module->getTrashDirectoryTree(),

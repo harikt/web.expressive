@@ -78,112 +78,141 @@ class AdminUserModule extends CrudModule
     {
         $module->name('users');
 
-        $module->metadata([
+        $module->metadata(
+            [
             'icon' => 'users',
-        ]);
+            ]
+        );
 
         $module->labelObjects()->fromProperty(Admin::FULL_NAME);
 
-        $module->crudForm(function (CrudFormDefinition $form) {
-            $form->dependentOnObject(function (CrudFormDefinition $form, Admin $admin = null) {
-                $fullNameField = AdminProfileFields::buildFullNameField($this->dataSource);
-                $userNameField = AdminProfileFields::buildUsernameField($this->dataSource);
-                $emailField    = AdminProfileFields::buildEmailField($this->dataSource);
+        $module->crudForm(
+            function (CrudFormDefinition $form) {
+                $form->dependentOnObject(
+                    function (CrudFormDefinition $form, Admin $admin = null) {
+                        $fullNameField = AdminProfileFields::buildFullNameField($this->dataSource);
+                        $userNameField = AdminProfileFields::buildUsernameField($this->dataSource);
+                        $emailField    = AdminProfileFields::buildEmailField($this->dataSource);
 
-                if ($admin && !($admin instanceof LocalAdmin)) {
-                    foreach ([$fullNameField, $userNameField, $emailField] as $field) {
-                        $field->readonly();
+                        if ($admin && !($admin instanceof LocalAdmin)) {
+                            foreach ([$fullNameField, $userNameField, $emailField] as $field) {
+                                $field->readonly();
+                            }
+                        }
+
+                        $form->section(
+                            'Details',
+                            array_filter(
+                                [
+                                $admin
+                                ? $form->field(
+                                    Field::create('type', 'Type')->string()->readonly()->value($this->getAdminType($admin))
+                                )->withoutBinding()
+                                : null,
+                                //
+                                $form->field($fullNameField)->bindToProperty(Admin::FULL_NAME),
+                                //
+                                $form->field($userNameField)->bindToProperty(Admin::USERNAME),
+                                //
+                                $form->field($emailField)->bindToProperty(Admin::EMAIL_ADDRESS),
+                                ]
+                            )
+                        );
                     }
-                }
+                );
 
-                $form->section('Details', array_filter([
-                    $admin
-                        ? $form->field(
-                            Field::create('type', 'Type')->string()->readonly()->value($this->getAdminType($admin))
-                        )->withoutBinding()
-                        : null,
-                    //
-                    $form->field($fullNameField)->bindToProperty(Admin::FULL_NAME),
-                    //
-                    $form->field($userNameField)->bindToProperty(Admin::USERNAME),
-                    //
-                    $form->field($emailField)->bindToProperty(Admin::EMAIL_ADDRESS),
-                ]));
-            });
+                if ($form->isCreateForm()) {
+                    $form->mapToSubClass(LocalAdmin::class);
 
-            if ($form->isCreateForm()) {
-                $form->mapToSubClass(LocalAdmin::class);
-
-                $form->section('Password', [
-                    $form->field(
-                        Field::create('password', 'Password')
+                    $form->section(
+                        'Password',
+                        [
+                        $form->field(
+                            Field::create('password', 'Password')
                             ->string()
                             ->password()
                             ->required()
                             ->minLength(6)
-                    )->withoutBinding(),
-                ]);
+                        )->withoutBinding(),
+                        ]
+                    );
 
-                $form->onSubmit(function (LocalAdmin $user, array $input) {
-                    $user->setPassword($this->hasher->buildDefault()->hash($input['password']));
-                });
-            }
+                    $form->onSubmit(
+                        function (LocalAdmin $user, array $input) {
+                            $user->setPassword($this->hasher->buildDefault()->hash($input['password']));
+                        }
+                    );
+                }
 
-            $form->section('Access Settings', [
-                //
-                $form->field(
-                    Field::create('is_banned', 'Is Banned?')->bool()
-                )->bindToProperty(Admin::IS_BANNED),
-                //
-                $form->field(
-                    Field::create('is_super_user', 'Is Super Admin?')->bool()
-                )->bindToProperty(Admin::IS_SUPER_USER),
-                //
-                $form->field(
-                    Field::create('roles', 'Roles')
+                $form->section(
+                    'Access Settings',
+                    [
+                    //
+                    $form->field(
+                        Field::create('is_banned', 'Is Banned?')->bool()
+                    )->bindToProperty(Admin::IS_BANNED),
+                    //
+                    $form->field(
+                        Field::create('is_super_user', 'Is Super Admin?')->bool()
+                    )->bindToProperty(Admin::IS_SUPER_USER),
+                    //
+                    $form->field(
+                        Field::create('roles', 'Roles')
                         ->entityIdsFrom($this->roleRepo)
                         ->mapToCollection(EntityIdCollection::type())
                         ->labelledBy(Role::NAME)
-                )->bindToProperty(Admin::ROLE_IDS),
-            ]);
+                    )->bindToProperty(Admin::ROLE_IDS),
+                    ]
+                );
 
-            if ($form->isCreateForm()) {
-                $form->onSubmit(function (Admin $admin) {
-                    $admin->metadata = new ObjectMetadata();
-                });
+                if ($form->isCreateForm()) {
+                    $form->onSubmit(
+                        function (Admin $admin) {
+                            $admin->metadata = new ObjectMetadata();
+                        }
+                    );
+                }
             }
-        });
+        );
 
         $module->objectAction('reset-password')
-            ->where(function (Admin $admin) {
-                return $admin instanceof LocalAdmin;
-            })
+            ->where(
+                function (Admin $admin) {
+                    return $admin instanceof LocalAdmin;
+                }
+            )
             ->authorize(self::EDIT_PERMISSION)
             ->form(new AdminPasswordResetForm())
             ->returns(Message::class)
-            ->handler(function (LocalAdmin $admin, AdminPasswordResetForm $input) {
-                $this->passwordResetService->resetUserPassword($admin, $input->newPassword);
+            ->handler(
+                function (LocalAdmin $admin, AdminPasswordResetForm $input) {
+                    $this->passwordResetService->resetUserPassword($admin, $input->newPassword);
 
-                return new Message('auth.user.password-reset');
-            });
+                    return new Message('auth.user.password-reset');
+                }
+            );
 
         $module->removeAction()->deleteFromDataSource();
 
-        $module->summaryTable(function (SummaryTableDefinition $table) {
-            $table->mapCallback(function (Admin $admin) {
-                return $this->getAdminType($admin);
-            })->to(Field::create('type', 'Type')->string());
+        $module->summaryTable(
+            function (SummaryTableDefinition $table) {
+                $table->mapCallback(
+                    function (Admin $admin) {
+                        return $this->getAdminType($admin);
+                    }
+                )->to(Field::create('type', 'Type')->string());
 
-            $table->mapProperty(Admin::USERNAME)->to(Field::create('username', 'Username')->string());
-            $table->mapProperty(Admin::EMAIL_ADDRESS)->to(Field::create('email', 'Email')->email());
-            $table->mapProperty(Admin::IS_SUPER_USER)->to(Field::create('super_admin', 'Super Admin')->bool());
-            $table->mapProperty(Admin::IS_BANNED)->to(Field::create('banned', 'Banned')->bool());
+                $table->mapProperty(Admin::USERNAME)->to(Field::create('username', 'Username')->string());
+                $table->mapProperty(Admin::EMAIL_ADDRESS)->to(Field::create('email', 'Email')->email());
+                $table->mapProperty(Admin::IS_SUPER_USER)->to(Field::create('super_admin', 'Super Admin')->bool());
+                $table->mapProperty(Admin::IS_BANNED)->to(Field::create('banned', 'Banned')->bool());
 
-            $table->view('all', 'All')
-                ->asDefault()
-                ->loadAll()
-                ->orderByAsc(Admin::USERNAME);
-        });
+                $table->view('all', 'All')
+                    ->asDefault()
+                    ->loadAll()
+                    ->orderByAsc(Admin::USERNAME);
+            }
+        );
 
         $module->widget('summary-table')
             ->label('Accounts')

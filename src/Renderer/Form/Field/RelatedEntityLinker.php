@@ -30,7 +30,7 @@ class RelatedEntityLinker
     protected $router;
 
     /**
-     * 
+     *
      * @param EntityModuleMap $entityModuleMap
      */
     public function __construct(EntityModuleMap $entityModuleMap, RouterInterface $router)

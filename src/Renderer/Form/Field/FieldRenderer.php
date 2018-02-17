@@ -9,7 +9,6 @@ use Dms\Core\Form\IFieldType;
 use Dms\Web\Expressive\Renderer\Form\FieldRendererCollection;
 use Dms\Web\Expressive\Renderer\Form\FormRenderingContext;
 use Dms\Web\Expressive\Renderer\Form\IFieldRenderer;
-use Dms\Web\Expressive\Renderer\Form\Field\RelatedEntityLinker;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
 /**

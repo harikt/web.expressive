@@ -26,20 +26,26 @@ class AdminPackage extends Package
     {
         $package->name('admin');
 
-        $package->metadata([
+        $package->metadata(
+            [
             'icon' => 'rocket'
-        ]);
+            ]
+        );
 
         $package->dashboard()
-            ->widgets([
+            ->widgets(
+                [
                 'users.summary-table',
                 'roles.summary-table',
-            ]);
+                ]
+            );
 
-        $package->modules([
+        $package->modules(
+            [
             'account' => AdminCurrentAccountModule::class,
             'users'   => AdminUserModule::class,
             'roles'   => RoleModule::class,
-        ]);
+            ]
+        );
     }
 }

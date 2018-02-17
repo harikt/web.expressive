@@ -23,8 +23,10 @@ class PublicFilePackage extends Package
     {
         $package->name('documents');
 
-        $package->modules([
+        $package->modules(
+            [
             'files' => PublicFileModule::class,
-        ]);
+            ]
+        );
     }
 }

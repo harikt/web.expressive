@@ -62,10 +62,15 @@ class ErrorMessageExceptionHandler extends ActionExceptionHandler
      */
     protected function handleException(ModuleContext $moduleContext, IAction $action, \Exception $exception)
     {
-        /** @var ErrorMessageException $exception */
-        return new JsonResponse([
+        /**
+         * @var ErrorMessageException $exception
+        */
+        return new JsonResponse(
+            [
             'message'      => $this->langProvider->format($exception->getLangMessage()),
             'message_type' => 'danger',
-        ], 500);
+            ],
+            500
+        );
     }
 }

@@ -49,7 +49,9 @@ class InvalidFormSubmissionExceptionHandler extends ActionExceptionHandler
      */
     protected function canHandleException(ModuleContext $moduleContext, IAction $action, \Exception $exception) : bool
     {
-        /** @var InvalidFormSubmissionException $exception */
+        /**
+         * @var InvalidFormSubmissionException $exception
+        */
         return true;
     }
 
@@ -62,10 +64,15 @@ class InvalidFormSubmissionExceptionHandler extends ActionExceptionHandler
      */
     protected function handleException(ModuleContext $moduleContext, IAction $action, \Exception $exception)
     {
-        /** @var InvalidFormSubmissionException $exception */
-        return new JsonResponse([
+        /**
+         * @var InvalidFormSubmissionException $exception
+        */
+        return new JsonResponse(
+            [
             'messages' => $this->transformInvalidFormSubmissionToArray($exception),
-        ], 422);
+            ],
+            422
+        );
     }
 
     /**
