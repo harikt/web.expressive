@@ -46,7 +46,7 @@ class LogoutHandler implements RequestHandlerInterface
      *
      * @return \Zend\Diactoros\Response
      */
-    public function process(ServerRequestInterface $request): ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         try {
             $this->auth->logout();
