@@ -125,7 +125,6 @@ class ContainerConfig
         $container->bind(IIocContainer::SCOPE_SINGLETON, IAdminRepository::class, AdminRepository::class);
         $container->bind(IIocContainer::SCOPE_SINGLETON, IRoleRepository::class, RoleRepository::class);
         $container->bind(IIocContainer::SCOPE_SINGLETON, IPasswordResetService::class, PasswordResetService::class);
-        $container->bind(IIocContainer::SCOPE_SINGLETON, \Psr\Http\Message\ResponseInterface::class, \Zend\Diactoros\Response::class);
 
         $container->bindCallback(
             IIocContainer::SCOPE_SINGLETON,
