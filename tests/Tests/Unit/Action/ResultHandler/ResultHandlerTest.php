@@ -4,6 +4,7 @@ namespace Dms\Web\Expressive\Tests\Unit\Action\ResultHandler;
 
 use Dms\Core\Exception\InvalidArgumentException;
 use Dms\Core\Module\IAction;
+use Dms\Core\Common\Crud\IReadModule;
 use Dms\Web\Expressive\Action\IActionResultHandler;
 use Dms\Web\Expressive\Http\ModuleContext;
 use PHPUnit\Framework\TestCase;
@@ -80,6 +81,20 @@ abstract class ResultHandlerTest extends TestCase
 
     protected function mockModuleContext() : ModuleContext
     {
-        return $this->createMock(ModuleContext::class);
+        $module = $this->createMock(IReadModule::class);
+        $module->method('getLabelFor')
+            ->willReturn('Hello');
+
+        $module->method('getName')
+            ->willReturn('IReadModule');
+
+        $stub = $this->createMock(ModuleContext::class);
+        $stub->method('getModule')
+            ->willReturn($module);
+
+        $stub->method('getUrl')
+            ->willReturn('/url');
+
+        return $stub;
     }
 }

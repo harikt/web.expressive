@@ -53,6 +53,13 @@ class SymfonyLanguageProvider implements ILanguageProvider
             $domain
         );
 
+        if ($response === $message->getId()) {
+            throw MessageNotFoundException::format(
+                'Could not translate message: unknown message id \'%s\' with params %s',
+                $message->getId(), $this->debugFormatParams($params)
+            );
+        }
+
         return $response;
     }
 
