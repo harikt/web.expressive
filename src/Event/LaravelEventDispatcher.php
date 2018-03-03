@@ -3,7 +3,7 @@
 namespace Dms\Web\Expressive\Event;
 
 use Dms\Core\Event\EventDispatcher;
-use Illuminate\Events\Dispatcher;
+use Illuminate\Contracts\Events\Dispatcher;
 
 /**
  * @author Elliot Levin <elliotlevin@hotmail.com>
@@ -18,9 +18,9 @@ class LaravelEventDispatcher extends EventDispatcher
     /**
      * LaravelEventDispatcher constructor.
      *
-     * @param \Illuminate\Contracts\Events\Dispatcher|Dispatcher $dispatcher
+     * @param \Illuminate\Contracts\Events\Dispatcher $dispatcher
      */
-    public function __construct(\Illuminate\Contracts\Events\Dispatcher $dispatcher)
+    public function __construct(Dispatcher $dispatcher)
     {
         $this->dispatcher = $dispatcher;
     }
@@ -84,6 +84,6 @@ class LaravelEventDispatcher extends EventDispatcher
      */
     public function emit(string $event, ...$arguments)
     {
-        $this->dispatcher->fire($event, $arguments);
+        return $this->dispatcher->fire($event, $arguments);
     }
 }
