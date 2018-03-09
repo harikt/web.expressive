@@ -61,8 +61,8 @@ class ReadModuleRenderer extends ModuleRenderer
     protected function renderDashboard(ModuleContext $moduleContext) : string
     {
         /**
- * @var IReadModule $module
-*/
+         * @var IReadModule $module
+        */
         $module       = $moduleContext->getModule();
         $summaryTable = $module->getSummaryTable();
 

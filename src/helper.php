@@ -97,8 +97,12 @@ if (!function_exists('asset_file_url')) {
      * @return string
      * @throws \Dms\Core\Exception\InvalidArgumentException
      */
-    function asset_file_url(\Dms\Core\File\IFile $file) : string
+    function asset_file_url(\Dms\Core\File\IFile $file = null) : string
     {
+        if (! $file) {
+            return '';
+        }
+
         $s3Prefixes = ['s3://', 's3-dms://'];
 
         foreach ($s3Prefixes as $s3Prefix) {

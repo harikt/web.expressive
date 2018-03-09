@@ -25,7 +25,7 @@ class FileTreeModuleRenderer extends ModuleRenderer
     protected $configRepository;
 
     /**
-     * ReadModuleRenderer constructor.
+     * FileTreeModuleRenderer constructor.
      *
      * @param WidgetRendererCollection  $widgetRenderers
      * @param TemplateRendererInterface $template
