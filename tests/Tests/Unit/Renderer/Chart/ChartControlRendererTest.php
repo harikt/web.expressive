@@ -18,6 +18,6 @@ class ChartControlRendererTest extends TestCase
 
     public function testRenderChart()
     {
-        $this->markTestSkipped('This test has not been implemented yet.');
+        $this->markTestIncomplete('This test has not been implemented yet.');
     }
 }
