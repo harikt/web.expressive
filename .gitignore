@@ -9,3 +9,5 @@
 /.php_cs
 /.php_cs.cache
 /coverage
+/generate.php
+/phpunit-skelgen.phar
