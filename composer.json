@@ -1,6 +1,6 @@
 {
     "name": "harikt/web.expressive",
-    "description": "The integration package with the zend expressive",
+    "description": "The integration package with DMS and zend expressive",
     "license": "MIT",
     "config": {
         "sort-packages": true
@@ -39,7 +39,7 @@
         "symfony/translation": "3.*",
         "symfony/validator": "3.*",
         "zendframework/zend-diactoros": "^1.7.1",
-        "zendframework/zend-expressive": "^3.0.0rc5"
+        "zendframework/zend-expressive": "^3.0.0"
     },
     "autoload-dev": {
         "psr-4": {
@@ -52,5 +52,5 @@
         "dms-org/library.testing": "dev-master",
         "dms-org/common.testing": "dev-master"
     },
-    "minimum-stability": "alpha"
+    "minimum-stability": "rc"
 }
