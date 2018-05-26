@@ -75,13 +75,14 @@ class LoginHandler extends DmsHandler implements RequestHandlerInterface
         if ($request->getMethod() == "POST") {
             $constraint = new Assert\Collection(
                 [
-                'username' => [
-                    new Assert\NotBlank(),
-                ],
-                'password' => [
-                    new Assert\NotBlank(),
-                ],
-                '_token' => []
+                    'username' => [
+                        new Assert\NotBlank(),
+                    ],
+                    'password' => [
+                        new Assert\NotBlank(),
+                    ],
+                    '_CSRF_INDEX' => [],
+                    '_CSRF_TOKEN' => []
                 ]
             );
 
