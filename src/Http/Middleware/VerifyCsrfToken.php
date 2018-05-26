@@ -33,7 +33,7 @@ class VerifyCsrfToken implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if ($request->getMethod() == "POST" && ! $this->csrf->validateRequest()) {
+        if ('XMLHttpRequest' != $request->getHeaderLine('X-Requested-With') && $request->getMethod() == "POST" && ! $this->csrf->validateRequest()) {
             $response = new Response('php://memory', 302);
             $server = $request->getServerParams();
             $segment = $this->session->getSegment('VerifyCsrfToken');
