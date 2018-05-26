@@ -39,6 +39,23 @@ if (! function_exists('csrf_token')) {
     }
 }
 
+if (! function_exists('js_csrf_token')) {
+    /**
+     * Get the CSRF token value.
+     *
+     * @return string
+     *
+     * @throws \RuntimeException
+     */
+    function js_csrf_token($lock_to = '')
+    {
+        $csrf = app(AntiCSRF::class);
+        $tokens = $csrf->getTokenArray($lock_to);
+
+        return $tokens['_CSRF_TOKEN'];
+    }
+}
+
 // used by asset_file_url
 if (! function_exists('public_path')) {
     /**

@@ -4,7 +4,7 @@
     window.Dms.config = {
         debug: {!! json_encode($config->get('app.debug', false)) !!},
         csrf: {
-            token: {!! json_encode(csrf_token()) !!}
+            token: {!! json_encode(js_csrf_token()) !!}
         },
         routes: {
             loginUrl: {!! json_encode($serverUrlHelper->generate($urlHelper->generate('dms::auth.login'))) !!},
