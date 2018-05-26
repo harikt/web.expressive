@@ -35,6 +35,7 @@
         "harikt/blade-renderer": "^0.4.0",
         "harikt/dms-illuminate-container": "^0.0",
         "illuminate/config": "5.5.*",
+        "paragonie/anti-csrf": "^2.2",
         "psr/http-server-middleware": "^1.0",
         "symfony/translation": "3.*",
         "symfony/validator": "3.*",

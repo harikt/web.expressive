@@ -70,7 +70,7 @@
                               data-action="{{ $serverUrlHelper->generate($moduleContext->getUrl('action.run', ['action' => 'empty-trash', 'package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName()])) }}"
                               data-reload-page-after-submit="1"
                               data-method="post">
-                            <input type="hidden" name="_token" value="{!! csrf_token() !!}">
+                            {!! csrf_token() !!}
                             <button type="submit" class="btn btn-danger">
                                 <i class="fa fa-trash"></i> Empty Trash
                             </button>

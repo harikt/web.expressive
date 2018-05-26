@@ -18,7 +18,7 @@
             data-enctype="multipart/form-data"
             class="dms-staged-form form-horizontal"
     >
-        <input type="hidden" name="_token" value="{!! csrf_token() !!}">
+        {!! csrf_token() !!}
 
         @if($hiddenValues)
             <div class="dms-form-stage-container loaded hidden">

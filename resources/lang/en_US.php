@@ -95,4 +95,5 @@ return [
     'validation.exact-array-length'        => 'The %field% must contain exactly %length% items',
     'validation.one-of'                    => 'The %field% must be one of %options%',
     'validation.table.invalid-structure' => 'The %field% does not contain a valid table structure',
+    'csrf.token' => 'Invalid csrf token',
 ];

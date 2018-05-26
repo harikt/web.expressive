@@ -95,7 +95,7 @@
                                      data-action="{{ $serverUrlHelper->generate($rowActionButtons['remove']->getUrl($objectId)) }}"
                                      data-after-run-remove-closest="tr"
                                      data-method="post">
-                                    <input type="hidden" name="_token" value="{!! csrf_token() !!}">
+                                    {!! csrf_token() !!}
                                     <button type="submit" class="btn btn-xs btn-danger">
                                         <i class="fa fa-trash-o"></i>
                                     </button>

@@ -60,7 +60,7 @@
                                       data-after-run-remove-closest="li"
                                       data-reload-page-after-submit="1"
                                       data-method="post">
-                                    <input type="hidden" name="_token" value="{!! csrf_token() !!}">
+                                    {!! csrf_token() !!}
                                     <button type="submit" class="btn btn-xs btn-success">
                                         <i class="fa fa-life-ring"></i>
                                     </button>
@@ -71,7 +71,7 @@
                                 <span class="dms-run-action-form inline"
                                       data-action="{{ $serverUrlHelper->generate($moduleContext->getUrl('action.run', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName(), 'action' => 'download'], ['object' => $fileId])) }}"
                                       data-method="post">
-                                    <input type="hidden" name="_token" value="{!! csrf_token() !!}">
+                                    {!! csrf_token() !!}
                                     <button type="submit" class="btn btn-xs btn-success">
                                         <i class="fa fa-download"></i>
                                     </button>
@@ -94,7 +94,7 @@
                                           data-action="{{ $serverUrlHelper->generate($moduleContext->getUrl('action.run', ['package' => $moduleContext->getModule()->getPackageName(), 'module' => $moduleContext->getModule()->getName(), 'action' => 'remove'], ['object' => $fileId])) }}"
                                           data-after-run-remove-closest="li"
                                           data-method="post">
-                                        <input type="hidden" name="_token" value="{!! csrf_token() !!}">
+                                        {!! csrf_token() !!}
                                         <button type="submit" class="btn btn-xs btn-danger">
                                             <i class="fa fa-trash-o"></i>
                                         </button>
