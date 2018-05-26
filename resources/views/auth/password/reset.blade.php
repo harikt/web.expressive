@@ -9,7 +9,7 @@
     @endif
 
     <form action="{{ $serverUrlHelper->generate($urlHelper->generate('dms::auth.password.reset')) }}" method="post">
-        <input type="hidden" name="_token" value="{!! csrf_token() !!}">
+        {!! csrf_token() !!}
 
         <input type="hidden" name="token" value="{{ $token }}">
 

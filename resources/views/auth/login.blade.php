@@ -3,13 +3,13 @@
 @extends('dms::template.auth')
 @section('content')
     <p class="login-box-msg">Log in to continue</p>
-    @if (session('error'))
+    @if ($errors->has('csrf_token'))
         <div class="alert alert-danger">
-            {{ session('error') }}
+            {{ $errors->first('csrf_token') }}
         </div>
     @endif
     <form action="{{ $serverUrlHelper->generate($urlHelper->generate('dms::auth.login')) }}" method="post">
-        <input type="hidden" name="_token" value="{!! csrf_token() !!}">
+        {!! csrf_token() !!}
 
         <div class="form-group has-feedback{{ $errors->has('username') ? ' has-error' : '' }}">
             <input type="text" name="username" class="form-control" placeholder="Username" value="">

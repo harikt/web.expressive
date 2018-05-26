@@ -2,6 +2,7 @@
 use Aura\Session\Session;
 use Dms\Web\Expressive\AppContainer;
 use Illuminate\Container\Container;
+use ParagonIE\AntiCSRF\AntiCSRF;
 
 if (! function_exists('app')) {
     /**
@@ -31,13 +32,10 @@ if (! function_exists('csrf_token')) {
      *
      * @throws \RuntimeException
      */
-    function csrf_token()
+    function csrf_token($lock_to = '')
     {
-        $session = app(Session::class);
-        $csrfToken = $session->getCsrfToken();
-        $csrfToken->regenerateValue();
-
-        return $csrfToken->getValue();
+        $csrf = app(AntiCSRF::class);
+        return $csrf->insertToken($lock_to, false);
     }
 }
 

@@ -2,6 +2,7 @@
 
 namespace Dms\Web\Expressive\Http\Handler\Auth;
 
+use Aura\Session\Session;
 use BehEh\Flaps\Flap;
 use Dms\Core\Auth\AdminBannedException;
 use Dms\Core\Auth\IAuthSystem;
@@ -36,6 +37,8 @@ class LoginHandler extends DmsHandler implements RequestHandlerInterface
 
     protected $flap;
 
+    protected $session;
+
     protected $translator;
 
     /**
@@ -56,12 +59,14 @@ class LoginHandler extends DmsHandler implements RequestHandlerInterface
         RouterInterface $router,
         OauthProviderCollection $oauthProviderCollection,
         Flap $flap,
-        Translator $translator
+        Translator $translator,
+        Session $session
     ) {
         parent::__construct($cms, $auth, $template, $router);
         $this->oauthProviderCollection = $oauthProviderCollection;
         $this->flap = $flap;
         $this->translator = $translator;
+        $this->session = $session;
     }
 
 
@@ -120,6 +125,9 @@ class LoginHandler extends DmsHandler implements RequestHandlerInterface
                 return $response;
             }
         }
+
+        $segment = $this->session->getSegment('VerifyCsrfToken');
+        $this->errors->add('csrf_token', $segment->getFlash('csrf_token'));
 
         return new HtmlResponse(
             $this->template->render(

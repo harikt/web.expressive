@@ -44,6 +44,7 @@ use Dms\Web\Expressive\File\Persistence\TemporaryFileRepository;
 use Dms\Web\Expressive\File\TemporaryFileService;
 use Dms\Web\Expressive\Http\Middleware\Authenticate;
 use Dms\Web\Expressive\Http\Middleware\LoadVariablesToTemplate;
+use Dms\Web\Expressive\Http\Middleware\VerifyCsrfToken;
 use Dms\Web\Expressive\Language\SymfonyLanguageProvider;
 use Dms\Web\Expressive\Renderer\Chart\ChartRendererCollection;
 use Dms\Web\Expressive\Renderer\Form\FieldRendererCollection;
@@ -63,6 +64,7 @@ use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Events\Dispatcher;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
+use ParagonIE\AntiCSRF\AntiCSRF;
 use Psr\Cache\CacheItemPoolInterface;
 use RKA\Middleware\IpAddress;
 use Symfony\Component\Translation\Loader\ArrayLoader;
@@ -241,16 +243,6 @@ class ContainerConfig
                 $translator = new Translator('en_US', new MessageSelector());
                 $translator->addLoader('array', new ArrayLoader());
 
-                return $translator;
-            }
-        );
-
-        $container->bindCallback(
-            IIocContainer::SCOPE_SINGLETON,
-            SymfonyLanguageProvider::class,
-            function () use ($container) {
-                $translator = $container->get(Translator::class);
-
                 $directory = dirname(__DIR__) . '/resources/lang/';
                 foreach (new \DirectoryIterator($directory) as $fileInfo) {
                     if ($fileInfo->isDot()) {
@@ -264,6 +256,16 @@ class ContainerConfig
                         $translator->addResource('array', include $file, $fileInfo->getBasename('.php'), 'dms');
                     }
                 }
+
+                return $translator;
+            }
+        );
+
+        $container->bindCallback(
+            IIocContainer::SCOPE_SINGLETON,
+            SymfonyLanguageProvider::class,
+            function () use ($container) {
+                $translator = $container->get(Translator::class);
 
                 return new SymfonyLanguageProvider($translator);
             }
@@ -458,6 +460,17 @@ class ContainerConfig
                 return $flap;
             }
         );
+
+        $container->bindCallback(IIocContainer::SCOPE_SINGLETON, AntiCSRF::class, function ($container) {
+            $session = $container->get(Session::class);
+            if (! $session->isStarted()) {
+                $session->start();
+            }
+
+            return new AntiCSRF();
+        });
+
+        $container->bind(IIocContainer::SCOPE_SINGLETON, VerifyCsrfToken::class, VerifyCsrfToken::class);
     }
 
 
