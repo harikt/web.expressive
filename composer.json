@@ -38,9 +38,9 @@
         "paragonie/anti-csrf": "^2.2",
         "psr/http-server-middleware": "^1.0",
         "symfony/translation": "3.*",
-        "symfony/validator": "3.*",
         "zendframework/zend-diactoros": "^1.7.1",
-        "zendframework/zend-expressive": "^3.0.0"
+        "zendframework/zend-expressive": "^3.0.0",
+        "zendframework/zend-inputfilter": "^2.8"
     },
     "autoload-dev": {
         "psr-4": {
