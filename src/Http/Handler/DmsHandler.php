@@ -4,10 +4,8 @@ namespace Dms\Web\Expressive\Http\Handler;
 
 use Dms\Core\Auth\IAuthSystem;
 use Dms\Core\ICms;
-use Dms\Web\Expressive\Exception\ValidationFailedException;
 use Illuminate\Support\MessageBag;
 use Psr\Http\Message\ServerRequestInterface;
-use Symfony\Component\Validator\Validation;
 use Zend\Diactoros\Response;
 use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
@@ -102,18 +100,4 @@ abstract class DmsHandler
         );
     }
 
-
-    protected function validate($data, $constraint)
-    {
-        $validator = Validation::createValidator();
-        $violations = $validator->validate($data, $constraint);
-        if (count($violations) != 0) {
-            // Add violation to message bag
-            foreach ($violations as $violation) {
-                $this->errors->add(str_replace(['[', ']'], [''], $violation->getPropertyPath()), $violation->getMessage());
-            }
-
-            throw ValidationFailedException::defaultMessage();
-        }
-    }
 }

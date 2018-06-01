@@ -16,12 +16,14 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Symfony\Component\Translation\Translator;
-use Symfony\Component\Validator\Constraints as Assert;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\JsonResponse;
 use Zend\Expressive\Router\RouterInterface;
 use Zend\Expressive\Template\TemplateRendererInterface;
+use Zend\InputFilter\Input;
+use Zend\InputFilter\InputFilter;
+use Zend\Validator;
 
 /**
  * The login controller.
@@ -73,43 +75,46 @@ class LoginHandler extends DmsHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         if ($request->getMethod() == "POST") {
-            $constraint = new Assert\Collection(
-                [
-                    'username' => [
-                        new Assert\NotBlank(),
-                    ],
-                    'password' => [
-                        new Assert\NotBlank(),
-                    ],
-                    '_CSRF_INDEX' => [],
-                    '_CSRF_TOKEN' => []
-                ]
-            );
-
             try {
-                $this->validate($request->getParsedBody(), $constraint);
+                $username = new Input('username');
+                $username->setRequired(true);
+
+                $password = new Input('password');
+                $password->setRequired(true);
+
+                $inputFilter = new InputFilter();
+                $inputFilter->add($username);
+                $inputFilter->add($password);
+                $inputFilter->setData($request->getParsedBody());
 
                 if (! $this->flap->limit($this->getThrottleKey($request))) {
                     // too many login attempts
                     throw TooManyFailedAttemptsException::defaultMessage();
                 }
 
-                $username = $request->getParsedBody()['username'];
-                $password = $request->getParsedBody()['password'];
-                $this->auth->login($username, $password);
+                if ($inputFilter->isValid()) {
+                    $this->auth->login($request->getParsedBody()['username'], $request->getParsedBody()['password']);
 
-                if ('XMLHttpRequest' == $request->getHeaderLine('X-Requested-With')) {
-                    return new JsonResponse(
-                        [
-                        'response'   => 'Authenticated',
-                        'csrf_token' => csrf_token(),
-                        ]
-                    );
+                    if ('XMLHttpRequest' == $request->getHeaderLine('X-Requested-With')) {
+                        return new JsonResponse(
+                            [
+                                'response'   => 'Authenticated',
+                                'csrf_token' => js_csrf_token(),
+                            ]
+                        );
+                    } else {
+                        $to = $this->router->generateUri('dms::index');
+                        $response = new Response('php://memory', 302);
+                        return $response->withHeader('Location', $to);
+                    }
                 } else {
-                    $to = $this->router->generateUri('dms::index');
-                    $response = new Response('php://memory', 302);
-                    return $response->withHeader('Location', $to);
+                    foreach ($inputFilter->getInvalidInput() as $key => $error) {
+                        foreach ($error->getMessages() as $message) {
+                            $this->errors->add($key, $message);
+                        }
+                    }
                 }
+
             } catch (InvalidCredentialsException $e) {
                 $this->errors->add('username', $this->translator->trans('auth.failed', [], 'dms'));
             } catch (AdminBannedException $e) {
